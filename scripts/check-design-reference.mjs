@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Integridade de design-reference/ (fonte de verdade — NUNCA editar).
- * Compara byte a byte (SHA-256) com o snapshot registrado antes de qualquer
- * alteração no projeto: scripts/design-reference.sha256 (formato sha256sum).
+ * Compara byte a byte (SHA-256) com a baseline oficial vigente
+ * (scripts/design-reference.sha256, formato sha256sum; histórico em docs/DESIGN-REFERENCE-BASELINE.md).
  * Falha em arquivo alterado, removido ou adicionado.
  */
 import { createHash } from "node:crypto"

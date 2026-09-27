@@ -248,8 +248,8 @@ html[data-motion="off"] *{animation:none!important;transition:none!important;scr
 </div>
 </sc-if>
 <div ref="{{ slRef }}" style="position:relative;height:{{ slTrackH }}">
-<div style="position:sticky;top:{{ headerH }};height:{{ stickyH }};overflow:hidden;display:flex;flex-direction:column;background:#05070A">
-<div aria-hidden="true" style="position:{{ slScenePos }};left:0;top:0;right:0;bottom:0;flex:{{ slSceneFlex }};min-height:{{ slSceneMin }};pointer-events:none">{{ slScene }}</div>
+<div style="position:{{ stPos }};top:{{ headerH }};height:{{ stH }};overflow:{{ stOv }};display:flex;flex-direction:column;background:#05070A">
+<div aria-hidden="true" style="position:{{ slScenePos }};left:0;top:0;right:0;bottom:0;flex:{{ slSceneFlex }};min-height:{{ slSceneMin }};height:{{ slSceneH }};pointer-events:none">{{ slScene }}</div>
 <div style="position:relative;z-index:1;box-sizing:border-box;width:100%;max-width:1440px;margin:0 auto;height:{{ slGridH }};padding:{{ slPad }};display:grid;grid-template-columns:{{ slCols }};gap:{{ slGap }};align-items:{{ slAlign }}">
 <sc-if value="{{ notM }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
@@ -264,7 +264,7 @@ html[data-motion="off"] *{animation:none!important;transition:none!important;scr
 </div>
 </sc-if>
 <div style="justify-self:end;box-sizing:border-box;width:100%;max-width:520px;background:rgba(7,9,12,.92);border:1px solid #232B36;border-radius:8px;padding:{{ cardPad }};display:flex;flex-direction:column;gap:{{ cardGap }}">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3">DIAGRAMA CONCEITUAL · TIMP</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3">ROLE PARA AVANÇAR</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3">DIAGRAMA CONCEITUAL · TIMP</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3">{{ slHint }}</span></div>
 <div role="group" aria-label="Etapas da demonstração Starlink" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
 <sc-for list="{{ slSteps }}" as="st" hint-placeholder-count="3"><button type="button" aria-current="{{ st.current }}" onClick="{{ st.go }}" style="min-height:48px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:6px 10px;background:{{ st.bg }};border:1px solid {{ st.border }};border-radius:4px;color:{{ st.color }};cursor:pointer;text-align:left;transition:background 200ms,border-color 200ms"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:{{ st.numColor }}">{{ st.n }}</span><span style="font-size:{{ stepFs }};font-weight:600;line-height:1.2">{{ st.label }}</span></button></sc-for>
 </div>
@@ -332,7 +332,7 @@ html[data-motion="off"] *{animation:none!important;transition:none!important;scr
 <p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:30em;text-wrap:pretty">Rede, conectividade, segurança e automação projetadas como um único ecossistema.</p>
 </div>
 <div ref="{{ idRef }}" style="position:relative;height:{{ idTrackH }}">
-<div style="position:sticky;top:{{ headerH }};height:{{ stickyH }};overflow:hidden;background:#07090C">
+<div style="position:{{ stPos }};top:{{ headerH }};height:{{ stH }};overflow:{{ stOv }};background:#07090C">
 <div style="box-sizing:border-box;max-width:1440px;margin:0 auto;height:100%;padding:{{ idPad }};display:grid;grid-template-columns:{{ idCols }};gap:{{ idGap }};align-content:center;align-items:center">
 <div style="order:{{ idStackOrder }};position:relative;width:100%;height:{{ idStageH }}">
 <sc-for list="{{ idPlanes }}" as="pl" hint-placeholder-count="5">
@@ -674,12 +674,13 @@ class Component extends DCLogic {
     const hs = this.heroSceneEl;
     if (hs) hs.style.transform = (!rm && window.innerWidth >= 1280) ? 'translate3d(0,' + (Math.min(y, 800) * 0.06).toFixed(1) + 'px,0)' : '';
     const prog = el => { const t = this.track(el); return t.span > 0 ? Math.min(1, Math.max(0, (hh - t.top) / t.span)) : 0; };
+    if (this.flat) { if (this.slEl) this.slEl.style.setProperty('--slp', ((this.state.slPhase + 1) / 4).toFixed(3)); if (this.idEl) this.idEl.style.setProperty('--idp', '1'); return; }
     if (this.slEl) { const p = prog(this.slEl); this.slEl.style.setProperty('--slp', p.toFixed(3)); const ph = p < 0.25 ? 0 : p < 0.5 ? 1 : p < 0.75 ? 2 : 3; if (ph !== this.state.slPhase) this.setState({ slPhase: ph }); }
     if (this.idEl) { const p = prog(this.idEl); this.idEl.style.setProperty('--idp', rm ? '1' : Math.min(1, p * 1.25).toFixed(3)); const ix = Math.min(4, Math.floor(p * 5)); if (ix !== this.state.idIdx) this.setState({ idIdx: ix }); }
   }
   goTrack(el, frac) { if (!el) return; const t = this.track(el); window.scrollTo({ top: Math.round(t.abs + t.span * frac) + 2, behavior: this.rm() ? 'auto' : 'smooth' }); }
-  goPhase(i) { this.goTrack(this.slEl, [0.12, 0.37, 0.62, 0.88][i]); }
-  goLayer(i) { this.goTrack(this.idEl, (i + 0.5) / 5); }
+  goPhase(i) { if (this.flat) { this.setState({ slPhase: i }); return; } this.goTrack(this.slEl, [0.12, 0.37, 0.62, 0.88][i]); }
+  goLayer(i) { if (this.flat) { this.setState({ idIdx: i }); return; } this.goTrack(this.idEl, (i + 0.5) / 5); }
   heroPulse(key, d, w, dur, delay, ns) {
     const h = React.createElement, anim = 'timpDash ' + dur + ' ' + delay + 's cubic-bezier(.45,0,.25,1) infinite';
     const base = { d, pathLength: 100, fill: 'none', strokeLinecap: 'round', vectorEffect: ns ? 'non-scaling-stroke' : undefined };
@@ -896,6 +897,7 @@ class Component extends DCLogic {
 
     const hk = isD ? 'd' : (isT ? 't' : 'm'), vh = s.vh || 900, hpx = isD ? 76 : 64;
     const stickyH = 'calc(100svh - ' + hpx + 'px)';
+    const flat = vh < (isD ? 720 : 760); this.flat = flat;
     const ph = s.slPhase;
     const mkN = (n, st, bd) => Object.assign({}, n, SL_ST[st], { badge: bd ? SL_BD[bd][0] : '', badgeColor: bd ? SL_BD[bd][1] : '', badgeBorder: bd ? SL_BD[bd][2] : '' });
     const slInputs = [
@@ -923,14 +925,14 @@ class Component extends DCLogic {
       heroR: hero === 'rj45', heroScene: this.heroScene(hk), heroSceneRef: this.heroSceneRef,
       heroMinH: isD ? 'min(max(calc(100svh - 76px), 640px), 880px)' : 'auto', heroPad: isD ? '56px 64px 72px' : (isT ? '56px 40px 12px' : '36px 20px 8px'),
       h1MaxR: isD ? '12ch' : (isT ? '13ch' : 'none'), hsPos: isD ? 'absolute' : 'relative', hsW: isD ? '60%' : '100%', hsAR: isD ? 'auto' : (isT ? '1000 / 440' : '390 / 300'),
-      stickyH, slRef: this.slRef, slTrackH: 'calc(' + stickyH + ' + 210svh)', slScene: this.slScene(hk, ph), slJoin: this.slJoin(ph), slFail: ph === 3,
-      slScenePos: isM ? 'relative' : 'absolute', slSceneFlex: isM ? '1 1 0' : 'none', slSceneMin: isM ? '120px' : '0',
-      slGridH: isM ? 'auto' : '100%', slPad: isD ? '56px 64px' : (isT ? '40px 40px' : '0 12px 12px'), slCols: isD ? 'minmax(0,6fr) minmax(0,5fr)' : (isT ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)'),
+      stickyH, stPos: flat ? 'relative' : 'sticky', stH: flat ? 'auto' : stickyH, stOv: flat ? 'visible' : 'hidden', slRef: this.slRef, slTrackH: flat ? 'auto' : 'calc(' + stickyH + ' + 210svh)', slScene: this.slScene(hk, ph), slJoin: this.slJoin(ph), slFail: ph === 3,
+      slScenePos: isM ? 'relative' : 'absolute', slSceneFlex: isM && !flat ? '1 1 0' : 'none', slSceneMin: isM ? (flat ? '200px' : '120px') : '0', slSceneH: isM && flat ? '200px' : 'auto',
+      slGridH: isM || flat ? 'auto' : '100%', slPad: isD ? '56px 64px' : (isT ? '40px 40px' : '0 12px 12px'), slCols: isD ? 'minmax(0,6fr) minmax(0,5fr)' : (isT ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)'),
       slGap: isD ? '48px' : (isT ? '28px' : '0'), slAlign: isD ? 'center' : (isT ? 'start' : 'end'),
-      cardPad: isM ? '14px' : '20px', cardGap: isM ? '12px' : '16px', nodePad: isM ? '8px 10px' : '10px 12px', nodeFs: isM ? '14px' : '15px', stepFs: isM ? '12px' : '13px',
+      cardPad: isM ? '14px' : '20px', cardGap: isM ? '12px' : '16px', nodePad: isM ? '8px 10px' : '10px 12px', nodeFs: isM ? '14px' : '15px', stepFs: isM ? '12px' : '13px', slHint: flat ? 'SELECIONE A ETAPA' : 'ROLE PARA AVANÇAR',
       joinH: isM ? '24px' : '36px', vlineH: isM ? '10px' : '18px', showSub: !isM, capMinH: isM ? '66px' : '72px', capFs: isM ? '14px' : '15px', tgFs: isM ? '13px' : '14px',
       slInputs, slChain, slSteps, slToggle, slCapTitle: SL_CAP[ph][0], slCapText: SL_CAP[ph][1], slCapColor: SL_CAP[ph][2],
-      idRef: this.idRef, idTrackH: 'calc(' + stickyH + ' + 150svh)', idPad: isD ? '24px 64px' : (isT ? '24px 40px' : '12px 20px'),
+      idRef: this.idRef, idTrackH: flat ? 'auto' : 'calc(' + stickyH + ' + 150svh)', idPad: isD ? '24px 64px' : (isT ? '24px 40px' : '12px 20px'),
       idCols: isD ? 'minmax(0,5fr) minmax(0,7fr)' : 'minmax(0,1fr)', idGap: isD ? '64px' : '16px', idStackOrder: isD ? 2 : 1, idListOrder: isD ? 1 : 2,
       idStageH: idStage + 'px', idS: idS + 'px', idHalfNeg: (-idS / 2) + 'px', idGrid: (idS / 10) + 'px ' + (idS / 10) + 'px', idPlaneFs: isM ? '8px' : '10px',
       idRiserTop: 'calc(50% - 2 * (' + g + '))', idRiserH: 'calc(4 * (' + g + '))', idPlanes, idRisers, idLayers,

@@ -54,6 +54,9 @@ Estrutura: cabeçalho da seção no fluxo (H2 + parágrafo); trilho `altura úti
 - Mobile: lista mostra a descrição apenas da camada ativa; pilha menor (planos ~165 px). Mesma narrativa e mesmos 5 estados.
 - Reduced motion / sem JS: pilha aberta (`--idp: 1`), todas as camadas a 100 %, todas as descrições visíveis; sem pontos subindo.
 
+## 3b. Viewports baixos (obrigatório)
+Se a altura útil não comporta o quadro (desktop vh < 720; tablet/mobile vh < 760 — ex.: laptop 540 px, tablet em paisagem, iPhone SE), Starlink e Infraestrutura **deixam de ser sticky**: trilho com altura automática, quadro no fluxo, overflow visível. O estado passa a mudar pelos botões de etapa / seletor / lista de camadas (sem rolagem), e a pilha de camadas fica aberta. Nenhum conteúdo fica inacessível. Em produção, preferir medir a altura real do conteúdo (ResizeObserver) em vez de limiar fixo.
+
 ## 4. Ritmo da página
 Impacto (Hero) → respiração (Posicionamento, estático) → conteúdo (Ecossistemas, interação moderada) → impacto (Starlink) → respiração (Processo, seção clara, estática) → profundidade (Infraestrutura) → conteúdo (Construtoras, estático com filtro) → operação (Monitoramento: demonstração acionada por clique, sem autoplay) → Projetos / Segmentos / Conhecimento / CTA sem motion além de hover.
 Nunca duas experiências sticky consecutivas.
