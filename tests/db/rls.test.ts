@@ -464,6 +464,30 @@ describe("grants mínimos", () => {
     for (const row of res.rows) expect(row.roles, row.policyname).toBe("{authenticated}")
   })
 
+  it("service_role (ignora RLS) tem só o necessário: audit_log SELECT/INSERT; demais sem TRUNCATE/TRIGGER/REFERENCES", async () => {
+    // Achado da validação no Supabase real: default privileges concediam ALL ao service_role.
+    const res = await db.query<{ table_name: string; privs: string }>(`
+      select table_name, string_agg(privilege_type, ',' order by privilege_type) as privs
+      from information_schema.role_table_grants
+      where grantee = 'service_role' and table_schema = 'public'
+      group by table_name order by table_name`)
+    const byTable = Object.fromEntries(res.rows.map((r) => [r.table_name, r.privs]))
+    expect(byTable.audit_log).toBe("INSERT,SELECT")
+    for (const table of ["companies", "units", "profiles", "company_memberships", "membership_units"]) {
+      expect(byTable[table], table).toBe("DELETE,INSERT,SELECT,UPDATE")
+    }
+  })
+
+  it("policies avaliam auth.uid() uma vez por consulta (initplan), não por linha", async () => {
+    const res = await db.query<{ policyname: string; expr: string }>(`
+      select policyname, coalesce(qual, '') || ' ' || coalesce(with_check, '') as expr
+      from pg_policies where schemaname = 'public'`)
+    for (const row of res.rows) {
+      const bare = row.expr.replace(/SELECT auth\.uid\(\)/gi, "").match(/auth\.uid\(\)/g)
+      expect(bare, row.policyname).toBeNull()
+    }
+  })
+
   it("funções SECURITY DEFINER têm search_path fixo", async () => {
     const res = await db.query<{ proname: string; proconfig: string[] | null }>(`
       select p.proname, p.proconfig from pg_proc p join pg_namespace n on n.oid = p.pronamespace

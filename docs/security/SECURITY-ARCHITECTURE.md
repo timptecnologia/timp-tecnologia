@@ -6,7 +6,7 @@
 | Macrofase | 1 — Fundação |
 | Escopo | Arquitetura de segurança da base: env, Supabase, auth estrutural, modelo multi-tenant, RLS, auditoria, headers/CSP, logging, validação, rate limit, dependências |
 | Fonte dos requisitos | `design-reference/docs/security-requirements.md`, `CLAUDE-CODE-HANDOFF.md` §15–17 |
-| Status | Fundação implementada e testada localmente. **Não** revisada por humano; **não** aplicada a projeto Supabase remoto |
+| Status | Fundação implementada, testada localmente **e aplicada/validada no Supabase real** (`zoykdxjcforfojergkyq`, sa-east-1, Postgres 17.6) em 2026-09-27. **Não** revisada por humano |
 
 > Este documento não declara o sistema "seguro". Código gerado por IA é **não confiável por padrão** até revisão humana e testes. Riscos residuais estão listados em §12.
 
@@ -61,10 +61,10 @@ Cookies de sessão: **HttpOnly** (sobrescreve o padrão `httpOnly:false` da lib)
 ## 5. Autenticação (estrutural)
 
 - Login = e-mail + senha (Supabase Auth). **CNPJ não é login.** `lib/auth/actions.ts` → validação estrita, rate limit por IP e por conta (hash SHA-256), mensagem única, log redigido, redirect seguro.
-- MFA: Supabase Auth MFA — **WebAuthn/Passkey (preferencial)** e **TOTP** habilitados em `supabase/config.toml`; SMS desabilitado. Nenhuma criptografia própria. Recovery codes: Macrofase 3 (armazenar somente hash; avaliar recurso nativo do provedor).
+- MFA: Supabase Auth MFA, sem criptografia própria. **TOTP = fator obrigatório estável** para perfis privilegiados (habilitado no projeto real). **Passkey/WebAuthn**: arquitetura preparada (Permissions-Policy, `[auth.webauthn]` local), mas **desligado** — no Supabase hospedado é add-on pago ("Advanced MFA - WebAuthn", US$ 75/mês e depois US$ 10/mês, informado pela CLI); habilitar só com decisão comercial. SMS não é fator. Recovery codes: Macrofase 3 (somente hash; avaliar recurso nativo).
 - Obrigatoriedade de MFA: `requiresMfa()` — todos os perfis TIMP e Cliente Admin; Cliente Usuário opcional. Aplicada **no guard de área e no banco** (aal2).
-- Sessão: expiração por inatividade 8h e timebox 24h (`[auth.sessions]` — recurso de plano pago no hospedado), encerramento `signOut({ scope: "local" })`; gestão de sessões por dispositivo na Macrofase 3.
-- Senha: mínimo 12 (app e `config.toml`), `secure_password_change`, confirmação de e-mail obrigatória.
+- Sessão: expiração por inatividade 8h e timebox 24h **não ativas no projeto real** (`[auth.sessions]` é recurso de plano pago; mantido comentado no `config.toml`). Até lá: `jwt_expiry` 1h + refresh; controle de inatividade na aplicação na Macrofase 3. Encerramento `signOut({ scope: "local" })`; gestão de sessões por dispositivo na Macrofase 3.
+- Senha: mínimo 12, `secure_password_change`, confirmação de e-mail, OTP de e-mail com 8 dígitos e reenvio mínimo de 1 min — **aplicados no projeto real via `supabase config push`** (versionado em `supabase/config.toml`).
 
 ## 6. Modelo multi-tenant e aprovação
 
@@ -91,6 +91,17 @@ Erros de autorização e "não encontrado" retornam o mesmo código (42501) e me
 - Default privileges do schema `public` revogados para objetos futuros (tabela nova nasce fechada).
 - Helpers em schema `app` (não exposto pela API), `SECURITY DEFINER`, `search_path=''` (verificado por teste).
 - **Mutation testing** executado: 6 regressões deliberadas (policy `using(true)`, regra de aprovação relaxada, role TIMP sem MFA, grant amplo, status ignorado, auditoria mutável) — **todas detectadas** pela suíte.
+
+## 7b. Validação no Supabase real (2026-09-27)
+
+- Pré-voo somente leitura: projeto vazio (0 relações/enums/funções em `public`, sem schema `app`, 0 usuários, sem triggers customizados em `auth`, sem histórico de migrations); `postgres` com **BYPASSRLS** (premissa das funções SECURITY DEFINER confirmada).
+- Migrations aplicadas pelo fluxo oficial (`db push --dry-run` → `db push`): `20260927000100`, `…0200`, `…0300` e a corretiva `…0400`.
+- Estrutura verificada (`supabase/checks/01_structure.sql`): 6 tabelas com RLS; 11 FKs (inclui compostas unidade↔empresa); 21 CHECK, 6 UNIQUE, 6 PK; 21 índices; 5 enums; 11 policies, todas `{authenticated}`; 18 funções SECURITY DEFINER, todas com `search_path=""`; RPCs sem EXECUTE para `anon`; schema `app` sem USAGE para `anon`; triggers de `auth.users` e de imutabilidade (UPDATE/DELETE e TRUNCATE) ativos.
+- **Achado corrigido** (só visível no projeto real): os default privileges do Supabase concediam ALL (inclusive TRUNCATE/TRIGGER/REFERENCES e UPDATE/DELETE em `audit_log`) ao `service_role`. Migration corretiva **nova** `20260927000400` reduziu para `SELECT/INSERT/UPDATE/DELETE` nas tabelas e **`SELECT/INSERT` no `audit_log`**; teste de regressão adicionado ao PGlite (falhou antes, passa depois). A mesma migration envolveu `auth.uid()` em `(select …)` em 4 policies (advisor `auth_rls_initplan`; semântica idêntica).
+- Suíte RLS/IDOR remota (`npm run db:check:remote`): **59/59** casos aprovados no banco real, com roles reais do Supabase e claims JWT como no PostgREST, em transação única sempre abortada; resíduos após rollback: 0.
+- Superfície HTTP real (publishable key, anônimo): todas as tabelas e RPCs → **401/42501**; schema `app` não exposto (**PGRST106**); GraphQL indisponível (`pg_graphql` não habilitado).
+- Advisors do Supabase: performance **0**; segurança **8 WARN** `0029 authenticated_security_definer_function_executable` — **aceitos por design**: as 8 RPCs são o único caminho de escrita sensível e cada uma faz checagem explícita de permissão, MFA (aal2), auto-ação e resposta anti-enumeração.
+- E2E da aplicação com o projeto real: rotas internas redirecionam anônimos para o login; CSP privada limitada à origem do projeto (https + wss) com nonce; site público sem conexão ao Supabase; tentativa de login com e-mail inexistente → mensagem única, 0 cookies de sessão, 0 erros/violações no console, log com e-mail mascarado.
 
 ## 8. Auditoria
 
@@ -137,17 +148,21 @@ Dev × produção: dev adiciona `'unsafe-eval'` (stack traces do React) e `ws:` 
 
 | # | Risco / pendência | Severidade | Tratamento |
 |---|---|---|---|
-| R1 | Migrations testadas só em PGlite (Postgres 18) com shim do Supabase; não aplicadas ao projeto real | Alta até aplicar | **BLOCKED — HUMAN ACTION REQUIRED** (credenciais). Após `db push`, rodar `supabase db lint` e a suíte contra o projeto |
-| R2 | Funções `SECURITY DEFINER` pressupõem owner com BYPASSRLS (role `postgres` no Supabase) | Média | Verificar no projeto remoto (`select rolbypassrls from pg_roles where rolname='postgres'`) |
+| R1 | ~~Migrations só em PGlite~~ | — | **Resolvido**: aplicadas e validadas no projeto real (§7b) |
+| R2 | ~~Owner das funções com BYPASSRLS~~ | — | **Resolvido**: `postgres` com `rolbypassrls = true` no projeto real |
 | R3 | `'unsafe-inline'` em `script-src` do site público | Baixa–média | §9; reavaliar nos gatilhos listados |
 | R4 | Rate limit em memória não é compartilhado entre instâncias | Média (quando houver endpoint público) | Store compartilhado antes do lançamento |
 | R5 | Tentativas negadas não são auditadas no banco | Média | Auditoria `denied` via admin client (Macrofase 3) |
 | R6 | MFA ainda sem fluxo de enrolment (guard bloqueia privilegiados em aal1) | — (fail-closed) | Macrofase 3 |
-| R7 | Configurações de Auth do projeto remoto (senha 12, confirmação, MFA, sessões, leaked password protection, SMTP) não aplicadas | Alta até configurar | Replicar `supabase/config.toml` no painel |
-| R8 | `types/database.ts` escrito à mão | Baixa | `npm run db:types` após vincular o projeto |
+| R7 | Auth remoto: aplicado via CLI (senha 12, troca segura, confirmação, OTP 8, TOTP). Pendentes no Dashboard/plano: SMTP próprio, SMS/Twilio desligado (CLI não grava), sessões/inatividade e leaked password protection (planos pagos), URLs de produção | Média | Ver MACROFASE-1 §19 |
+| R8 | ~~Tipos escritos à mão~~ | — | **Resolvido**: gerados do banco remoto (`PostgrestVersion 14.5`) |
 | R9 | HSTS sem `preload` | Baixa | Decidir após domínio 100% HTTPS |
 | R10 | Script de instalação `unrs-resolver` não aprovado pelo `allowScripts` do npm 11 | Baixa | Lint funciona sem ele; revisar ao aprovar scripts |
 | R11 | Sem revisão humana de segurança | Alta | Revisão obrigatória antes de produção (`SECURITY-REVIEW.md`) |
+| R12 | Projeto único serve de desenvolvimento e futura produção; migrations e testes rodam direto nele | Média | Criar projeto de staging (ou branching) antes de dados reais; nunca `db reset` no remoto |
+| R13 | Token pessoal da CLI (`sbp_…`) em `.env.supabase-cli` dá acesso administrativo à conta | Média | Arquivo ignorado e fora do app; definir expiração/rotação e revogar quando não estiver em uso |
+| R14 | Testes remotos cobrem a camada de banco (SQL como PostgREST) e anon via HTTP; fluxos autenticados via HTTP com usuários reais e MFA real não foram exercitados | Média | Macrofase 3, com usuários de teste em ambiente de staging |
+| R15 | Advisor 0029 (8 RPCs SECURITY DEFINER executáveis por `authenticated`) | Baixa (por design) | Manter checagens internas testadas; reavaliar a cada nova RPC |
 
 ## 13. Relatórios
 

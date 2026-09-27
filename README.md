@@ -2,7 +2,7 @@
 
 Ecossistema digital da **TIMP Tecnologia** (timp.com.br, Rio de Janeiro): site institucional com blog SEO/GEO, Auth, Portal do Cliente, Admin TIMP (Help Desk, contratos, ativos, rentabilidade), CMS e Central TIMP de Monitoramento 24h independente de fabricante.
 
-> **Estado atual: Macrofase 1 — Fundação concluída.** Relatório: [`docs/MACROFASE-1-FUNDACAO.md`](docs/MACROFASE-1-FUNDACAO.md).
+> **Estado atual: Macrofase 1 — Fundação concluída e conectada ao Supabase real** (projeto `zoykdxjcforfojergkyq`, sa-east-1). Relatório: [`docs/MACROFASE-1-FUNDACAO.md`](docs/MACROFASE-1-FUNDACAO.md).
 
 ## Stack
 
@@ -47,9 +47,12 @@ Sem Supabase configurado, o site público funciona normalmente e as áreas inter
 | `npm run test:db` | **Testes negativos de RLS/IDOR** nas migrations reais (PGlite) |
 | `npm run security:audit` | `npm audit` |
 | `npm run security:secrets` | Secret scan de tudo que seria versionado |
+| `npm run security:env-leak` | Procura os valores reais de `.env.local` em arquivos versionáveis e no bundle (só contagens) |
 | `npm run check:design-reference` | Integridade byte a byte de `design-reference/` |
 | `npm run check` | **Todos os quality gates** (obrigatório antes de commit) |
-| `npm run db:types` | Gera `types/database.ts` do projeto Supabase vinculado (requer credenciais) |
+| `npm run supabase -- <cmd>` | Supabase CLI (versão fixada, credencial isolada, recusa outro project ref) |
+| `npm run --silent db:types > <arquivo>` | Gera tipos do banco remoto (revisar o diff antes de substituir `types/database.ts`) |
+| `npm run db:check:remote` | 59 casos de RLS/IDOR no Supabase real em transação sempre abortada + verificação de resíduos |
 
 Hook de pre-commit (secret scan + design-reference): `git config core.hooksPath .githooks` (já configurado neste clone).
 
@@ -82,12 +85,13 @@ lib/
   validation/  primitivas (CNPJ numérico e alfanumérico, e-mail, telefone), schemas estritos
 styles/        motion (keyframes + reduced motion), variantes shadcn
 supabase/
-  migrations/  schema multi-tenant, RLS, funções de aprovação e auditoria
+  migrations/  schema multi-tenant, RLS, funções de aprovação e auditoria (aplicadas no projeto real)
+  checks/      consultas de verificação somente leitura + suíte RLS/IDOR remota (transação abortada)
   config.toml  configuração do stack local (auth endurecida)
 tests/
   unit/        testes de lógica crítica
   db/          harness PGlite + shim Supabase + testes negativos RLS/IDOR
-types/database.ts   tipos do banco (substituir por `npm run db:types`)
+types/database.ts   tipos gerados do banco remoto (`npm run db:types`)
 docs/          relatórios de macrofase e segurança
 design-reference/   FONTE DE VERDADE de design/produto (somente leitura)
 proxy.ts       CSP por área + renovação de sessão
@@ -104,6 +108,7 @@ Validadas em `lib/env/schema.ts` (falha clara listando nomes, nunca valores). Ve
 | `NEXT_PUBLIC_SUPABASE_URL` | pública | URL do projeto Supabase |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | pública | publishable key (a validação **rejeita** secret/service_role aqui) |
 | `SUPABASE_SECRET_KEY` | **servidor** | somente `lib/supabase/admin.ts` (`server-only`) |
+| `SUPABASE_ACCESS_TOKEN` | **CLI** (`.env.supabase-cli`) | token pessoal da Supabase CLI; nunca no `.env.local` nem no app |
 | `LOG_LEVEL` | servidor | `debug`/`info`/`warn`/`error` |
 
 ## Banco de dados e autorização
@@ -112,7 +117,11 @@ Validadas em `lib/env/schema.ts` (falha clara listando nomes, nunca valores). Ve
 - Roles: `timp_admin`, `timp_operator`, `timp_technician` (no perfil) · `client_admin`, `client_user` (no vínculo).
 - RLS deny-by-default em todas as tabelas; escrita sensível apenas via funções `SECURITY DEFINER` com checagem explícita, MFA (aal2) e auditoria.
 - Senhas: exclusivamente Supabase Auth. Nenhuma tabela de senha.
-- Aplicar no projeto remoto (após credenciais): `npx supabase link --project-ref <ref>` e `npx supabase db push`.
+- MFA: **TOTP** é o fator obrigatório estável para perfis privilegiados. Passkey/WebAuthn está preparado na arquitetura, mas desligado (no Supabase hospedado é add-on pago).
+- Projeto real: `zoykdxjcforfojergkyq` (South America — São Paulo). Credencial da CLI em `.env.supabase-cli` (ignorado; `SUPABASE_ACCESS_TOKEN=sbp_…`), separada do `.env.local` da aplicação.
+- Fluxo: `npm run supabase -- link --project-ref zoykdxjcforfojergkyq` → `npm run supabase -- db push --linked --dry-run` → `npm run supabase -- db push --linked` → `npm run db:check:remote`. Nunca `db reset` no remoto.
+- Configuração de Auth versionada em `supabase/config.toml`; aplicar com `npm run supabase -- config push --project-ref zoykdxjcforfojergkyq` (revisar o diff exibido; responder `y` só ao serviço desejado).
+- Consultas de verificação somente leitura: `supabase/checks/*.sql` (`npm run supabase -- db query --linked -f <arquivo>`).
 - Primeiro TIMP Admin (bootstrap, uma vez, pelo dono do banco no SQL Editor): `update public.profiles set timp_role = 'timp_admin', status = 'active' where email = '<e-mail>';` — auditado automaticamente.
 
 ## Segurança
@@ -127,7 +136,7 @@ Arquitetura, ameaças, controles e riscos residuais: [`docs/security/SECURITY-AR
 
 1. ~~Fundação~~ ✅
 2. **Site público** — todas as URLs do sitemap, Home completa (Starlink, Infraestrutura em profundidade, motion), CMS de leitura, SEO/GEO técnico, formulário/WhatsApp.
-3. **Portal / Admin** — Auth completa (CNPJ, aprovação, MFA Passkey/TOTP), Portal, Help Desk, Admin, contratos, ativos, rentabilidade, CMS de edição e mídia.
+3. **Portal / Admin** — Auth completa (CNPJ, aprovação, MFA TOTP obrigatório; Passkey opcional), Portal, Help Desk, Admin, contratos, ativos, rentabilidade, CMS de edição e mídia.
 4. **Monitoramento** — Gateway vendor-agnostic, adapter Intelbras, normalização, fila, rules, Central, Video Gateway, saúde, redundância.
 5. **Qualidade** — testes, acessibilidade, Core Web Vitals, segurança.
 6. **Produção** — deploy, DNS, monitoramento, backup.

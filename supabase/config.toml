@@ -134,8 +134,8 @@ enabled = true
 # Store analytical data in S3 for running ETL jobs over Iceberg Catalog
 # This feature is only available on the hosted platform.
 [storage.analytics]
-enabled = false
-max_namespaces = 5
+enabled = true
+max_namespaces = 10
 max_tables = 10
 max_catalogs = 2
 
@@ -159,7 +159,8 @@ site_url = "http://localhost:3000"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["http://localhost:3000/**"]
+# TIMP: vazio (igual ao projeto real). Adicionar https://timp.com.br/** e previews no lançamento.
+additional_redirect_urls = []
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -229,9 +230,10 @@ enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = true
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
-max_frequency = "1s"
+# TIMP: igual ao projeto real (mais seguro que o padrão local de 1s)
+max_frequency = "1m0s"
 # Number of characters used in the email OTP.
-otp_length = 6
+otp_length = 8
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 3600
 
@@ -271,12 +273,13 @@ max_frequency = "5s"
 # 4152127777 = "123456"
 
 # Configure logged in session timeouts.
-# TIMP: expiração por inatividade (HANDOFF §15). Recurso de plano pago no Supabase hospedado.
-[auth.sessions]
+# TIMP: expiração por inatividade (HANDOFF §15). Recurso de plano pago (Pro+) no Supabase hospedado:
+# mantido comentado para não divergir do projeto real (plano Free). Ativar ao migrar de plano:
+# [auth.sessions]
 # Force log out after the specified duration.
-timebox = "24h"
+# timebox = "24h"
 # Force log out if the user has been inactive longer than the specified duration.
-inactivity_timeout = "8h"
+# inactivity_timeout = "8h"
 
 # This hook runs before a new user is created and allows developers to reject the request based on the incoming user object.
 # [auth.hook.before_user_created]
@@ -315,10 +318,12 @@ template = "Your code is {{ .Code }}"
 max_frequency = "5s"
 
 # Configure MFA via WebAuthn
-# TIMP: Passkey/WebAuthn = fator preferencial (HANDOFF §16)
+# TIMP: Passkey/WebAuthn — arquitetura preparada, DESLIGADO. No Supabase hospedado é add-on pago
+# ("Advanced MFA - WebAuthn": US$ 75/mês, depois US$ 10/mês — informado pela CLI em 2026-09-27).
+# Habilitar só com decisão comercial. MFA obrigatório estável = TOTP.
 [auth.mfa.web_authn]
-enroll_enabled = true
-verify_enabled = true
+enroll_enabled = false
+verify_enabled = false
 
 # Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
 # `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
