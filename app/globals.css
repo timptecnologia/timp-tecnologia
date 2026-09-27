@@ -1,0 +1,381 @@
+/*
+ * TIMP Design System v1.0 — tokens em código.
+ * Fonte de verdade: design-reference/docs/design-system.md
+ *                   design-reference/prototype/TIMP Design System.dc.html
+ *
+ * Regra: nenhum hex fora deste arquivo. Componentes usam utilitários gerados
+ * pelos tokens (bg-g-900, text-blue-400, border-crit…) ou tokens semânticos
+ * (bg-background, text-muted-foreground…).
+ */
+@import "tailwindcss";
+@import "../styles/shadcn-variants.css";
+@import "../styles/motion.css";
+
+@custom-variant dark (&:is([data-theme="dark"] *));
+
+/* ------------------------------------------------------------------ */
+/* 1. Tokens primitivos                                                */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Remove a paleta, raios e breakpoints padrão do Tailwind: só tokens TIMP. */
+  --color-*: initial;
+  --radius-*: initial;
+  --breakpoint-*: initial;
+  --shadow-*: initial;
+
+  /* Marca (amostrada da logo) */
+  --color-blue-300: #8cc2ff; /* brilho — hover/realce */
+  --color-blue-400: #4c9bea; /* neon claro — links/foco (AA sobre escuro) */
+  --color-blue-500: #287dd2; /* neon TIMP — caminho ativo */
+  --color-blue-600: #2359a5; /* azul TIMP — primário */
+  --color-blue-650: #2a66bc; /* hover do primário */
+  --color-blue-800: #11305e; /* superfícies de marca */
+  --color-blue-900: #0b1e3d; /* seções estratégicas */
+
+  /* Neutros: preto → grafite → branco */
+  --color-ink: #000000;
+  --color-g-950: #07090c;
+  --color-g-900: #0c1015;
+  --color-g-850: #11161d;
+  --color-g-800: #171d26;
+  --color-g-700: #232b36;
+  --color-g-600: #343e4b;
+  --color-g-500: #56616f;
+  --color-g-400: #8a94a3;
+  --color-g-300: #b6bec9;
+  --color-g-200: #dce1e7;
+  --color-g-100: #eef1f4;
+  --color-white: #ffffff;
+
+  /* Status (uso funcional, nunca decorativo) + variantes de texto sobre escuro */
+  --color-ok: #2fbf71;
+  --color-ok-fg: #5fd49a;
+  --color-warn: #e8a33d;
+  --color-warn-fg: #f2c27a;
+  --color-crit: #e5484d;
+  --color-crit-fg: #ff8a8d;
+  --color-info: #287dd2;
+  --color-info-fg: #8cc2ff;
+  --color-mute: #8a94a3;
+  /* Variantes de texto sobre fundo claro (Portal) — contraste AA sobre #fff */
+  --color-ok-strong: #1a7f4b;
+  --color-warn-strong: #8a5a12;
+  --color-crit-strong: #b4262b;
+  --color-info-strong: #1d4f8f;
+
+  /* Tipografia (variáveis injetadas por next/font em app/layout.tsx) */
+  --font-sans: var(--font-archivo), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  /* Escala tipográfica */
+  --text-display: clamp(2.75rem, 6vw, 5.5rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.04em;
+  --text-display--font-weight: 700;
+  --text-h1: clamp(2.25rem, 4.4vw, 3.75rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.035em;
+  --text-h1--font-weight: 700;
+  --text-h2: clamp(1.75rem, 3.2vw, 2.75rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h2--font-weight: 700;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h3--font-weight: 600;
+  --text-body-lg: 1.25rem;
+  --text-body-lg--line-height: 1.55;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-ui: 0.8125rem; /* 13px — tabelas Admin/Central */
+  --text-ui--line-height: 1.4;
+  --text-label: 0.75rem; /* mono 12 caixa alta +8% */
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.08em;
+  --text-data: 0.875rem; /* mono 14 tabular */
+  --text-data--line-height: 1.4;
+  --text-micro: 0.6875rem; /* 11px — rótulos mono internos (nunca texto corrido) */
+  --text-micro--line-height: 1.3;
+  --text-micro--letter-spacing: 0.06em;
+
+  /* Espaço: base 4px (padrão Tailwind v4: p-1 = 4px … p-32 = 128px) */
+  --spacing: 0.25rem;
+
+  /* Raio: 2 · 4 · 8 (pílulas só em badges) */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-full: 9999px;
+
+  /* Elevação: divisão por linhas/superfícies; sombra só em overlay */
+  --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.5);
+  --shadow-primary-inset: inset 0 1px 0 rgb(140 194 255 / 0.35);
+  --shadow-focus: 0 0 0 3px rgb(76 155 234 / 0.25); /* halo de foco (blue-400 25%) */
+
+  /* Breakpoints conceituais (mobile-first): 360–430 · 768–1024 · 1280–1600+ */
+  --breakpoint-tablet: 48rem; /* 768 */
+  --breakpoint-desktop: 80rem; /* 1280 */
+  --breakpoint-wide: 105rem; /* 1680 — Central: fila 320px */
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-pulse: cubic-bezier(0.45, 0, 0.25, 1);
+  --default-transition-duration: 120ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  --animate-fade-in: timp-fade-in 200ms var(--ease-enter) both;
+  --animate-overlay-in: timp-overlay-in 320ms var(--ease-enter) both;
+  --animate-pulse-live: timp-pulse-live 2s var(--ease-pulse) infinite;
+  --animate-skeleton: timp-skeleton 1.6s ease-in-out infinite;
+}
+
+/* Durações e camadas (usadas via var() / utilitários arbitrários) */
+:root {
+  --duration-micro: 120ms;
+  --duration-control: 200ms;
+  --duration-panel: 320ms;
+
+  --z-base: 0;
+  --z-sticky: 20;
+  --z-header: 40;
+  --z-sticky-cta: 45;
+  --z-overlay: 50;
+  --z-modal: 60;
+  --z-toast: 70;
+  --z-skip-link: 100;
+
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-blue-400);
+
+  --header-height: 76px;
+}
+
+/* ------------------------------------------------------------------ */
+/* 2. Tokens semânticos por contexto (tema) — consumidos pelos primitives */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --color-background: var(--surface-0);
+  --color-foreground: var(--text-1);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-overlay: var(--surface-overlay);
+  --color-muted: var(--surface-1);
+  --color-muted-foreground: var(--text-3);
+  --color-subtle-foreground: var(--text-2);
+  --color-border: var(--line-1);
+  --color-border-strong: var(--line-2);
+  --color-input: var(--line-2);
+  --color-ring: var(--focus-ring-color);
+  --color-primary: var(--color-blue-600);
+  --color-primary-hover: var(--color-blue-650);
+  --color-primary-foreground: var(--color-white);
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+  --color-destructive: var(--color-crit);
+  --color-disabled: var(--disabled-bg);
+  --color-disabled-foreground: var(--disabled-fg);
+}
+
+/* Tema escuro (padrão): site público, Auth, Admin, CMS */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: var(--color-g-950);
+  --surface-1: var(--color-g-900);
+  --surface-2: var(--color-g-850);
+  --surface-overlay: var(--color-g-800);
+  --text-1: var(--color-g-100); /* 17.6:1 sobre g-950 */
+  --text-2: var(--color-g-300); /* 10.6:1 */
+  --text-3: var(--color-g-400); /* 6.5:1 */
+  --line-1: var(--color-g-800);
+  --line-2: var(--color-g-600);
+  --link: var(--color-blue-400); /* 6.8:1 */
+  --link-hover: var(--color-blue-300);
+  --disabled-bg: var(--color-g-800);
+  --disabled-fg: var(--color-g-500);
+  --status-ok-text: var(--color-ok-fg);
+  --status-warn-text: var(--color-warn-fg);
+  --status-crit-text: var(--color-crit-fg);
+  --status-info-text: var(--color-info-fg);
+}
+
+/* Central 24h: preto puro */
+[data-theme="central"] {
+  color-scheme: dark;
+  --surface-0: var(--color-ink);
+  --surface-1: var(--color-g-950);
+  --surface-2: var(--color-g-900);
+  --surface-overlay: var(--color-g-800);
+  --text-1: var(--color-g-100);
+  --text-2: var(--color-g-300);
+  --text-3: var(--color-g-400);
+  --line-1: var(--color-g-800);
+  --line-2: var(--color-g-600);
+  --link: var(--color-blue-400);
+  --link-hover: var(--color-blue-300);
+  --disabled-bg: var(--color-g-800);
+  --disabled-fg: var(--color-g-500);
+  --status-ok-text: var(--color-ok-fg);
+  --status-warn-text: var(--color-warn-fg);
+  --status-crit-text: var(--color-crit-fg);
+  --status-info-text: var(--color-info-fg);
+}
+
+/* Portal do Cliente: tema claro (#EEF1F4 / #FFFFFF) */
+[data-theme="light"] {
+  color-scheme: light;
+  --surface-0: var(--color-g-100);
+  --surface-1: var(--color-white);
+  --surface-2: var(--color-white);
+  --surface-overlay: var(--color-white);
+  --text-1: var(--color-g-950);
+  --text-2: var(--color-g-600);
+  --text-3: var(--color-g-500); /* 6.1:1 sobre #fff */
+  --line-1: var(--color-g-200);
+  --line-2: var(--color-g-400);
+  --link: var(--color-blue-600);
+  --link-hover: var(--color-blue-800);
+  --disabled-bg: var(--color-g-200);
+  --disabled-fg: var(--color-g-500);
+  --status-ok-text: var(--color-ok-strong);
+  --status-warn-text: var(--color-warn-strong);
+  --status-crit-text: var(--color-crit-strong);
+  --status-info-text: var(--color-info-strong);
+}
+
+/* ------------------------------------------------------------------ */
+/* 3. Densidades (um Design System, quatro densidades)                  */
+/* ------------------------------------------------------------------ */
+:root,
+[data-density="comfortable"] {
+  /* Site público: botões 52, campos 52, texto 16–20 */
+  --control-h: 52px;
+  --control-h-sm: 48px;
+  --control-px: 24px;
+  --control-text: 1rem;
+  --row-h: 64px;
+}
+[data-density="medium"] {
+  /* Portal: toque 48, linhas 56, texto 15–16 */
+  --control-h: 48px;
+  --control-h-sm: 44px;
+  --control-px: 20px;
+  --control-text: 0.9375rem;
+  --row-h: 56px;
+}
+[data-density="compact"] {
+  /* Admin / CMS: linhas 34–40, texto 13 */
+  --control-h: 36px;
+  --control-h-sm: 32px;
+  --control-px: 14px;
+  --control-text: 0.8125rem;
+  --row-h: 40px;
+}
+[data-density="dense"] {
+  /* Central: linhas 32, texto 12–13, mono */
+  --control-h: 36px;
+  --control-h-sm: 28px;
+  --control-px: 12px;
+  --control-text: 0.8125rem;
+  --row-h: 32px;
+}
+/* Alvos de toque nunca abaixo de 44px em telas de toque, mesmo em densidades compactas */
+@media (pointer: coarse) {
+  [data-density="compact"],
+  [data-density="dense"] {
+    --control-h: 44px;
+    --control-h-sm: 44px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* 4. Base                                                              */
+/* ------------------------------------------------------------------ */
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    min-height: 100svh;
+  }
+  /* Foco visível: anel 2px #4C9BEA, afastamento 2px — nunca removido */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+  a {
+    color: var(--color-link);
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--color-link-hover);
+  }
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+  }
+  ::selection {
+    background-color: var(--color-blue-800);
+    color: var(--color-white);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. Utilitários TIMP                                                  */
+/* ------------------------------------------------------------------ */
+
+/* Container: margem 20 / 40 / 64, conteúdo até 1440 */
+@utility container-timp {
+  width: 100%;
+  max-width: calc(1440px + 2 * 64px);
+  margin-inline: auto;
+  padding-inline: 20px;
+  @variant tablet {
+    padding-inline: 40px;
+  }
+  @variant desktop {
+    padding-inline: 64px;
+  }
+}
+
+/* Rótulo mono (eyebrows, IDs, status) */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Dígitos tabulares para dados/horários */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Fundo técnico de diagrama: grade 32px */
+@utility diagram-grid {
+  background-color: var(--color-ink);
+  background-image:
+    linear-gradient(var(--color-g-900) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-g-900) 1px, transparent 1px);
+  background-size: 32px 32px;
+}

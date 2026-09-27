@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Conhecimento TIMP · Redes, segurança eletrônica, TI e obras</title>
+<meta name="description" content="Conteúdo técnico da TIMP sobre cabeamento, redes, Wi-Fi, CFTV, controle de acesso, alarmes, monitoramento 24h, TI corporativa, automação e tecnologia para obras.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#FFFFFF;color:#07090C;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#2359A5;text-decoration:none}
+a:hover{color:#11305E}
+:focus-visible{outline:2px solid #2359A5;outline-offset:2px}
+@keyframes timpPulse{0%{transform:scale(1);opacity:.6}70%{transform:scale(2.8);opacity:0}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<dc-import name="SiteHeader" current="conhecimento" style="position:sticky;top:0;z-index:60;display:block" hint-size="100%,76px"></dc-import>
+<main>
+<section data-screen-label="Conhecimento · Cabeçalho" style="background:#07090C;color:#EEF1F4">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(28px,4vw,48px) clamp(20px,5vw,64px) clamp(40px,5vw,72px);display:flex;flex-direction:column;gap:clamp(24px,3vw,36px)">
+<nav aria-label="Breadcrumb" style="display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8A94A3"><a href="Home.dc.html" style="color:#8A94A3">Início</a><span aria-hidden="true">/</span><span aria-current="page" style="color:#DCE1E7">Conhecimento</span></nav>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:24px 64px;align-items:end">
+<div style="display:flex;flex-direction:column;gap:18px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">CONHECIMENTO TIMP</span><h1 style="margin:0;font-size:clamp(40px,5.4vw,80px);line-height:.98;letter-spacing:-.045em;font-weight:700;text-wrap:balance">Respostas técnicas, escritas por quem instala.</h1></div>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#B6BEC9;max-width:32em">Como funcionam redes, câmeras, alarmes, controle de acesso e monitoramento, e o que considerar antes de contratar. Conteúdo com autoria e revisão técnica.</p>
+</div>
+<label style="display:flex;flex-direction:column;gap:8px;max-width:640px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Buscar conteúdo</span><input type="search" value="{{ q }}" onChange="{{ onQ }}" placeholder="Ex.: Cat6A, câmeras, Starlink, alarme" style="height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"></label>
+</div>
+</section>
+
+<section data-screen-label="Conhecimento · Destaques" style="max-width:1440px;margin:0 auto;padding:clamp(40px,5vw,72px) clamp(20px,5vw,64px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(24px,3vw,40px)">
+<sc-for list="{{ featured }}" as="a" hint-placeholder-count="3">
+<a href="Artigo.dc.html" style="display:flex;flex-direction:column;gap:18px;color:#07090C" style-hover="color:#2359A5">
+<div aria-hidden="true" style="aspect-ratio:16/10;background:#07090C;border-radius:6px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;background-image:linear-gradient(rgba(35,43,54,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.5) 1px,transparent 1px);background-size:20px 20px">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3"><span>{{ a.cat }}</span><span>TIMP</span></span>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px"><sc-for list="{{ a.cover }}" as="cv"><sc-if value="{{ cv.sep }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#287DD2">→</span></sc-if><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ cv.color }};border:1px solid {{ cv.border }};border-radius:3px;padding:5px 8px;background:#000;white-space:nowrap">{{ cv.t }}</span></sc-for></div>
+</div>
+<span style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#56616F">{{ a.cat }}</span><span style="font-size:22px;font-weight:700;letter-spacing:-.015em;line-height:1.2;text-wrap:balance">{{ a.title }}</span><span style="font-size:15px;line-height:1.55;color:#343E4B">{{ a.dek }}</span></span>
+</a>
+</sc-for>
+</section>
+
+<section data-screen-label="Conhecimento · Lista" style="max-width:1440px;margin:0 auto;padding:clamp(48px,6vw,96px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px"><h2 style="margin:0;font-size:clamp(26px,2.6vw,38px);line-height:1.1;letter-spacing:-.025em;font-weight:700">Todos os conteúdos</h2><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#56616F">{{ countLabel }}</span></div>
+<div role="group" aria-label="Filtrar por categoria" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
+<sc-for list="{{ cats }}" as="c" hint-placeholder-count="6"><button type="button" aria-pressed="{{ c.active }}" onClick="{{ c.pick }}" style="flex:none;height:44px;padding:0 16px;border-radius:4px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit">{{ c.label }}</button></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;border-top:1px solid #DCE1E7">
+<sc-for list="{{ list }}" as="a" hint-placeholder-count="10"><a href="Artigo.dc.html" style="display:grid;grid-template-columns:{{ rowCols }};gap:6px 24px;align-items:center;padding:18px 0;border-bottom:1px solid #DCE1E7;color:#07090C" style-hover="color:#2359A5;background:#EEF1F4"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#56616F;grid-column:{{ catCol }}">{{ a.cat }}</span><span style="font-size:18px;font-weight:600;line-height:1.3">{{ a.t }}</span><span style="color:#2359A5;justify-self:end" aria-hidden="true">→</span></a></sc-for>
+<sc-if value="{{ empty }}"><div style="padding:32px 0;font-size:16px;color:#343E4B">Nenhum conteúdo encontrado para "{{ q }}". <button type="button" onClick="{{ clear }}" style="background:none;border:0;color:#2359A5;font-weight:600;font-size:16px;cursor:pointer;padding:0;font-family:inherit">Limpar busca</button></div></sc-if>
+</div>
+</section>
+
+<section data-screen-label="Conhecimento · CTA" style="background:#0B1E3D;color:#EEF1F4">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(48px,6vw,88px) clamp(20px,5vw,64px);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:24px">
+<div style="display:flex;flex-direction:column;gap:12px;max-width:720px"><h2 style="margin:0;font-size:clamp(26px,3vw,44px);line-height:1.06;letter-spacing:-.03em;font-weight:700">Tem uma dúvida sobre o seu ambiente?</h2><p style="margin:0;font-size:17px;line-height:1.6;color:#DCE1E7">A equipe técnica avalia o caso e indica o próximo passo.</p></div>
+<div data-final-cta="" style="display:flex;flex-wrap:wrap;gap:12px"><a href="Home.dc.html#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:#FFFFFF;color:#0B1E3D;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="background:#DCE1E7;color:#0B1E3D">Solicitar diagnóstico <span aria-hidden="true">→</span></a><a href="{{ wa }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 20px;border:1px solid rgba(220,225,231,.35);color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>WhatsApp</a></div>
+</div>
+</section>
+</main>
+<dc-import name="SiteFooter" cta-label="Solicitar diagnóstico" cta-href="Home.dc.html#contato" hint-size="100%,520px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CATS = ['Redes e Infraestrutura', 'Segurança Eletrônica', 'TI Corporativa', 'Automação', 'Tecnologia para Obras'];
+const ARTS = [
+  [0, 'O que é cabeamento estruturado e como funciona?'], [0, 'Cat6 ou Cat6A?'], [0, 'Como planejar pontos de rede?'], [4, 'Cabeamento estruturado em obras'], [0, 'Wi-Fi empresarial'],
+  [1, 'Instalação de câmeras em empresas'], [1, 'CFTV IP ou analógico?'], [1, 'Controle de acesso para empresas'], [1, 'Controle facial'], [1, 'Fechaduras eletrônicas'],
+  [1, 'Controle de acesso para condomínios'], [1, 'Sistema de alarme monitorado'], [1, 'O que acontece quando um alarme dispara?'], [1, 'Integração CFTV + alarme'], [1, 'Como funciona uma Central de Monitoramento 24h?'],
+  [2, 'O que faz uma empresa de suporte de TI?'], [2, 'Servidor local, cloud ou híbrido?'], [3, 'Automação predial'], [4, 'Infraestrutura tecnológica para construtoras'], [4, 'Sala técnica em obras'],
+  [0, "Starlink: como funciona a internet via satélite?", 1],
+  [0, "Como instalar antena Starlink corretamente?", 1],
+  [0, "Starlink para empresas: quando vale a pena?", 1],
+  [0, "Starlink como internet de backup para empresas", 1],
+  [0, "Starlink no carro: como funciona?", 1],
+  [0, "Como instalar Starlink no carro?", 1],
+  [0, "Starlink para veículos em movimento", 1],
+  [0, "Starlink para caminhões", 1],
+  [0, "Starlink para motorhome", 1],
+  [0, "Internet rural com Starlink", 1],
+  [0, "Starlink para casas de praia e áreas remotas", 1],
+  [0, "Starlink em barcos e embarcações", 1],
+  [0, "Starlink roteador: alcance, Wi-Fi e integração", 1],
+  [0, "Starlink velocidade: o que esperar?", 1],
+  [0, "Starlink Mobile: como funciona?", 1],
+  [0, "Starlink Standard Kit: instalação e utilização", 1],
+  [0, "Starlink é boa? Vantagens e limitações", 1],
+  [0, "Starlink em obras e canteiros", 1]
+];
+class Component extends DCLogic {
+  state = { cat: -1, q: '', vw: typeof window !== 'undefined' ? window.innerWidth : 1440 };
+  componentDidMount() { this.onR = () => this.setState({ vw: window.innerWidth }); window.addEventListener('resize', this.onR); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); }
+  renderVals() {
+    const s = this.state, q = s.q.trim().toLowerCase();
+    const norm = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const list = ARTS.filter(([c, t, st]) => (s.cat < 0 || (s.cat === 9 ? st : c === s.cat)) && (!q || norm(t).includes(norm(q)))).map(([c, t, st]) => ({ t, cat: st ? 'REDES E INFRAESTRUTURA · STARLINK' : CATS[c].toUpperCase() }));
+    const cv = (arr, hl) => arr.map((t, i) => ({ t, sep: i > 0, color: i === hl ? '#FFFFFF' : '#B6BEC9', border: i === hl ? '#287DD2' : '#343E4B' }));
+    return {
+      q: s.q, onQ: e => this.setState({ q: e.target.value }), clear: () => this.setState({ q: '' }),
+      cats: [{ i: -1, label: 'Todas' }, ...CATS.map((label, i) => ({ i, label })), { i: 9, label: 'Cluster Starlink' }].map(c => ({ ...c, active: s.cat === c.i, pick: () => this.setState({ cat: c.i }), border: s.cat === c.i ? '#07090C' : '#B6BEC9', bg: s.cat === c.i ? '#07090C' : '#FFFFFF', color: s.cat === c.i ? '#FFFFFF' : '#07090C' })),
+      list, empty: list.length === 0, countLabel: list.length + (list.length === 1 ? ' conteúdo' : ' conteúdos'),
+      catCol: s.vw < 768 ? '1 / -1' : 'auto',
+      rowCols: s.vw < 768 ? 'minmax(0,1fr) 20px' : 'minmax(180px,.35fr) minmax(0,1fr) 24px',
+      featured: [
+        { cat: 'SEGURANÇA ELETRÔNICA', title: 'O que acontece quando um alarme dispara?', dek: 'Do sensor ao registro da ocorrência: cada etapa do atendimento e o papel do operador.', cover: cv(['Sensor', 'Central', 'Operador', 'Registro'], 2) },
+        { cat: 'REDES E INFRAESTRUTURA', title: 'O que é cabeamento estruturado e como funciona?', dek: 'Componentes, topologia e por que o cabeamento define a capacidade de toda a rede.', cover: cv(['Switch', 'Patch Panel', 'Tomada', 'Usuário'], 1) },
+        { cat: 'TECNOLOGIA PARA OBRAS', title: 'Infraestrutura tecnológica para construtoras', dek: 'O que prever no projeto da obra para evitar retrabalho na entrega e na operação.', cover: cv(['Projeto', 'Prumada', 'Sala técnica', 'Entrega'], 2) }
+      ],
+      wa: 'https://wa.me/5521983318387?text=' + encodeURIComponent('Olá, TIMP. Vim pelo Conhecimento TIMP e tenho uma dúvida técnica.')
+    };
+  }
+}
+</script>
+</body>
+</html>

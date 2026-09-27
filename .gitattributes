@@ -1,0 +1,14 @@
+# Código e docs: LF no repositório e no checkout (independe de core.autocrlf)
+* text=auto eol=lf
+
+# Binários
+*.png binary
+*.ico binary
+*.jpg binary
+*.webp binary
+*.avif binary
+*.woff2 binary
+
+# design-reference/ é fonte de verdade: bytes EXATOS, sem conversão de fim de linha
+# (integridade verificada por SHA-256 em scripts/design-reference.sha256)
+design-reference/** -text

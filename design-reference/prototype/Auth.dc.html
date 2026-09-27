@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Entrar | TIMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07090C;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4C9BEA;text-decoration:none}
+a:hover{color:#8CC2FF}
+:focus-visible{outline:2px solid #4C9BEA;outline-offset:2px}
+input,button{font-family:inherit}
+@keyframes timpSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:grid;grid-template-columns:{{ cols }}">
+<sc-if value="{{ showSide }}" hint-placeholder-val="{{ true }}">
+<aside style="position:relative;background:#000;border-right:1px solid #171D26;padding:48px;display:flex;flex-direction:column;justify-content:space-between;background-image:linear-gradient(rgba(23,29,38,.7) 1px,transparent 1px),linear-gradient(90deg,rgba(23,29,38,.7) 1px,transparent 1px);background-size:40px 40px">
+<a href="Home.dc.html"><img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP Tecnologia" style="height:44px;width:auto;display:block"></a>
+<div style="display:flex;flex-direction:column;gap:20px;max-width:30em">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">ÁREA DO CLIENTE · EQUIPE TIMP</span>
+<h1 style="margin:0;font-size:44px;line-height:1.02;letter-spacing:-.035em;font-weight:700">Sua operação, acompanhada em um só lugar.</h1>
+<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border-top:1px solid #232B36">
+<li style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #171D26;font-size:15px;color:#B6BEC9"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4C9BEA;padding-top:2px">01</span>Chamados, equipamentos e documentos por unidade</li>
+<li style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #171D26;font-size:15px;color:#B6BEC9"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4C9BEA;padding-top:2px">02</span>Status do monitoramento e histórico de ocorrências</li>
+<li style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #171D26;font-size:15px;color:#B6BEC9"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4C9BEA;padding-top:2px">03</span>Acesso individual para cada pessoa da empresa</li>
+</ul>
+</div>
+<span style="font-size:13px;color:#56616F">Suporte de acesso: (21) 98331-8387 · comercial@timp.com.br</span>
+</aside>
+</sc-if>
+
+<main style="display:flex;flex-direction:column;min-width:0">
+<sc-if value="{{ screenNav }}" hint-placeholder-val="{{ true }}">
+<nav aria-label="Telas do protótipo" style="display:flex;align-items:center;gap:6px;padding:10px 16px;border-bottom:1px solid #171D26;overflow-x:auto;background:#0C1015">
+<span style="flex:none;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#E8A33D;padding-right:6px">PROTÓTIPO · TELAS</span>
+<sc-for list="{{ screens }}" as="t" hint-placeholder-count="10"><button type="button" onClick="{{ t.go }}" aria-current="{{ t.cur }}" style="flex:none;height:30px;padding:0 10px;border-radius:3px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }};font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ t.label }}</button></sc-for>
+</nav>
+</sc-if>
+<div style="flex:1;display:flex;align-items:{{ alignY }};justify-content:center;padding:clamp(24px,5vw,64px) 20px">
+<div style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:28px">
+<sc-if value="{{ showLogoTop }}"><a href="Home.dc.html" style="align-self:flex-start"><img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP Tecnologia" style="height:34px;width:auto;display:block"></a></sc-if>
+
+<sc-if value="{{ is.login }}" hint-placeholder-val="{{ true }}">
+<form onSubmit="{{ doLogin }}" novalidate="" style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0;font-size:30px;letter-spacing:-.025em;font-weight:700">Entrar</h2><p style="margin:0;font-size:15px;color:#8A94A3;line-height:1.5">Use o e-mail cadastrado para sua conta pessoal.</p></div>
+<sc-if value="{{ loginErr }}"><div role="alert" style="display:flex;gap:12px;padding:12px 14px;border:1px solid #E5484D;background:rgba(229,72,77,.1);border-radius:4px;font-size:14px;line-height:1.5;color:#FFD1D2"><span style="font-family:'JetBrains Mono',monospace;color:#FF8A8D">!</span>{{ loginErr }}</div></sc-if>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">E-mail</span><input type="email" autocomplete="username" value="{{ email }}" onChange="{{ onEmail }}" placeholder="nome@empresa.com.br" style="height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"></label>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="display:flex;justify-content:space-between;font-size:14px;font-weight:600;color:#DCE1E7">Senha<button type="button" onClick="{{ goForgot }}" style="background:none;border:0;padding:0;color:#4C9BEA;font-size:14px;font-weight:600;cursor:pointer">Esqueci minha senha</button></span><span style="position:relative;display:flex"><input type="{{ pwType }}" autocomplete="current-password" value="{{ pw }}" onChange="{{ onPw }}" style="flex:1;height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 70px 0 14px;outline:none" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><button type="button" onClick="{{ togglePw }}" aria-label="Mostrar ou ocultar senha" style="position:absolute;right:6px;top:6px;height:40px;padding:0 10px;background:none;border:0;color:#B6BEC9;font-size:13px;font-weight:600;cursor:pointer">{{ pwToggle }}</button></span></label>
+<button type="submit" disabled="{{ loading }}" style="display:flex;align-items:center;justify-content:center;gap:10px;height:52px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:16px;font-weight:600;cursor:pointer;opacity:{{ btnOp }}" style-hover="background:#2A66BC"><sc-if value="{{ loading }}"><span style="width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#FFFFFF;border-radius:50%;animation:timpSpin .8s linear infinite"></span></sc-if>{{ loginLabel }}</button>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid #171D26;font-size:15px;color:#8A94A3"><span>Primeiro acesso da sua empresa? <button type="button" onClick="{{ goCnpj }}" style="background:none;border:0;padding:0;color:#4C9BEA;font-size:15px;font-weight:600;cursor:pointer">Criar conta</button></span><span style="font-size:13px;color:#56616F">O CNPJ é usado apenas no cadastro. O acesso é sempre por e-mail e senha.</span></div>
+<sc-if value="{{ screenNav }}"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;color:#8A94A3;border:1px dashed #343E4B;border-radius:4px;padding:10px 12px">DEMO · e-mail com "pendente" → aguardando aprovação · "bloqueado" → conta inativa · @timp.com.br → Admin · outros → Portal · senha vazia → erro</div></sc-if>
+</form>
+</sc-if>
+
+<sc-if value="{{ inSignup }}" hint-placeholder-val="{{ false }}">
+<ol aria-label="Etapas do cadastro" style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="4"><li style="display:flex;flex-direction:column;gap:6px"><span style="height:3px;border-radius:2px;background:{{ s.bar }}"></span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:{{ s.color }}">{{ s.n }} {{ s.t }}</span></li></sc-for>
+</ol>
+</sc-if>
+
+<sc-if value="{{ is.cnpj }}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{ checkCnpj }}" novalidate="" style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0;font-size:30px;letter-spacing:-.025em;font-weight:700">Criar conta</h2><p style="margin:0;font-size:15px;color:#8A94A3;line-height:1.5">Informe o CNPJ da empresa. O cadastro só é liberado para empresas habilitadas pela TIMP.</p></div>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">CNPJ da empresa</span><input type="text" inputmode="numeric" value="{{ cnpj }}" onChange="{{ onCnpj }}" placeholder="00.000.000/0000-00" style="height:52px;border:1px solid {{ cnpjBorder }};border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:17px;font-family:'JetBrains Mono',monospace;padding:0 14px;outline:none" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><sc-if value="{{ cnpjErr }}"><span style="font-size:13px;color:#FF8A8D">{{ cnpjErr }}</span></sc-if></label>
+<button type="submit" style="display:flex;align-items:center;justify-content:center;gap:10px;height:52px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:16px;font-weight:600;cursor:pointer;opacity:{{ btnOp }}" style-hover="background:#2A66BC"><sc-if value="{{ loading }}"><span style="width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#FFFFFF;border-radius:50%;animation:timpSpin .8s linear infinite"></span></sc-if>{{ cnpjLabel }}</button>
+<button type="button" onClick="{{ goLogin }}" style="background:none;border:0;padding:0;color:#4C9BEA;font-size:15px;font-weight:600;cursor:pointer;align-self:flex-start">‹ Já tenho conta</button>
+<sc-if value="{{ screenNav }}"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;color:#8A94A3;border:1px dashed #343E4B;border-radius:4px;padding:10px 12px">DEMO · 11.111.111/0001-11 → empresa habilitada · qualquer outro → não habilitada</div></sc-if>
+</form>
+</sc-if>
+
+<sc-if value="{{ is.naohab }}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="display:flex;flex-direction:column;gap:20px">
+<span style="display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#F2C27A;border:1px solid #E8A33D;background:rgba(232,163,61,.12);border-radius:3px;padding:5px 9px"><span style="width:7px;height:7px;background:#E8A33D;border-radius:1px"></span>EMPRESA NÃO HABILITADA</span>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700;line-height:1.15">Este CNPJ ainda não está habilitado para a Área do Cliente.</h2>
+<p style="margin:0;font-size:16px;line-height:1.6;color:#B6BEC9">O acesso é liberado pela TIMP para empresas com contrato ativo. Se sua empresa já é cliente, fale com a equipe para habilitar o CNPJ <span style="font-family:'JetBrains Mono',monospace;color:#EEF1F4">{{ cnpj }}</span>.</p>
+<a href="https://wa.me/5521983318387" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;height:52px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600">Falar com a TIMP pelo WhatsApp</a>
+<a href="mailto:comercial@timp.com.br" style="display:flex;align-items:center;justify-content:center;height:52px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600">comercial@timp.com.br</a>
+<button type="button" onClick="{{ goCnpj }}" style="background:none;border:0;padding:0;color:#4C9BEA;font-size:15px;font-weight:600;cursor:pointer;align-self:flex-start">‹ Tentar outro CNPJ</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.dados }}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{ submitDados }}" novalidate="" style="display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700">Seus dados</h2>
+<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #2FBF71;background:rgba(47,191,113,.08);border-radius:4px"><span style="color:#5FD49A;font-weight:700" aria-hidden="true">✓</span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Empresa Alfa Comércio Ltda.</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8A94A3">11.111.111/0001-11 · habilitada pela TIMP</span></span></div>
+<p style="margin:0;font-size:14px;color:#8A94A3;line-height:1.5">Cada pessoa da empresa tem conta, login e histórico próprios. Não compartilhe credenciais.</p>
+</div>
+<sc-for list="{{ fields }}" as="f" hint-placeholder-count="4"><label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">{{ f.label }}</span><input type="{{ f.type }}" autocomplete="{{ f.ac }}" value="{{ f.value }}" onChange="{{ f.on }}" placeholder="{{ f.ph }}" aria-invalid="{{ f.inv }}" style="height:52px;border:1px solid {{ f.border }};border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><sc-if value="{{ f.err }}"><span style="font-size:13px;color:#FF8A8D">{{ f.err }}</span></sc-if><sc-if value="{{ f.isPw }}"><span style="display:flex;align-items:center;gap:8px"><span style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:4px"><sc-for list="{{ pwBars }}" as="b"><span style="height:3px;border-radius:2px;background:{{ b }}"></span></sc-for></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A94A3;min-width:60px;text-align:right">{{ pwLabel }}</span></span></sc-if></label></sc-for>
+<button type="submit" style="height:52px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:16px;font-weight:600;cursor:pointer" style-hover="background:#2A66BC">Criar minha conta</button>
+<span style="font-size:13px;color:#56616F;line-height:1.5">Ao criar a conta, você concorda com os termos de uso e a política de privacidade.</span>
+</form>
+</sc-if>
+
+<sc-if value="{{ is.confirmar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#4C9BEA">ETAPA 3 · CONFIRMAÇÃO</span>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700;line-height:1.15">Confirme seu e-mail.</h2>
+<p style="margin:0;font-size:16px;line-height:1.6;color:#B6BEC9">Enviamos um link de confirmação para <span style="color:#EEF1F4;font-weight:600">{{ shownEmail }}</span>. O link expira em 24 horas.</p>
+<button type="button" onClick="{{ goAguardando }}" style="height:52px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:16px;font-weight:600;cursor:pointer">Simular clique no link do e-mail</button>
+<div style="display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px"><button type="button" onClick="{{ resend }}" style="background:none;border:0;padding:0;color:#4C9BEA;font-weight:600;cursor:pointer;font-size:14px">{{ resendLabel }}</button><button type="button" onClick="{{ goDados }}" style="background:none;border:0;padding:0;color:#8A94A3;font-weight:600;cursor:pointer;font-size:14px">Corrigir e-mail</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.aguardando }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display:flex;flex-direction:column;gap:20px">
+<span style="display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#8CC2FF;border:1px solid #287DD2;background:rgba(40,125,210,.12);border-radius:3px;padding:5px 9px"><span style="width:7px;height:7px;border-radius:50%;background:#287DD2"></span>AGUARDANDO APROVAÇÃO</span>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700;line-height:1.15">E-mail confirmado. Sua conta está em análise.</h2>
+<p style="margin:0;font-size:16px;line-height:1.6;color:#B6BEC9">O Cliente Admin da Empresa Alfa ou a equipe TIMP aprova o acesso. O primeiro Cliente Admin de cada empresa é sempre aprovado pela TIMP. Você receberá um e-mail quando a conta for liberada.</p>
+<ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border-left:1px solid #343E4B;margin-left:5px">
+<li style="position:relative;padding:0 0 14px 20px;font-size:15px;color:#DCE1E7"><span style="position:absolute;left:-6px;top:4px;width:11px;height:11px;border-radius:50%;background:#2FBF71"></span>Conta criada</li>
+<li style="position:relative;padding:0 0 14px 20px;font-size:15px;color:#DCE1E7"><span style="position:absolute;left:-6px;top:4px;width:11px;height:11px;border-radius:50%;background:#2FBF71"></span>E-mail confirmado</li>
+<li style="position:relative;padding:0 0 14px 20px;font-size:15px;color:#EEF1F4;font-weight:600"><span style="position:absolute;left:-6px;top:4px;width:11px;height:11px;border-radius:50%;background:#07090C;border:2px solid #287DD2"></span>Aprovação do acesso</li>
+<li style="position:relative;padding:0 0 0 20px;font-size:15px;color:#56616F"><span style="position:absolute;left:-6px;top:4px;width:11px;height:11px;border-radius:50%;background:#07090C;border:2px solid #343E4B"></span>Primeiro acesso</li>
+</ol>
+<button type="button" onClick="{{ goPrimeiro }}" style="height:48px;border:1px solid #343E4B;background:none;color:#EEF1F4;border-radius:4px;font-size:15px;font-weight:600;cursor:pointer">Simular aprovação</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.primeiro }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#5FD49A">ACESSO LIBERADO · PRIMEIRO ACESSO</span>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700;line-height:1.15">Proteja sua conta com verificação em duas etapas.</h2>
+<p style="margin:0;font-size:16px;line-height:1.6;color:#B6BEC9">Obrigatório para Cliente Admin e perfis TIMP (Admin, Operador e acessos privilegiados). Recomendado para Cliente Usuário. SMS não é aceito como fator principal.</p>
+<div style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ mfaOpts }}" as="o" hint-placeholder-count="2"><button type="button" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:64px;padding:12px 0;background:none;border:0;border-bottom:1px solid #171D26;color:#EEF1F4;text-align:left;cursor:pointer"><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:600">{{ o.t }}</span><span style="font-size:13px;color:#8A94A3">{{ o.d }}</span></span><span style="width:20px;height:20px;border-radius:50%;border:2px solid {{ o.ring }};display:flex;align-items:center;justify-content:center"><span style="width:10px;height:10px;border-radius:50%;background:{{ o.dot }}"></span></span></button></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;padding:14px;border:1px solid #232B36;border-radius:4px;background:#0C1015"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#8A94A3">CÓDIGOS DE RECUPERAÇÃO · USO ÚNICO</span><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#EEF1F4"><span>7F2K-9QXA</span><span>M4TP-2LZC</span><span>X8RD-6NWB</span><span>C3VH-5JQE</span><span>P9GU-1YKS</span><span>B6LN-8TDF</span></div><span style="font-size:13px;color:#8A94A3;line-height:1.5">Guarde em local seguro. Cada código acessa a conta uma vez se o método principal não estiver disponível.</span><button type="button" style="align-self:flex-start;height:40px;padding:0 12px;border:1px solid #343E4B;border-radius:4px;background:none;color:#EEF1F4;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">Baixar códigos</button></div>
+<a href="Portal%20do%20Cliente.dc.html" style="display:flex;align-items:center;justify-content:center;height:52px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600">Cadastrar método e continuar</a>
+<span style="align-self:center;font-size:13px;color:#8A94A3;text-align:center">Cliente Usuário pode configurar depois em Perfil › Segurança.</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.bloqueada }}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="display:flex;flex-direction:column;gap:20px">
+<span style="display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#07090C;background:#E5484D;border-radius:3px;padding:5px 9px"><span style="width:7px;height:7px;background:#07090C;border-radius:1px"></span>CONTA INATIVA</span>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700;line-height:1.15">Esta conta está bloqueada.</h2>
+<p style="margin:0;font-size:16px;line-height:1.6;color:#B6BEC9">O acesso foi desativado pelo administrador da sua empresa ou pela TIMP. Seus dados continuam preservados. Para reativar, fale com o administrador da empresa ou com a TIMP.</p>
+<a href="https://wa.me/5521983318387" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;height:52px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600">Falar com a TIMP</a>
+<button type="button" onClick="{{ goLogin }}" style="background:none;border:0;padding:0;color:#4C9BEA;font-size:15px;font-weight:600;cursor:pointer;align-self:flex-start">‹ Voltar ao login</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.esqueci }}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{ sendReset }}" novalidate="" style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700">Esqueci minha senha</h2><p style="margin:0;font-size:15px;color:#8A94A3;line-height:1.5">Informe o e-mail da sua conta. Se ele estiver cadastrado, enviaremos um link para criar uma nova senha.</p></div>
+<sc-if value="{{ resetSent }}"><div role="status" style="display:flex;gap:12px;padding:12px 14px;border:1px solid #2FBF71;background:rgba(47,191,113,.08);border-radius:4px;font-size:14px;line-height:1.5;color:#D6F5E3"><span style="color:#5FD49A">✓</span>Se o e-mail estiver cadastrado, o link chegará em alguns minutos.</div></sc-if>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">E-mail</span><input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="nome@empresa.com.br" style="height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"></label>
+<button type="submit" style="height:52px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:16px;font-weight:600;cursor:pointer">Enviar link</button>
+<div style="display:flex;flex-wrap:wrap;gap:8px 20px"><button type="button" onClick="{{ goLogin }}" style="background:none;border:0;padding:0;color:#4C9BEA;font-size:15px;font-weight:600;cursor:pointer">‹ Voltar ao login</button><button type="button" onClick="{{ goRedefinir }}" style="background:none;border:0;padding:0;color:#8A94A3;font-size:15px;font-weight:600;cursor:pointer">Simular link recebido</button></div>
+</form>
+</sc-if>
+
+<sc-if value="{{ is.redefinir }}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{ doRedefinir }}" novalidate="" style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700">Criar nova senha</h2><p style="margin:0;font-size:15px;color:#8A94A3;line-height:1.5">Mínimo de 10 caracteres, com letras e números. Todas as outras sessões serão encerradas.</p></div>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Nova senha</span><input type="password" autocomplete="new-password" value="{{ pw }}" onChange="{{ onPw }}" style="height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><span style="display:flex;align-items:center;gap:8px"><span style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:4px"><sc-for list="{{ pwBars }}" as="b"><span style="height:3px;border-radius:2px;background:{{ b }}"></span></sc-for></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A94A3;min-width:60px;text-align:right">{{ pwLabel }}</span></span></label>
+<sc-if value="{{ redefOk }}"><div role="status" style="display:flex;gap:12px;padding:12px 14px;border:1px solid #2FBF71;background:rgba(47,191,113,.08);border-radius:4px;font-size:14px;color:#D6F5E3"><span style="color:#5FD49A">✓</span>Senha alterada. Entre novamente com a nova senha.</div></sc-if>
+<button type="submit" style="height:52px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:16px;font-weight:600;cursor:pointer">Salvar nova senha</button>
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#56616F">LINK VÁLIDO POR 60 MIN · USO ÚNICO</span>
+</form>
+</sc-if>
+
+<sc-if value="{{ is.expirada }}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="display:flex;flex-direction:column;gap:20px">
+<span style="display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#B6BEC9;border:1px solid #56616F;border-radius:3px;padding:5px 9px"><span style="width:7px;height:7px;border-radius:50%;background:#8A94A3"></span>SESSÃO EXPIRADA</span>
+<h2 style="margin:0;font-size:28px;letter-spacing:-.025em;font-weight:700;line-height:1.15">Sua sessão foi encerrada por inatividade.</h2>
+<p style="margin:0;font-size:16px;line-height:1.6;color:#B6BEC9">Por segurança, entre novamente. Você voltará para a tela em que estava.</p>
+<button type="button" onClick="{{ goLogin }}" style="height:52px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:16px;font-weight:600;cursor:pointer">Entrar novamente</button>
+</div>
+</sc-if>
+
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;screenNav&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Protótipo&quot;}}">
+const SCREENS = [['login', 'Login'], ['cnpj', 'Cadastro · CNPJ'], ['naohab', 'CNPJ não habilitado'], ['dados', 'Dados pessoais'], ['confirmar', 'Confirmar e-mail'], ['aguardando', 'Aguardando aprovação'], ['primeiro', 'Primeiro acesso'], ['esqueci', 'Esqueci a senha'], ['redefinir', 'Redefinir senha'], ['bloqueada', 'Conta bloqueada'], ['expirada', 'Sessão expirada']];
+const STEP = { cnpj: 0, naohab: 0, dados: 1, confirmar: 2, aguardando: 3 };
+const maskCnpj = v => { const d = v.replace(/\D/g, '').slice(0, 14); return d.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2'); };
+class Component extends DCLogic {
+  state = { vw: typeof window !== 'undefined' ? window.innerWidth : 1440, scr: 'login', email: '', pw: '', showPw: false, loading: false, loginErr: '', cnpj: '', cnpjErr: '', d: { nome: '', email: '', tel: '', senha: '' }, dErr: {}, resent: false, resetSent: false, redefOk: false, mfa: 'passkey' };
+  componentDidMount() { this.onR = () => this.setState({ vw: window.innerWidth }); window.addEventListener('resize', this.onR); const s = new URLSearchParams(location.search).get('tela'); if (s) this.setState({ scr: s }); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); clearTimeout(this.t); }
+  go = scr => () => this.setState({ scr, loading: false, loginErr: '', cnpjErr: '', resetSent: false, redefOk: false });
+  renderVals() {
+    const s = this.state, isD = s.vw >= 1024;
+    const strength = p => { let n = 0; if (p.length >= 10) n++; if (/[a-z]/i.test(p) && /\d/.test(p)) n++; if (/[A-Z]/.test(p) && /[a-z]/.test(p)) n++; if (/[^a-z0-9]/i.test(p)) n++; return n; };
+    const pwS = strength(s.scr === 'dados' ? s.d.senha : s.pw), cols = ['#E5484D', '#E8A33D', '#287DD2', '#2FBF71'];
+    const is = {}; SCREENS.forEach(([k]) => is[k] = s.scr === k);
+    const onD = k => e => { const v = e.target.value; this.setState(st => ({ d: { ...st.d, [k]: v }, dErr: { ...st.dErr, [k]: null } })); };
+    const F = [['nome', 'Nome completo', 'text', 'name', ''], ['email', 'E-mail corporativo', 'email', 'email', 'nome@empresa.com.br'], ['tel', 'Telefone / WhatsApp', 'tel', 'tel', '(21) 90000-0000'], ['senha', 'Senha', 'password', 'new-password', 'Mínimo de 10 caracteres']];
+    return {
+      cols: isD ? 'minmax(420px,5fr) minmax(0,6fr)' : 'minmax(0,1fr)', showSide: isD, showLogoTop: !isD, alignY: isD ? 'center' : 'flex-start',
+      screenNav: this.props.screenNav ?? true,
+      screens: SCREENS.map(([k, label]) => ({ label, go: this.go(k), cur: s.scr === k ? 'page' : undefined, border: s.scr === k ? '#287DD2' : '#232B36', bg: s.scr === k ? 'rgba(40,125,210,.16)' : 'transparent', color: s.scr === k ? '#FFFFFF' : '#8A94A3' })),
+      is, inSignup: STEP[s.scr] !== undefined,
+      steps: ['EMPRESA', 'DADOS', 'CONFIRMAÇÃO', 'APROVAÇÃO'].map((t, i) => ({ t, n: '0' + (i + 1), bar: i <= (STEP[s.scr] ?? -1) ? '#287DD2' : '#232B36', color: i <= (STEP[s.scr] ?? -1) ? '#8CC2FF' : '#56616F' })),
+      email: s.email, pw: s.pw, onEmail: e => this.setState({ email: e.target.value, loginErr: '' }), onPw: e => this.setState({ pw: e.target.value, loginErr: '' }),
+      pwType: s.showPw ? 'text' : 'password', pwToggle: s.showPw ? 'Ocultar' : 'Mostrar', togglePw: () => this.setState(st => ({ showPw: !st.showPw })),
+      loading: s.loading, btnOp: s.loading ? 0.7 : 1, loginLabel: s.loading ? 'Entrando…' : 'Entrar', loginErr: s.loginErr,
+      doLogin: e => { e.preventDefault(); if (!s.email || !s.pw) return this.setState({ loginErr: 'E-mail ou senha incorretos. Verifique os dados e tente novamente.' }); this.setState({ loading: true }); this.t = setTimeout(() => { const em = s.email.toLowerCase(); if (em.includes('bloqueado')) return this.setState({ scr: 'bloqueada', loading: false }); if (em.includes('pendente')) return this.setState({ scr: 'aguardando', loading: false }); location.href = em.endsWith('@timp.com.br') ? 'Admin%20TIMP.dc.html' : 'Portal%20do%20Cliente.dc.html'; }, 900); },
+      goForgot: this.go('esqueci'), goCnpj: this.go('cnpj'), goLogin: this.go('login'), goDados: this.go('dados'), goAguardando: this.go('aguardando'), goPrimeiro: this.go('primeiro'), goRedefinir: this.go('redefinir'),
+      cnpj: s.cnpj, onCnpj: e => this.setState({ cnpj: maskCnpj(e.target.value), cnpjErr: '' }), cnpjErr: s.cnpjErr, cnpjBorder: s.cnpjErr ? '#E5484D' : '#343E4B', cnpjLabel: s.loading ? 'Verificando…' : 'Verificar CNPJ',
+      checkCnpj: e => { e.preventDefault(); if (s.cnpj.replace(/\D/g, '').length !== 14) return this.setState({ cnpjErr: 'Informe os 14 dígitos do CNPJ.' }); this.setState({ loading: true }); this.t = setTimeout(() => this.setState({ loading: false, scr: s.cnpj === '11.111.111/0001-11' ? 'dados' : 'naohab' }), 900); },
+      fields: F.map(([k, label, type, ac, ph]) => ({ label, type, ac, ph, value: s.d[k], on: onD(k), err: s.dErr[k], inv: !!s.dErr[k], border: s.dErr[k] ? '#E5484D' : '#343E4B', isPw: k === 'senha' })),
+      pwBars: [0, 1, 2, 3].map(i => i < pwS ? cols[pwS - 1] : '#232B36'), pwLabel: ['', 'Fraca', 'Média', 'Boa', 'Forte'][pwS],
+      submitDados: e => { e.preventDefault(); const d = s.d, x = {}; if (!d.nome.trim()) x.nome = 'Informe seu nome.'; if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) x.email = 'Informe um e-mail válido.'; if (d.tel.replace(/\D/g, '').length < 10) x.tel = 'Informe o número com DDD.'; if (d.senha.length < 10) x.senha = 'Use pelo menos 10 caracteres.'; if (Object.keys(x).length) return this.setState({ dErr: x }); this.setState({ scr: 'confirmar' }); },
+      shownEmail: s.d.email || 'seu e-mail', resend: () => this.setState({ resent: true }), resendLabel: s.resent ? 'Link reenviado ✓' : 'Reenviar e-mail',
+      resetSent: s.resetSent, sendReset: e => { e.preventDefault(); this.setState({ resetSent: true }); },
+      redefOk: s.redefOk, doRedefinir: e => { e.preventDefault(); if (strength(s.pw) >= 2) this.setState({ redefOk: true }); },
+      mfaOpts: [['passkey', 'Passkey (recomendado)', 'Biometria ou PIN do dispositivo · WebAuthn'], ['app', 'Aplicativo autenticador', 'Código TOTP de 6 dígitos']].map(([k, t, d]) => ({ t, d, on: s.mfa === k, pick: () => this.setState({ mfa: k }), ring: s.mfa === k ? '#287DD2' : '#56616F', dot: s.mfa === k ? '#287DD2' : 'transparent' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

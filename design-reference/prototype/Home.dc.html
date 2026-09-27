@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>TIMP Tecnologia — Empresa de TI no Rio de Janeiro</title>
+<meta name="description" content="Infraestrutura, conectividade, segurança, automação e suporte tecnológico para empresas no Rio de Janeiro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07090C;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+*{box-sizing:border-box}
+a{color:#4C9BEA;text-decoration:none}
+a:hover{color:#8CC2FF}
+:focus-visible{outline:2px solid #4C9BEA;outline-offset:2px}
+[id]{scroll-margin-top:80px}
+input,select,textarea,button{font-family:inherit}
+@keyframes timpX{0%{transform:translateX(0);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(100%);opacity:0}}
+@keyframes timpY{0%{transform:translateY(0);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateY(100%);opacity:0}}
+@keyframes timpPulse{0%{transform:scale(1);opacity:.6}70%{transform:scale(2.8);opacity:0}100%{opacity:0}}
+@keyframes timpDraw{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+@keyframes timpDash{0%{stroke-dashoffset:6;opacity:0}6%{opacity:1}58%{opacity:1}62%{stroke-dashoffset:-100;opacity:0}100%{stroke-dashoffset:-100;opacity:0}}
+@keyframes timpLed{0%,56%{opacity:.35}62%{opacity:1}80%{opacity:1}100%{opacity:.35}}
+@keyframes timpFade{from{opacity:0}to{opacity:1}}
+@keyframes timpBeam{to{stroke-dashoffset:-20}}
+@keyframes timpRise{0%{transform:translateY(0);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(-100%);opacity:0}}
+html[data-motion="off"] *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+<script>(function(){try{var q=new URLSearchParams(location.search),w=+q.get('vw'),h=+q.get('vh');if(!w)return;h=h||900;Object.defineProperty(window,'innerWidth',{get:function(){return w},configurable:true});Object.defineProperty(window,'innerHeight',{get:function(){return h},configurable:true});document.documentElement.style.width=w+'px';var re=/(-?\d*\.?\d+)(vw|svh|dvh|vh)\b/g,t=0;function fix(){t=0;document.querySelectorAll('[style]').forEach(function(el){var s=el.getAttribute('style');if(s&&re.test(s)){re.lastIndex=0;el.setAttribute('style',s.replace(re,function(m,n,u){return (n*(u==='vw'?w:h)/100)+'px'}))}re.lastIndex=0})}new MutationObserver(function(){if(!t)t=requestAnimationFrame(fix)}).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['style']});}catch(e){}})();</script>
+</helmet>
+
+<a href="#conteudo" style="position:absolute;left:12px;top:-60px;z-index:100;background:#2359A5;color:#FFFFFF;padding:12px 16px;border-radius:4px;font-weight:600" style-focus="top:12px;color:#FFFFFF">Pular para o conteúdo</a>
+
+<dc-import name="SiteHeader" style="position:sticky;top:0;z-index:60;display:block" hint-size="100%,76px"></dc-import>
+
+<main id="conteudo">
+
+<sc-if value="{{ heroR }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Hero · Infraestrutura conectada" style="position:relative;overflow:hidden;background:#07090C;border-bottom:1px solid #171D26">
+<div style="position:relative;z-index:1;box-sizing:border-box;max-width:1440px;margin:0 auto;min-height:{{ heroMinH }};padding:{{ heroPad }};display:flex;flex-direction:column;justify-content:center;gap:clamp(24px,3vw,36px)">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8A94A3">TIMP TECNOLOGIA · RIO DE JANEIRO · DESDE 2016</span>
+<h1 style="margin:0;font-size:clamp(42px,6.6vw,104px);line-height:.96;letter-spacing:-.045em;font-weight:700;max-width:{{ h1MaxR }};text-wrap:balance">Tecnologia que sustenta sua operação.</h1>
+<p style="margin:0;max-width:30em;font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:#B6BEC9;text-wrap:pretty">Infraestrutura, conectividade, segurança, automação e suporte tecnológico para empresas no Rio de Janeiro.</p>
+<div data-hero-cta="" style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(140,194,255,.35)" style-hover="background:#2A66BC;color:#FFFFFF">Solicitar um projeto <span aria-hidden="true">→</span></a>
+<a href="#ecossistemas" style="display:inline-flex;align-items:center;height:52px;padding:0 24px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;background:rgba(7,9,12,.6)" style-hover="border-color:#8A94A3;color:#FFFFFF">Conhecer soluções</a>
+</div>
+<p style="margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3"><span>TIMP</span><span aria-hidden="true" style="color:#287DD2">→</span><span>INFRAESTRUTURA</span><span aria-hidden="true" style="color:#287DD2">→</span><span>CONECTIVIDADE</span><span aria-hidden="true" style="color:#287DD2">→</span><span style="color:#EEF1F4">OPERAÇÃO</span></p>
+</div>
+<div aria-hidden="true" ref="{{ heroSceneRef }}" style="position:{{ hsPos }};top:0;right:0;bottom:0;width:{{ hsW }};aspect-ratio:{{ hsAR }};z-index:0;pointer-events:none">{{ heroScene }}</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ heroA }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Hero · Sistema vivo" style="max-width:1440px;margin:0 auto;padding:clamp(40px,7vw,104px) clamp(20px,5vw,64px) clamp(48px,6vw,88px);display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8A94A3">TIMP TECNOLOGIA · RIO DE JANEIRO · DESDE 2016</span>
+<h1 style="margin:0;font-size:clamp(40px,7.4vw,112px);line-height:.96;letter-spacing:-.045em;font-weight:700;max-width:{{ h1Max }};text-wrap:balance">Tecnologia que sustenta sua operação.</h1>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:28px 48px">
+<p style="margin:0;max-width:34em;font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:#B6BEC9;text-wrap:pretty">Infraestrutura, conectividade, segurança, automação e suporte tecnológico para empresas no Rio de Janeiro.</p>
+<div data-hero-cta="" style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(140,194,255,.35)" style-hover="background:#2A66BC;color:#FFFFFF">Solicitar um projeto <span aria-hidden="true">→</span></a>
+<a href="#ecossistemas" style="display:inline-flex;align-items:center;height:52px;padding:0 24px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="border-color:#8A94A3;color:#FFFFFF">Conhecer soluções</a>
+</div>
+</div>
+<figure aria-label="Diagrama conceitual: equipamentos no local, infraestrutura e Central TIMP conectados" style="margin:8px 0 0;background:#000;border:1px solid #171D26;border-radius:8px;padding:clamp(16px,2.6vw,32px);display:flex;flex-direction:column;gap:24px;background-image:linear-gradient(rgba(35,43,54,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.35) 1px,transparent 1px);background-size:32px 32px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">SISTEMA TIMP · VISÃO CONCEITUAL</span>
+<span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#DCE1E7"><span style="position:relative;width:8px;height:8px;display:inline-block">{{ liveDot }}</span>OPERAÇÃO CONECTADA</span>
+</div>
+<div style="display:flex;flex-direction:{{ diagDir }};align-items:stretch">
+<sc-for list="{{ diagCols }}" as="c" hint-placeholder-count="3">
+<sc-if value="{{ c.notFirst }}">
+<div aria-hidden="true" style="position:relative;flex:none;width:{{ connW }};height:{{ connH }};display:flex;align-items:center;justify-content:center">
+<span style="position:absolute;left:{{ lineL }};top:{{ lineT }};width:{{ lineW }};height:{{ lineHh }};background:#232B36"></span>
+<span style="position:absolute;left:{{ lineL }};top:{{ lineT }};width:{{ lineW }};height:{{ lineHh }};overflow:visible">{{ c.pulse }}</span>
+</div>
+</sc-if>
+<div style="flex:{{ c.flex }};min-width:0;display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid {{ c.border }};background:{{ c.bg }};border-radius:6px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:{{ c.headColor }}">{{ c.head }}</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax({{ c.min }},1fr));gap:8px">
+<sc-for list="{{ c.nodes }}" as="n">
+<div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid #232B36;border-radius:4px;background:#07090C;transition:border-color 120ms" style-hover="border-color:#287DD2">
+<span style="flex:none;min-width:38px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#4C9BEA;border:1px solid #11305E;border-radius:3px;padding:3px 4px">{{ n.code }}</span>
+<span style="font-size:14px;color:#DCE1E7;line-height:1.3">{{ n.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<figcaption style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#56616F"><span>NO LOCAL → INFRAESTRUTURA → CENTRAL</span><span>DIAGRAMA CONCEITUAL · TIMP</span></figcaption>
+</figure>
+</section>
+</sc-if>
+
+<sc-if value="{{ heroB }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Hero · Edificação em camadas" style="max-width:1440px;margin:0 auto;padding:clamp(40px,6vw,96px) clamp(20px,5vw,64px) clamp(48px,6vw,88px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:clamp(36px,5vw,72px);align-items:center">
+<div style="display:flex;flex-direction:column;gap:28px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8A94A3">TIMP TECNOLOGIA · RIO DE JANEIRO · DESDE 2016</span>
+<h1 style="margin:0;font-size:clamp(44px,5.8vw,92px);line-height:.96;letter-spacing:-.045em;font-weight:700;text-wrap:balance">Tecnologia que sustenta sua operação.</h1>
+<p style="margin:0;max-width:30em;font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:#B6BEC9;text-wrap:pretty">Infraestrutura, conectividade, segurança, automação e suporte tecnológico para empresas no Rio de Janeiro.</p>
+<div data-hero-cta="" style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(140,194,255,.35)" style-hover="background:#2A66BC;color:#FFFFFF">Solicitar um projeto <span aria-hidden="true">→</span></a>
+<a href="#ecossistemas" style="display:inline-flex;align-items:center;height:52px;padding:0 24px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="border-color:#8A94A3;color:#FFFFFF">Conhecer soluções</a>
+</div>
+</div>
+<figure aria-label="Edificação em camadas: sistemas de tecnologia por pavimento" style="margin:0;display:flex;flex-direction:column;gap:14px">
+<div role="group" aria-label="Filtrar camadas" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
+<sc-for list="{{ layers }}" as="l" hint-placeholder-count="5"><button type="button" aria-pressed="{{ l.active }}" onClick="{{ l.pick }}" style="flex:none;height:40px;padding:0 14px;border-radius:4px;border:1px solid {{ l.border }};background:{{ l.bg }};color:{{ l.color }};font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ l.label }}</button></sc-for>
+</div>
+<div style="position:relative;background:#000;border:1px solid #171D26;border-radius:8px;padding:18px 18px 18px 52px;background-image:linear-gradient(rgba(35,43,54,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.3) 1px,transparent 1px);background-size:24px 24px">
+<span aria-hidden="true" style="position:absolute;left:26px;top:26px;bottom:34px;width:2px;background:#287DD2;opacity:{{ riserOp }}"></span>
+<span aria-hidden="true" style="position:absolute;left:10px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:#56616F;white-space:nowrap;width:0;display:flex;justify-content:center">PRUMADA</span>
+<div style="display:flex;flex-direction:column;border-top:2px solid #343E4B">
+<sc-for list="{{ floors }}" as="f" hint-placeholder-count="5">
+<div style="position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid #232B36;background:{{ f.bg }}">
+<span aria-hidden="true" style="position:absolute;left:-30px;top:24px;width:10px;height:10px;border-radius:50%;background:#000;border:2px solid #287DD2;opacity:{{ riserOp }}"></span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:#EEF1F4;border:1px solid #343E4B;border-radius:3px;height:28px;display:flex;align-items:center;justify-content:center">{{ f.lvl }}</span>
+<div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+<span style="font-size:13px;color:#8A94A3">{{ f.name }}</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ f.sys }}" as="s"><span style="font-size:13px;font-weight:500;color:{{ s.color }};border:1px solid {{ s.border }};background:{{ s.bg }};border-radius:3px;padding:5px 9px;transition:opacity 200ms,border-color 200ms;opacity:{{ s.op }}">{{ s.t }}</span></sc-for>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+<figcaption style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#56616F"><span>CORTE ESQUEMÁTICO · SISTEMAS POR PAVIMENTO</span><span>DIAGRAMA CONCEITUAL · TIMP</span></figcaption>
+</figure>
+</section>
+</sc-if>
+
+<section id="empresa" data-screen-label="Posicionamento" style="border-top:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,6vw,96px)">
+<div style="display:flex;flex-direction:column;gap:24px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">01 — POSICIONAMENTO</span>
+<h2 style="margin:0;font-size:clamp(30px,3.6vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Parceira de tecnologia, infraestrutura, segurança e operação.</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#B6BEC9;max-width:32em;text-wrap:pretty">A TIMP planeja, implanta e acompanha a tecnologia que mantém empresas, condomínios e obras funcionando. Um único parceiro responsável, do projeto à manutenção.</p>
+</div>
+<dl style="margin:0;display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ facts }}" as="f" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:6px 24px;padding:18px 0;border-bottom:1px solid #171D26">
+<dt style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:#8A94A3;padding-top:3px">{{ f.q }}</dt>
+<dd style="margin:0;font-size:16px;line-height:1.55;color:#EEF1F4;grid-column:span 2">{{ f.a }}</dd>
+</div>
+</sc-for>
+</dl>
+</div>
+</section>
+
+<section id="ecossistemas" data-screen-label="Ecossistemas" style="background:#0C1015;border-top:1px solid #171D26;border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(32px,4vw,56px)">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px 48px">
+<div style="display:flex;flex-direction:column;gap:20px;max-width:760px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">02 — ECOSSISTEMAS</span>
+<h2 style="margin:0;font-size:clamp(30px,3.6vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:700">Cinco frentes. Uma operação integrada.</h2>
+</div>
+<p style="margin:0;max-width:30em;font-size:17px;line-height:1.6;color:#B6BEC9;text-wrap:pretty">Cada sistema é projetado considerando os outros: a câmera depende da rede, o alarme se comunica com a Central, o controle de acesso registra quem entrou.</p>
+</div>
+
+<sc-if value="{{ notM }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:{{ ecoCols }};gap:{{ ecoGap }};align-items:start">
+<div role="tablist" aria-label="Ecossistemas" aria-orientation="{{ ecoOrient }}" style="display:flex;flex-direction:{{ ecoDir }};overflow-x:auto;border-top:{{ ecoListBorder }}">
+<sc-for list="{{ ecos }}" as="e" hint-placeholder-count="5">
+<button type="button" role="tab" aria-selected="{{ e.active }}" onClick="{{ e.select }}" style="flex:none;display:flex;flex-direction:{{ e.tabDir }};align-items:{{ e.tabAlign }};gap:{{ e.tabGap }};text-align:left;background:{{ e.bg }};border:0;border-bottom:1px solid #171D26;box-shadow:{{ e.mark }};color:{{ e.color }};padding:{{ e.pad }};cursor:pointer;transition:background 120ms,color 120ms" style-hover="color:#FFFFFF">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:{{ e.numColor }}">{{ e.n }}</span>
+<span style="font-size:{{ e.nameSize }};font-weight:600;letter-spacing:-.01em;line-height:1.2;white-space:{{ e.ws }}">{{ e.name }}</span>
+<sc-if value="{{ e.showCount }}"><span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:#56616F">{{ e.count }}</span></sc-if>
+</button>
+</sc-for>
+</div>
+<div role="tabpanel" style="background:#07090C;border:1px solid #171D26;border-radius:8px;padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:#4C9BEA">{{ cur.n }} — {{ cur.upper }}</span>
+<p style="margin:0;font-size:clamp(19px,1.7vw,24px);line-height:1.4;letter-spacing:-.01em;color:#EEF1F4;max-width:34em;text-wrap:pretty">{{ cur.desc }}</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));column-gap:28px">
+<sc-for list="{{ cur.items }}" as="it" hint-placeholder-count="5"><a href="{{ it.href }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:52px;border-bottom:1px solid #171D26;color:#DCE1E7;font-size:16px;font-weight:500" style-hover="color:#FFFFFF">{{ it.label }}<span style="color:#4C9BEA" aria-hidden="true">→</span></a></sc-for>
+</div>
+<sc-for list="{{ cur.flows }}" as="fl" hint-placeholder-count="1">
+<div style="display:flex;flex-direction:column;gap:12px;padding:18px;background:#000;border:1px solid #171D26;border-radius:6px;background-image:linear-gradient(rgba(35,43,54,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.3) 1px,transparent 1px);background-size:24px 24px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#56616F">{{ fl.title }}</span>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+<sc-for list="{{ fl.nodes }}" as="nd"><sc-if value="{{ nd.sep }}"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#287DD2" aria-hidden="true">{{ nd.sep }}</span></sc-if><span style="font-size:13px;font-weight:500;color:#EEF1F4;border:1px {{ nd.style }} {{ nd.border }};background:#07090C;border-radius:3px;padding:6px 10px;white-space:nowrap">{{ nd.label }}</span></sc-for>
+</div>
+</div>
+</sc-for>
+<div style="display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center">
+<a href="{{ cur.ctaHref }}" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600" style-hover="background:#2A66BC;color:#FFFFFF">{{ cur.cta }} <span aria-hidden="true">→</span></a>
+<a href="#" style="font-size:15px;font-weight:600;color:#4C9BEA">{{ cur.more }}</a>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isM }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ ecos }}" as="e" hint-placeholder-count="5">
+<div style="border-bottom:1px solid #232B36">
+<button type="button" aria-expanded="{{ e.open }}" onClick="{{ e.toggle }}" style="width:100%;display:flex;align-items:center;gap:14px;min-height:68px;background:none;border:0;color:#EEF1F4;text-align:left;cursor:pointer;padding:12px 0">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4C9BEA">{{ e.n }}</span>
+<span style="flex:1;font-size:18px;font-weight:600;line-height:1.25">{{ e.name }}</span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#8A94A3;width:20px;text-align:center" aria-hidden="true">{{ e.sign }}</span>
+</button>
+<sc-if value="{{ e.open }}">
+<div style="display:flex;flex-direction:column;gap:20px;padding:0 0 24px">
+<p style="margin:0;font-size:17px;line-height:1.5;color:#DCE1E7">{{ e.desc }}</p>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ e.items }}" as="it"><a href="{{ it.href }}" style="display:flex;justify-content:space-between;align-items:center;min-height:48px;border-top:1px solid #171D26;color:#DCE1E7;font-size:16px">{{ it.label }}<span style="color:#4C9BEA" aria-hidden="true">›</span></a></sc-for>
+</div>
+<sc-for list="{{ e.flows }}" as="fl">
+<div style="display:flex;flex-direction:column;gap:10px;padding:16px;background:#000;border:1px solid #171D26;border-radius:6px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#56616F">{{ fl.title }}</span>
+<div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
+<sc-for list="{{ fl.nodes }}" as="nd"><sc-if value="{{ nd.sep }}"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#287DD2;padding-left:12px" aria-hidden="true">{{ nd.sepV }}</span></sc-if><span style="font-size:14px;font-weight:500;color:#EEF1F4;border:1px {{ nd.style }} {{ nd.border }};background:#07090C;border-radius:3px;padding:7px 10px">{{ nd.label }}</span></sc-for>
+</div>
+</div>
+</sc-for>
+<a href="{{ e.ctaHref }}" style="display:flex;align-items:center;justify-content:center;height:52px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600">{{ e.cta }}</a>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</section>
+
+<section id="starlink" aria-labelledby="starlink-titulo" data-screen-label="Starlink · Conectividade" style="position:relative;background:#05070A;border-bottom:1px solid #171D26">
+<sc-if value="{{ isM }}" hint-placeholder-val="{{ false }}">
+<div style="padding:64px 20px 28px;display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">03 — STARLINK + INFRAESTRUTURA TIMP</span>
+<h2 id="starlink-titulo" style="margin:0;font-size:clamp(34px,4.4vw,64px);line-height:1;letter-spacing:-.035em;font-weight:700;text-wrap:balance">Conectividade onde sua operação precisar.</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#B6BEC9;max-width:30em;text-wrap:pretty">A TIMP instala e integra Starlink à sua infraestrutura para ampliar a conectividade, atender locais remotos e criar caminhos de contingência quando a rede terrestre não for suficiente.</p>
+<ul aria-label="Onde se aplica" style="margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px"><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Empresas</li><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Obras</li><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Áreas remotas</li><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Mobilidade</li><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Projetos especiais</li></ul>
+<div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:4px">
+<a href="Instalacao%20Starlink.dc.html" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="background:#2A66BC;color:#FFFFFF">Conhecer instalação Starlink <span aria-hidden="true">→</span></a>
+<a href="#contato" style="display:inline-flex;align-items:center;height:52px;padding:0 22px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;background:rgba(7,9,12,.6)" style-hover="border-color:#8A94A3;color:#FFFFFF">Solicitar um projeto</a>
+</div>
+</div>
+</sc-if>
+<div ref="{{ slRef }}" style="position:relative;height:{{ slTrackH }}">
+<div style="position:sticky;top:{{ headerH }};height:{{ stickyH }};overflow:hidden;display:flex;flex-direction:column;background:#05070A">
+<div aria-hidden="true" style="position:{{ slScenePos }};left:0;top:0;right:0;bottom:0;flex:{{ slSceneFlex }};min-height:{{ slSceneMin }};pointer-events:none">{{ slScene }}</div>
+<div style="position:relative;z-index:1;box-sizing:border-box;width:100%;max-width:1440px;margin:0 auto;height:{{ slGridH }};padding:{{ slPad }};display:grid;grid-template-columns:{{ slCols }};gap:{{ slGap }};align-items:{{ slAlign }}">
+<sc-if value="{{ notM }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:22px;min-width:0">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">03 — STARLINK + INFRAESTRUTURA TIMP</span>
+<h2 id="starlink-titulo" style="margin:0;font-size:clamp(34px,4.4vw,64px);line-height:1;letter-spacing:-.035em;font-weight:700;text-wrap:balance">Conectividade onde sua operação precisar.</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#B6BEC9;max-width:30em;text-wrap:pretty">A TIMP instala e integra Starlink à sua infraestrutura para ampliar a conectividade, atender locais remotos e criar caminhos de contingência quando a rede terrestre não for suficiente.</p>
+<ul aria-label="Onde se aplica" style="margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px"><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Empresas</li><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Obras</li><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Áreas remotas</li><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Mobilidade</li><li style="font-size:13px;font-weight:500;color:#DCE1E7;border:1px solid #343E4B;border-radius:3px;padding:6px 10px;background:rgba(7,9,12,.7);white-space:nowrap">Projetos especiais</li></ul>
+<div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:4px">
+<a href="Instalacao%20Starlink.dc.html" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="background:#2A66BC;color:#FFFFFF">Conhecer instalação Starlink <span aria-hidden="true">→</span></a>
+<a href="#contato" style="display:inline-flex;align-items:center;height:52px;padding:0 22px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;background:rgba(7,9,12,.6)" style-hover="border-color:#8A94A3;color:#FFFFFF">Solicitar um projeto</a>
+</div>
+</div>
+</sc-if>
+<div style="justify-self:end;box-sizing:border-box;width:100%;max-width:520px;background:rgba(7,9,12,.92);border:1px solid #232B36;border-radius:8px;padding:{{ cardPad }};display:flex;flex-direction:column;gap:{{ cardGap }}">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3">DIAGRAMA CONCEITUAL · TIMP</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3">ROLE PARA AVANÇAR</span></div>
+<div role="group" aria-label="Etapas da demonstração Starlink" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+<sc-for list="{{ slSteps }}" as="st" hint-placeholder-count="3"><button type="button" aria-current="{{ st.current }}" onClick="{{ st.go }}" style="min-height:48px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:6px 10px;background:{{ st.bg }};border:1px solid {{ st.border }};border-radius:4px;color:{{ st.color }};cursor:pointer;text-align:left;transition:background 200ms,border-color 200ms"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:{{ st.numColor }}">{{ st.n }}</span><span style="font-size:{{ stepFs }};font-weight:600;line-height:1.2">{{ st.label }}</span></button></sc-for>
+</div>
+<div aria-hidden="true" style="height:2px;background:#171D26;border-radius:1px;overflow:hidden;margin-top:-6px"><div style="height:100%;width:calc(var(--slp, 0) * 100%);background:#287DD2"></div></div>
+<div style="display:flex;flex-direction:column">
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+<sc-for list="{{ slInputs }}" as="n" hint-placeholder-count="2">
+<div style="min-width:0;display:flex;flex-direction:column;gap:6px;padding:{{ nodePad }};border:1px {{ n.bs }} {{ n.bc }};background:{{ n.bg }};border-radius:6px;opacity:{{ n.op }};transition:opacity 320ms,border-color 320ms,background 320ms">
+<span style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#4C9BEA;border:1px solid #11305E;border-radius:3px;padding:3px 5px">{{ n.code }}</span><sc-if value="{{ n.badge }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:{{ n.badgeColor }};border:1px solid {{ n.badgeBorder }};border-radius:3px;padding:2px 6px;white-space:nowrap">{{ n.badge }}</span></sc-if></span>
+<span style="font-size:{{ nodeFs }};font-weight:600;color:#EEF1F4;line-height:1.25">{{ n.label }}</span>
+<sc-if value="{{ showSub }}"><span style="font-size:12px;line-height:1.35;color:#8A94A3">{{ n.sub }}</span></sc-if>
+</div>
+</sc-for>
+</div>
+<div aria-hidden="true" style="position:relative;height:{{ joinH }}">{{ slJoin }}<sc-if value="{{ slFail }}"><span style="position:absolute;left:62.5%;top:45%;transform:translate(-50%,-50%);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#FF8A8E;background:#07090C;padding:0 3px;line-height:1">✕</span></sc-if></div>
+<sc-for list="{{ slChain }}" as="n" hint-placeholder-count="3">
+<sc-if value="{{ n.notFirst }}"><div aria-hidden="true" style="position:relative;height:{{ vlineH }}"><span style="position:absolute;left:50%;top:0;bottom:0;width:{{ n.lineW }};margin-left:-1px;background:{{ n.lineColor }};transition:background 320ms"></span><span style="position:absolute;left:50%;top:0;bottom:0;width:1px">{{ n.pulse }}</span></div></sc-if>
+<div style="display:flex;align-items:center;gap:12px;padding:{{ nodePad }};border:1px solid {{ n.bc }};background:{{ n.bg }};border-radius:6px;opacity:{{ n.op }};transition:opacity 320ms,border-color 320ms,background 320ms">
+<span style="flex:none;min-width:38px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#4C9BEA;border:1px solid #11305E;border-radius:3px;padding:3px 4px">{{ n.code }}</span>
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:{{ nodeFs }};font-weight:600;color:#EEF1F4;line-height:1.25">{{ n.label }}</span><sc-if value="{{ showSub }}"><span style="font-size:12px;line-height:1.35;color:#8A94A3">{{ n.sub }}</span></sc-if></span>
+<sc-if value="{{ n.badge }}"><span style="flex:none;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:{{ n.badgeColor }};border:1px solid {{ n.badgeBorder }};border-radius:3px;padding:2px 6px;white-space:nowrap">{{ n.badge }}</span></sc-if>
+</div>
+</sc-for>
+</div>
+<div aria-live="polite" style="display:flex;flex-direction:column;gap:6px;min-height:{{ capMinH }}">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:{{ slCapColor }}">{{ slCapTitle }}</span>
+<p style="margin:0;font-size:{{ capFs }};line-height:1.5;color:#DCE1E7;text-wrap:pretty">{{ slCapText }}</p>
+</div>
+<div role="group" aria-label="Estado do link" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;border:1px solid #343E4B;border-radius:5px;padding:3px">
+<sc-for list="{{ slToggle }}" as="tg" hint-placeholder-count="2"><button type="button" aria-pressed="{{ tg.on }}" onClick="{{ tg.go }}" style="min-height:44px;border:0;border-radius:3px;background:{{ tg.bg }};color:{{ tg.color }};font-size:{{ tgFs }};font-weight:600;line-height:1.2;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 10px;transition:background 200ms"><span aria-hidden="true" style="color:{{ tg.dot }};font-size:12px">{{ tg.glyph }}</span>{{ tg.label }}</button></sc-for>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="processo" data-screen-label="Processo TIMP" style="background:#EEF1F4;color:#07090C">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(36px,5vw,64px)">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px 48px">
+<div style="display:flex;flex-direction:column;gap:20px;max-width:760px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#2359A5">04 — PROCESSO TIMP</span>
+<h2 style="margin:0;font-size:clamp(30px,3.6vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Do planejamento à evolução, com o mesmo parceiro.</h2>
+</div>
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:#07090C;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600" style-hover="background:#232B36;color:#FFFFFF">Solicitar um projeto <span aria-hidden="true">→</span></a>
+</div>
+<ol style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:0 28px">
+<sc-for list="{{ process }}" as="p" hint-placeholder-count="8">
+<li style="display:flex;flex-direction:column;gap:10px;padding:22px 0 30px;border-top:2px solid {{ p.line }}">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#2359A5">{{ p.n }}</span>
+<span style="font-size:24px;font-weight:700;letter-spacing:-.02em">{{ p.t }}</span>
+<span style="font-size:15px;line-height:1.55;color:#343E4B;max-width:26em">{{ p.d }}</span>
+</li>
+</sc-for>
+</ol>
+</div>
+</section>
+
+<section id="infraestrutura" aria-labelledby="infra-titulo" data-screen-label="Infraestrutura em profundidade" style="background:#07090C;border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px) clamp(8px,2vw,24px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:20px 64px;align-items:end">
+<div style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">05 — INFRAESTRUTURA EM PROFUNDIDADE</span>
+<h2 id="infra-titulo" style="margin:0;font-size:clamp(30px,3.6vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Infraestrutura que trabalha em conjunto.</h2>
+</div>
+<p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:30em;text-wrap:pretty">Rede, conectividade, segurança e automação projetadas como um único ecossistema.</p>
+</div>
+<div ref="{{ idRef }}" style="position:relative;height:{{ idTrackH }}">
+<div style="position:sticky;top:{{ headerH }};height:{{ stickyH }};overflow:hidden;background:#07090C">
+<div style="box-sizing:border-box;max-width:1440px;margin:0 auto;height:100%;padding:{{ idPad }};display:grid;grid-template-columns:{{ idCols }};gap:{{ idGap }};align-content:center;align-items:center">
+<div style="order:{{ idStackOrder }};position:relative;width:100%;height:{{ idStageH }}">
+<sc-for list="{{ idPlanes }}" as="pl" hint-placeholder-count="5">
+<div aria-hidden="true" style="position:absolute;left:50%;top:{{ pl.top }};width:{{ idS }};height:{{ idS }};margin-left:{{ idHalfNeg }};margin-top:{{ idHalfNeg }};transform:rotateX(60deg) rotateZ(-45deg);z-index:{{ pl.z }};opacity:{{ pl.op }};background-color:{{ pl.bg }};background-image:linear-gradient(rgba(52,62,75,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(52,62,75,.35) 1px,transparent 1px);background-size:{{ idGrid }};border:1px solid {{ pl.bc }};border-radius:6px;transition:opacity 320ms,border-color 320ms,background-color 320ms">
+<span style="position:absolute;left:10px;top:8px;font-family:'JetBrains Mono',monospace;font-size:{{ idPlaneFs }};letter-spacing:.08em;color:{{ pl.labelColor }};white-space:nowrap">{{ pl.tag }}</span>
+<div style="position:absolute;left:16%;top:16%;right:16%;bottom:16%">{{ pl.art }}</div>
+</div>
+</sc-for>
+<sc-for list="{{ idRisers }}" as="r" hint-placeholder-count="3"><span aria-hidden="true" style="position:absolute;left:{{ r.left }};top:{{ idRiserTop }};height:{{ idRiserH }};width:1px;background:rgba(76,155,234,.55);z-index:10"><span style="position:absolute;left:0;top:0;right:0;bottom:0">{{ r.pulse }}</span></span></sc-for>
+</div>
+<ol aria-label="Camadas da infraestrutura" style="order:{{ idListOrder }};margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border-top:1px solid #232B36;min-width:0">
+<sc-for list="{{ idLayers }}" as="l" hint-placeholder-count="5">
+<li style="border-bottom:1px solid #171D26">
+<button type="button" aria-current="{{ l.current }}" onClick="{{ l.go }}" style="width:100%;min-height:48px;display:grid;grid-template-columns:40px minmax(0,1fr);gap:4px 12px;align-items:baseline;text-align:left;background:none;border:0;padding:{{ idRowPad }};cursor:pointer;color:{{ l.color }};transition:color 200ms">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:{{ l.numColor }}">{{ l.n }}</span>
+<span style="font-size:{{ idNameFs }};font-weight:600;letter-spacing:-.01em;line-height:1.25">{{ l.name }}</span>
+<sc-if value="{{ l.showDesc }}"><span style="grid-column:2;font-size:15px;line-height:1.5;color:#8A94A3;text-wrap:pretty">{{ l.desc }}</span></sc-if>
+</button>
+</li>
+</sc-for>
+</ol>
+</div>
+</div>
+</div>
+</section>
+
+<section id="construtoras" data-screen-label="Construtoras e Engenharia" style="background:#0B1E3D">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(40px,5vw,72px)">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(36px,5vw,80px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:24px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8CC2FF">06 — CONSTRUTORAS E ENGENHARIA</span>
+<h2 style="margin:0;font-size:clamp(34px,4.4vw,64px);line-height:1;letter-spacing:-.035em;font-weight:700;text-wrap:balance">Tecnologia começa ainda no projeto da obra.</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#DCE1E7;max-width:32em;text-wrap:pretty">Quando a infraestrutura entra no projeto, a obra reserva rotas, prumadas e a sala técnica no lugar certo, e evita adaptações depois da entrega. A TIMP trabalha junto a engenheiros, arquitetos e gestores de obra desde o planejamento.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:4px">
+<a href="Construtoras%20e%20Engenharia.dc.html" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:#FFFFFF;color:#0B1E3D;border-radius:4px;font-size:16px;font-weight:600" style-hover="background:#DCE1E7;color:#0B1E3D">Conhecer solução para construtoras <span aria-hidden="true">→</span></a>
+<a href="{{ waObra }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 20px;border:1px solid rgba(220,225,231,.35);color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600" style-hover="border-color:#FFFFFF;color:#FFFFFF"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>Falar sobre uma obra</a>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8CC2FF">CAMADAS PREVISTAS NO PROJETO</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));border-top:1px solid rgba(140,194,255,.22)">
+<sc-for list="{{ obraLayers }}" as="l" hint-placeholder-count="12"><div style="display:flex;align-items:baseline;gap:12px;padding:14px 12px 14px 0;border-bottom:1px solid rgba(140,194,255,.14)"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8CC2FF">{{ l.n }}</span><span style="font-size:16px;font-weight:500;color:#FFFFFF">{{ l.t }}</span></div></sc-for>
+</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:18px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8CC2FF">DA PLANTA À OPERAÇÃO</span>
+<ol style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:{{ trackCols }};gap:{{ trackGap }}">
+<sc-for list="{{ obraSteps }}" as="s" hint-placeholder-count="9">
+<li style="position:relative;display:flex;flex-direction:{{ trackItemDir }};gap:12px;padding:{{ trackItemPad }};border-left:{{ trackBL }};border-top:{{ trackBT }}">
+<span aria-hidden="true" style="position:absolute;left:{{ dotL }};top:{{ dotT }};width:9px;height:9px;border-radius:50%;background:#0B1E3D;border:2px solid #8CC2FF"></span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8CC2FF">{{ s.n }}</span>
+<span style="font-size:16px;font-weight:600;color:#FFFFFF">{{ s.t }}</span>
+</li>
+</sc-for>
+</ol>
+</div>
+</div>
+</section>
+
+<section id="monitoramento" data-screen-label="Monitoramento 24h" style="background:#000;background-image:linear-gradient(rgba(23,29,38,.55) 1px,transparent 1px),linear-gradient(90deg,rgba(23,29,38,.55) 1px,transparent 1px);background-size:48px 48px;border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:clamp(40px,5vw,80px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:28px">
+<span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA"><span style="position:relative;width:8px;height:8px;display:inline-block">{{ liveDot }}</span>07 — MONITORAMENTO 24H</span>
+<h2 style="margin:0;font-size:clamp(34px,4.4vw,64px);line-height:1;letter-spacing:-.035em;font-weight:700;text-wrap:balance">Segurança acompanhada 24 horas por dia.</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#B6BEC9;max-width:32em;text-wrap:pretty">A Central TIMP recebe os eventos dos sistemas instalados, verifica cada ocorrência com as câmeras relacionadas e segue o protocolo definido para cada cliente e unidade. Toda ação fica registrada.</p>
+<div style="display:flex;flex-direction:column;gap:10px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#56616F">DO EVENTO AO REGISTRO</span>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+<sc-for list="{{ monFlow }}" as="nd" hint-placeholder-count="7"><sc-if value="{{ nd.sep }}"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#287DD2" aria-hidden="true">→</span></sc-if><span style="font-size:13px;font-weight:500;color:{{ nd.color }};border:1px {{ nd.style }} {{ nd.border }};background:#07090C;border-radius:3px;padding:6px 10px;white-space:nowrap">{{ nd.label }}</span></sc-for>
+</div>
+</div>
+<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border-top:1px solid #171D26">
+<sc-for list="{{ monNotes }}" as="m" hint-placeholder-count="3"><li style="display:grid;grid-template-columns:24px minmax(0,1fr);gap:12px;padding:16px 0;border-bottom:1px solid #171D26"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4C9BEA;padding-top:3px">{{ m.n }}</span><span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:600;color:#EEF1F4">{{ m.t }}</span><span style="font-size:15px;line-height:1.55;color:#8A94A3">{{ m.d }}</span></span></li></sc-for>
+</ul>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600" style-hover="background:#2A66BC;color:#FFFFFF">Solicitar avaliação de monitoramento <span aria-hidden="true">→</span></a>
+<a href="Monitoramento%2024h.dc.html" style="display:inline-flex;align-items:center;height:52px;padding:0 4px;color:#4C9BEA;font-size:16px;font-weight:600">Conhecer a Central TIMP</a>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">INTERFACE DA CENTRAL · DEMONSTRAÇÃO</span>
+<sc-if value="{{ annotations }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#E8A33D;border:1px dashed #E8A33D;border-radius:3px;padding:4px 8px;white-space:nowrap">DADOS FICTÍCIOS</span></sc-if>
+</div>
+<div style="background:#0C1015;border:1px solid #232B36;border-radius:6px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #171D26;border-top:3px solid {{ evTop }};flex-wrap:wrap">
+<span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+<span style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.06em;color:#07090C;background:#E5484D;border-radius:3px;padding:4px 8px"><span style="width:7px;height:7px;background:#07090C;border-radius:1px"></span>CRÍTICO</span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ evStatusColor }};border:1px solid {{ evStatusColor }};border-radius:3px;padding:3px 8px">{{ evStatus }}</span>
+</span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500;color:#EEF1F4">02:14:37</span>
+</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:16px">
+<span style="font-size:20px;font-weight:700;color:#FFFFFF;letter-spacing:-.01em">Abertura fora do horário</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:12px">
+<span style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">CLIENTE</span><span style="font-size:14px;color:#DCE1E7">Empresa X</span></span>
+<span style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">UNIDADE</span><span style="font-size:14px;color:#DCE1E7">Barra</span></span>
+<span style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">LOCAL</span><span style="font-size:14px;color:#DCE1E7">Entrada lateral</span></span>
+<span style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">ZONA</span><span style="font-size:14px;color:#DCE1E7;font-family:'JetBrains Mono',monospace">03</span></span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+<sc-for list="{{ cams }}" as="cm" hint-placeholder-count="2">
+<div style="aspect-ratio:16/9;border:1px solid {{ cm.border }};border-radius:4px;background:{{ cm.bg }};display:flex;flex-direction:column;justify-content:space-between;padding:8px;background-image:repeating-linear-gradient(0deg,rgba(35,43,54,.35) 0 1px,transparent 1px 6px)">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:#B6BEC9"><span>{{ cm.id }}</span><span>{{ cm.state }}</span></span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#56616F">{{ cm.label }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid #232B36;border-radius:4px;background:#07090C">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#4C9BEA">PROTOCOLO · UNIDADE BARRA</span>
+<span style="font-size:13px;line-height:1.6;color:#B6BEC9">Horário 08h–19h · Evento fora do horário: alta prioridade · Contato 1: responsável principal · Contato 2: responsável secundário · Depois: seguir protocolo específico.</span>
+</div>
+<div style="display:flex;flex-direction:column;padding:4px 0">
+<sc-for list="{{ evTimeline }}" as="a" hint-placeholder-count="1">
+<div style="display:grid;grid-template-columns:70px 14px minmax(0,1fr);gap:10px;align-items:start;padding:6px 0">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#B6BEC9">{{ a.t }}</span>
+<span style="width:9px;height:9px;border-radius:50%;border:2px solid {{ a.hex }};margin-top:3px"></span>
+<span style="font-size:14px;color:#EEF1F4">{{ a.what }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid #171D26;padding-top:14px">
+<button type="button" onClick="{{ evNext }}" style="height:44px;padding:0 16px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:#2A66BC">{{ evAction }}</button>
+<span style="display:flex;align-items:center;font-size:13px;color:#8A94A3">{{ evHint }}</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="projetos" data-screen-label="Projetos / Cases">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(32px,4vw,48px)">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px 64px;align-items:end">
+<div style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">08 — PROJETOS</span>
+<h2 style="margin:0;font-size:clamp(30px,3.6vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Projetos reais, publicados com autorização.</h2>
+</div>
+<p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:32em;text-wrap:pretty">Cada case mostra o segmento, o desafio, a solução, as tecnologias utilizadas e um resultado verificável, com fotos reais da instalação.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px">
+<sc-for list="{{ caseSlots }}" as="c" hint-placeholder-count="3">
+<article style="display:flex;flex-direction:column;border:1px dashed #343E4B;border-radius:8px;overflow:hidden">
+<div style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:#0C1015;border-bottom:1px dashed #343E4B"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#56616F">FOTO REAL DA INSTALAÇÃO</span></div>
+<div style="padding:18px;display:flex;flex-direction:column;gap:10px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#8A94A3">{{ c.seg }}</span>
+<span style="font-size:18px;font-weight:600;color:#56616F">Nome do projeto</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ c.fields }}" as="f"><span style="font-size:12px;color:#8A94A3;border:1px solid #232B36;border-radius:3px;padding:4px 8px">{{ f }}</span></sc-for></div>
+</div>
+</article>
+</sc-for>
+</div>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px">
+<sc-if value="{{ annotations }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#E8A33D;border:1px dashed #E8A33D;border-radius:3px;padding:6px 10px">PROTÓTIPO · SEÇÃO ATIVADA QUANDO HOUVER CASES REAIS PUBLICADOS</span></sc-if>
+<a href="#contato" style="font-size:15px;font-weight:600;color:#4C9BEA">Tem um projeto semelhante? Fale com a equipe →</a>
+</div>
+</div>
+</section>
+
+<section id="segmentos" data-screen-label="Segmentos" style="border-top:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:clamp(32px,5vw,80px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:20px;position:{{ segSticky }};top:112px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">09 — SEGMENTOS</span>
+<h2 style="margin:0;font-size:clamp(30px,3.6vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Soluções para cada tipo de operação.</h2>
+<p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:28em">Os mesmos sistemas, combinados de acordo com a rotina, o risco e o tamanho de cada ambiente.</p>
+</div>
+<nav aria-label="Segmentos" style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ segments }}" as="s" hint-placeholder-count="7">
+<a href="{{ s.href }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) 24px;gap:14px;align-items:start;padding:22px 8px 22px 0;border-bottom:1px solid #171D26;color:#EEF1F4;transition:background 120ms,padding 200ms" style-hover="background:#0C1015;padding-left:12px;color:#FFFFFF">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4C9BEA;padding-top:6px">{{ s.n }}</span>
+<span style="display:flex;flex-direction:column;gap:6px"><span style="font-size:clamp(20px,2vw,26px);font-weight:600;letter-spacing:-.015em;line-height:1.2">{{ s.name }}</span><span style="font-size:15px;line-height:1.5;color:#8A94A3">{{ s.desc }}</span></span>
+<span style="color:#4C9BEA;font-size:18px;padding-top:4px" aria-hidden="true">→</span>
+</a>
+</sc-for>
+</nav>
+</div>
+</section>
+
+<section id="conhecimento" data-screen-label="Conhecimento TIMP" style="background:#FFFFFF;color:#07090C">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(32px,4vw,56px)">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px 48px">
+<div style="display:flex;flex-direction:column;gap:20px;max-width:760px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#2359A5">10 — CONHECIMENTO TIMP</span>
+<h2 style="margin:0;font-size:clamp(30px,3.6vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Respostas técnicas, escritas por quem instala.</h2>
+</div>
+<a href="Conhecimento.dc.html" style="font-size:16px;font-weight:600;color:#2359A5">Ver todos os conteúdos →</a>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(24px,3vw,40px)">
+<sc-for list="{{ articles }}" as="a" hint-placeholder-count="3">
+<a href="Artigo.dc.html" style="display:flex;flex-direction:column;gap:18px;color:#07090C" style-hover="color:#2359A5">
+<div aria-hidden="true" style="aspect-ratio:16/10;background:#07090C;border-radius:6px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;background-image:linear-gradient(rgba(35,43,54,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.5) 1px,transparent 1px);background-size:20px 20px">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3"><span>{{ a.catShort }}</span><span>TIMP</span></span>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px">
+<sc-for list="{{ a.cover }}" as="cv"><sc-if value="{{ cv.sep }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#287DD2">→</span></sc-if><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ cv.color }};border:1px solid {{ cv.border }};border-radius:3px;padding:5px 8px;background:#000">{{ cv.t }}</span></sc-for>
+</div>
+</div>
+<span style="display:flex;flex-direction:column;gap:8px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#56616F">{{ a.cat }}</span>
+<span style="font-size:22px;font-weight:700;letter-spacing:-.015em;line-height:1.2;text-wrap:balance">{{ a.title }}</span>
+<span style="font-size:15px;line-height:1.55;color:#343E4B">{{ a.dek }}</span>
+</span>
+</a>
+</sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));column-gap:40px;border-top:1px solid #DCE1E7">
+<sc-for list="{{ moreArticles }}" as="m" hint-placeholder-count="4"><a href="Conhecimento.dc.html" style="display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:60px;border-bottom:1px solid #DCE1E7;color:#07090C;font-size:16px;font-weight:600" style-hover="color:#2359A5"><span style="display:flex;flex-direction:column;gap:2px;padding:10px 0"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#56616F;font-weight:400">{{ m.cat }}</span>{{ m.t }}</span><span style="color:#2359A5" aria-hidden="true">→</span></a></sc-for>
+</div>
+</div>
+</section>
+
+<section id="contato" data-final-cta="" data-screen-label="CTA final / Contato" style="background:#0B1E3D">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(64px,8vw,128px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,88px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:28px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8CC2FF">11 — SOLICITAR UM PROJETO</span>
+<h2 style="margin:0;font-size:clamp(34px,4.4vw,64px);line-height:1;letter-spacing:-.035em;font-weight:700;text-wrap:balance">Conte o que sua operação precisa.</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#DCE1E7;max-width:30em">Descreva o ambiente e o objetivo. A equipe comercial retorna com o próximo passo: visita técnica, diagnóstico ou proposta de projeto.</p>
+<dl style="margin:0;display:flex;flex-direction:column;border-top:1px solid rgba(140,194,255,.22)">
+<div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid rgba(140,194,255,.14)"><dt style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#8CC2FF;padding-top:4px">WHATSAPP</dt><dd style="margin:0"><a href="{{ waHome }}" target="_blank" rel="noopener" style="font-size:17px;font-weight:600;color:#FFFFFF" style-hover="color:#8CC2FF">(21) 98331-8387</a></dd></div>
+<div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid rgba(140,194,255,.14)"><dt style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#8CC2FF;padding-top:4px">E-MAIL</dt><dd style="margin:0"><a href="mailto:comercial@timp.com.br" style="font-size:17px;font-weight:600;color:#FFFFFF" style-hover="color:#8CC2FF">comercial@timp.com.br</a></dd></div>
+<div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid rgba(140,194,255,.14)"><dt style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#8CC2FF;padding-top:4px">ATENDIMENTO</dt><dd style="margin:0;font-size:16px;line-height:1.5;color:#FFFFFF;max-width:26em">Todo o estado do Rio de Janeiro. Projetos especiais de grande porte em outras regiões do Brasil sob avaliação técnica e logística.</dd></div>
+</dl>
+</div>
+
+<dc-import name="ProjectForm" annotations="{{ annotations }}" hint-size="100%,900px"></dc-import>
+</div>
+</section>
+</main>
+
+<dc-import name="SiteFooter" sticky-cta="{{ stickyProp }}" hint-size="100%,520px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;hero&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rj45&quot;,&quot;sistema&quot;,&quot;edificacao&quot;],&quot;default&quot;:&quot;rj45&quot;,&quot;tsType&quot;:&quot;'rj45' | 'sistema' | 'edificacao'&quot;,&quot;section&quot;:&quot;Home&quot;},&quot;staticMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Protótipo&quot;},&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Protótipo&quot;},&quot;stickyCta&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Mobile&quot;}}">
+const WA = t => 'https://wa.me/5521983318387?text=' + encodeURIComponent(t);
+const ECOS = [
+  { n: '01', name: 'Infraestrutura & Conectividade', short: 'infraestrutura', desc: 'A base física e lógica da operação: do ponto de rede ao servidor. Projeto e instalação de cabeamento, redes, Wi-Fi, fibra óptica, Starlink e servidores.',
+    items: ['Cabeamento estruturado', 'Infraestrutura de redes', 'Wi-Fi empresarial', 'Fibra óptica', 'Instalação de Starlink', 'Servidores'],
+    flows: [{ title: 'CABEAMENTO ESTRUTURADO', nodes: ['Internet', 'Firewall', 'Switch', 'Patch Panel', 'Cabeamento', 'Usuários · AP · CFTV · Telefonia · Acesso'], hl: 2, sep: '→' }],
+    cta: 'Solicitar projeto de cabeamento', ctaHref: '#contato' },
+  { n: '02', name: 'Segurança Eletrônica', short: 'segurança eletrônica', desc: 'Câmeras, alarmes, controle de acesso e fechaduras projetados como um sistema único, apoiado na rede e preparado para monitoramento.',
+    items: ['CFTV e câmeras de segurança', 'Alarmes', 'Controle de acesso', 'Fechaduras eletrônicas', 'Monitoramento 24h'],
+    flows: [{ title: 'CFTV', nodes: ['Câmera', 'PoE / Rede', 'NVR', 'Visualização', 'Monitoramento'], hl: 2, sep: '→' }, { title: 'CONTROLE DE ACESSO', nodes: ['Pessoa', 'Identificação', 'Autorização', 'Porta', 'Registro'], hl: 2, sep: '→' }],
+    cta: 'Solicitar projeto de CFTV', ctaHref: '#contato' },
+  { n: '03', name: 'TI Corporativa', short: 'TI corporativa', desc: 'Suporte, consultoria e servidores para que a equipe trabalhe sem interrupção. Ambiente local, em cloud ou híbrido, conforme a operação exige.',
+    items: ['Suporte de TI para empresas', 'Consultoria em TI', 'Cloud', 'Virtualização', 'Segurança da informação'],
+    flows: [{ title: 'SERVIDORES', nodes: ['Local', 'Híbrido', 'Cloud'], hl: 1, sep: '↔' }],
+    cta: 'Solicitar diagnóstico', ctaHref: '#contato' },
+  { n: '04', name: 'Automação & Comunicação', short: 'automação e comunicação', desc: 'Sistemas prediais integrados e comunicação por voz sobre a mesma infraestrutura de rede.',
+    items: ['Automação predial', 'Telefonia IP', 'PABX'],
+    flows: [{ title: 'AUTOMAÇÃO', nodes: ['Sistemas', 'Integração', 'Controle'], hl: 1, sep: '→' }, { title: 'TELEFONIA', nodes: ['Usuário', 'Rede', 'Telefonia IP', 'PABX', 'Comunicação'], hl: 3, sep: '→' }],
+    cta: 'Solicitar avaliação', ctaHref: '#contato' },
+  { n: '05', name: 'Monitoramento 24h', short: 'monitoramento', desc: 'A Central TIMP acompanha os eventos dos sistemas instalados e segue o protocolo de cada cliente, 24 horas por dia.',
+    items: ['Central TIMP de Monitoramento'],
+    flows: [{ title: 'CENTRAL TIMP', nodes: ['Dispositivo', 'Evento', 'Central TIMP', 'Verificação', 'Protocolo', 'Registro'], hl: 2, sep: '→' }],
+    cta: 'Conhecer a Central TIMP', ctaHref: '#monitoramento' }
+];
+const LINKS = { 'Cabeamento estruturado': 'Pagina%20de%20Servico.dc.html?s=cabeamento', 'Wi-Fi empresarial': 'Pagina%20de%20Servico.dc.html?s=wifi', 'CFTV e câmeras de segurança': 'Pagina%20de%20Servico.dc.html?s=cftv', 'Controle de acesso': 'Pagina%20de%20Servico.dc.html?s=acesso', 'Instalação de Starlink': 'Instalacao%20Starlink.dc.html', 'Alarmes': 'Seguranca%20Eletronica.dc.html#alarmes', 'Monitoramento 24h': 'Monitoramento%2024h.dc.html', 'Central TIMP de Monitoramento': 'Monitoramento%2024h.dc.html' };
+const GROUPS = [
+  { n: '01', label: 'INFRAESTRUTURA', eco: 0, links: ['Cabeamento Estruturado', 'Infraestrutura de Redes', 'Wi-Fi Empresarial', 'Fibra Óptica'] },
+  { n: '02', label: 'SEGURANÇA ELETRÔNICA', eco: 1, links: ['CFTV e Câmeras de Segurança', 'Segurança Eletrônica', 'Alarmes', 'Controle de Acesso', 'Fechaduras Eletrônicas'] },
+  { n: '03', label: 'TI CORPORATIVA', eco: 2, links: ['Suporte de TI para Empresas', 'Consultoria em TI', 'Servidores, Cloud e Virtualização', 'Segurança da Informação'] },
+  { n: '04', label: 'AUTOMAÇÃO & COMUNICAÇÃO', eco: 3, links: ['Automação Predial', 'Telefonia IP e PABX'] }
+];
+const SEGMENTS = [
+  { name: 'Construtoras e Engenharia', desc: 'Infraestrutura tecnológica planejada desde o projeto da obra.', href: 'Construtoras%20e%20Engenharia.dc.html' },
+  { name: 'Empresas e Escritórios', desc: 'Rede, Wi-Fi, suporte de TI e controle de acesso para o dia a dia.', href: '#' },
+  { name: 'Condomínios', desc: 'CFTV, controle de acesso, fechaduras e monitoramento das áreas comuns.', href: '#' },
+  { name: 'Clínicas', desc: 'Rede estável, sistemas disponíveis e segurança no ambiente de atendimento.', href: '#' },
+  { name: 'Comércio e Restaurantes', desc: 'Câmeras, alarme, Wi-Fi e rede para a operação e o caixa.', href: '#' },
+  { name: 'Indústrias e Galpões', desc: 'Fibra, Wi-Fi de grande área, CFTV perimetral e sensores.', href: '#' },
+  { name: 'Empresas com Múltiplas Unidades', desc: 'Padrão técnico único e gestão centralizada entre unidades.', href: '#' }
+];
+const FLOORS = [
+  { lvl: 'COB', name: 'Cobertura', sys: [['Energia solar', 'energia'], ['Wi-Fi externo', 'rede'], ['CFTV perimetral', 'seg']] },
+  { lvl: '03', name: 'Pavimento tipo · escritórios', sys: [['Pontos de rede', 'rede'], ['Wi-Fi', 'rede'], ['Telefonia IP', 'auto'], ['Controle de acesso', 'seg']] },
+  { lvl: '02', name: 'Pavimento tipo · salas', sys: [['Cabeamento', 'rede'], ['Fechaduras eletrônicas', 'seg'], ['Automação predial', 'auto']] },
+  { lvl: '01', name: 'Térreo · recepção e acessos', sys: [['Reconhecimento facial', 'seg'], ['CFTV', 'seg'], ['Alarmes', 'seg'], ['PABX', 'auto']] },
+  { lvl: 'SS', name: 'Subsolo · garagem e sala técnica', sys: [['Sala técnica', 'rede'], ['Entrada de fibra', 'rede'], ['Carregadores EV', 'energia'], ['Infraestrutura futura', 'energia']] }
+];
+const LAYERS = [['all', 'Todas as camadas'], ['rede', 'Rede e conectividade'], ['seg', 'Segurança'], ['auto', 'Automação e voz'], ['energia', 'Energia']];
+const EV = [
+  { status: 'NOVO', color: '#E8A33D', action: 'Assumir evento', hint: 'Evento aguardando operador', add: null },
+  { status: 'ASSUMIDO', color: '#4C9BEA', action: 'Abrir câmeras relacionadas', hint: 'Zona 03 · CAM-07, CAM-08', add: { t: '02:14:41', what: 'Operador assumiu o evento', hex: '#287DD2' } },
+  { status: 'EM VERIFICAÇÃO', color: '#4C9BEA', action: 'Registrar contato', hint: 'Protocolo: contato 1', add: { t: '02:15:03', what: 'CAM-07 e CAM-08 abertas', hex: '#287DD2' } },
+  { status: 'EM VERIFICAÇÃO', color: '#4C9BEA', action: 'Classificar e encerrar', hint: 'Contato registrado', add: { t: '02:16:02', what: 'Contato com responsável principal', hex: '#287DD2' } },
+  { status: 'ENCERRADO', color: '#5FD49A', action: 'Reiniciar demonstração', hint: 'Histórico preservado na auditoria', add: { t: '02:30:00', what: 'Encerrado · classificação registrada', hex: '#2FBF71' } }
+];
+
+const MONO = (size, weight) => ({ fontFamily: "'JetBrains Mono',monospace", fontSize: size, fontWeight: weight || 400, letterSpacing: '.08em' });
+const HERO_GEO = {
+  d: { vb: '0 0 760 760', par: 'xMaxYMid meet', vert: false, ps: 1, sw: { x: 560, y: 220, w: 92, h: 340 }, ports: [280, 350, 420, 490], upY: 385,
+    cables: ['M 110 -40 C 140 190 340 280 510 280', 'M 420 -40 C 420 150 390 350 510 350', 'M 40 800 C 120 560 320 420 510 420', 'M 400 800 C 410 640 400 490 510 490'],
+    up: 'M 652 385 C 700 385 740 385 860 385', glow: [606, 385, 300], widths: [9, 7, 10, 8] },
+  t: { vb: '0 0 1000 440', par: 'xMidYMid meet', vert: true, ps: 1, sw: { x: 360, y: 300, w: 280, h: 64 }, ports: [420, 473, 527, 580],
+    cables: ['M -40 110 C 220 100 420 120 420 250', 'M 290 -40 C 320 80 473 110 473 250', 'M 710 -40 C 680 80 527 110 527 250', 'M 1040 130 C 800 120 580 130 580 250'],
+    up: 'M 500 364 L 500 480', glow: [500, 320, 260], widths: [8, 7, 7, 8] },
+  m: { vb: '0 0 390 300', par: 'xMidYMid meet', vert: true, ps: 0.78, sw: { x: 85, y: 222, w: 220, h: 54 }, ports: [128, 173, 217, 262],
+    cables: ['M -30 40 C 80 50 128 90 128 184', 'M 120 -30 C 140 60 173 90 173 184', 'M 280 -30 C 250 60 217 90 217 184', 'M 420 60 C 300 70 262 100 262 184'],
+    up: 'M 195 276 L 195 340', glow: [195, 240, 170], widths: [6, 5, 5, 6] }
+};
+const SL_GEO = {
+  d: { W: 1440, H: 820, win: 0, k: 1, base: 780, satY: 80, sat: 1, short: false },
+  t: { W: 834, H: 1048, win: 310, k: 1, base: 1008, satY: 770, sat: 1, short: false },
+  m: { W: 390, H: 290, win: 520, k: 0.8125, base: 270, satY: 46, sat: 0.8, short: true }
+};
+const RIDGE = [[-400, 20], [0, 30], [60, 80], [105, 140], [125, 150], [185, 150], [215, 100], [250, 70], [285, 112], [300, 118], [315, 98], [335, 122], [350, 126], [380, 70], [430, 60], [480, 100], [520, 150], [540, 178], [556, 150], [600, 90], [640, 26], [930, 24], [960, 60], [990, 86], [1020, 70], [1045, 84], [1075, 150], [1100, 172], [1125, 176], [1150, 160], [1172, 110], [1200, 34], [1440, 26], [1840, 20]];
+const CITY = [[648, 14, 40], [664, 10, 62], [678, 16, 34], [698, 12, 74], [716, 26, 104, true], [746, 12, 54], [762, 16, 70], [782, 10, 44], [796, 18, 58], [818, 12, 38], [834, 14, 66], [852, 10, 30], [866, 16, 48], [886, 12, 26], [902, 14, 40]];
+const SL_ST = { dim: { bc: '#232B36', bg: 'rgba(12,16,21,.6)', op: 0.45, bs: 'solid' }, on: { bc: '#343E4B', bg: '#0C1015', op: 1, bs: 'solid' }, act: { bc: '#287DD2', bg: 'rgba(17,48,94,.35)', op: 1, bs: 'solid' }, stby: { bc: '#56616F', bg: '#0C1015', op: 1, bs: 'dashed' }, fail: { bc: '#E5484D', bg: 'rgba(229,72,77,.08)', op: 1, bs: 'dashed' } };
+const SL_BD = { act: ['● ATIVO', '#8CC2FF', '#287DD2'], sig: ['● SINAL', '#8CC2FF', '#287DD2'], main: ['● PRINCIPAL', '#8CC2FF', '#287DD2'], stby: ['◌ RESERVA', '#B6BEC9', '#56616F'], fail: ['✕ FALHA', '#FF8A8E', '#E5484D'], wanSl: ['WAN · STARLINK', '#8CC2FF', '#287DD2'], wanFb: ['WAN · FIBRA', '#8CC2FF', '#287DD2'] };
+const SL_CAP = [
+  ['01 · CONECTIVIDADE', 'Satélite → sinal → local. O terminal Starlink leva conectividade a endereços onde a rede terrestre não chega ou não é suficiente.', '#8CC2FF'],
+  ['02 · INTEGRAÇÃO TIMP', 'Starlink → firewall Dual WAN → rede TIMP → Wi-Fi e dispositivos. O link entra na infraestrutura como parte do projeto.', '#8CC2FF'],
+  ['03 · CONTINGÊNCIA · OPERAÇÃO NORMAL', 'A fibra é o link principal. O Starlink permanece disponível no firewall como caminho secundário.', '#8CC2FF'],
+  ['03 · CONTINGÊNCIA · FALHA DO LINK TERRESTRE', 'Com a fibra degradada ou interrompida, o firewall passa o tráfego para o Starlink. Conectividade principal ou contingência, conforme o projeto.', '#FF8A8E']
+];
+const ID_LAYERS = [
+  { n: '01', tag: '01 · AMBIENTE', name: 'Ambiente e operação', desc: 'A edificação, as pessoas e a rotina que a tecnologia precisa sustentar.' },
+  { n: '02', tag: '02 · CABEAMENTO', name: 'Infraestrutura física', desc: 'Cabeamento estruturado, fibra óptica, sala técnica e rotas planejadas.' },
+  { n: '03', tag: '03 · REDE', name: 'Rede e Wi-Fi', desc: 'Switches, firewall e Wi-Fi empresarial dimensionados para a operação.' },
+  { n: '04', tag: '04 · SEGURANÇA', name: 'Segurança e automação', desc: 'CFTV, controle de acesso, alarmes e automação apoiados na mesma rede.' },
+  { n: '05', tag: '05 · OPERAÇÃO TIMP', name: 'Operação TIMP', desc: 'Suporte, manutenção e monitoramento 24h pela Central TIMP.' }
+];
+
+class Component extends DCLogic {
+  state = { vw: typeof window !== 'undefined' ? window.innerWidth : 1440, vh: typeof window !== 'undefined' ? window.innerHeight : 900, slPhase: 0, idIdx: 0, menu: null, drawer: false, sub: null, eco: 0, ecoOpen: 0, layer: 'all', step: 0,
+    form: { nome: '', empresa: '', email: '', whats: '', tipo: '', msg: '' }, errors: {}, sent: false };
+  urlHero = (() => { try { return new URLSearchParams(location.search).get('hero'); } catch (e) { return null; } })();
+  urlMotionOff = (() => { try { return new URLSearchParams(location.search).get('motion') === 'off'; } catch (e) { return false; } })();
+  heroSceneRef = el => { this.heroSceneEl = el; };
+  slRef = el => { this.slEl = el; };
+  idRef = el => { this.idEl = el; };
+  rm() { try { return !!(this.props.staticMotion || this.urlMotionOff || window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { return false; } }
+  applyMotion() { const off = this.rm(); if (off) document.documentElement.setAttribute('data-motion', 'off'); else document.documentElement.removeAttribute('data-motion'); }
+  hh() { return window.innerWidth >= 1280 ? 76 : 64; }
+  track(el) { const vh = window.innerHeight, hh = this.hh(); const sh = el.firstElementChild ? el.firstElementChild.offsetHeight : vh - hh; const top = el.getBoundingClientRect().top; return { top, span: el.offsetHeight - sh, abs: top + window.scrollY - hh }; }
+  scrollTick() {
+    if (window.__timpFreeze) return;
+    const rm = this.rm(), y = window.scrollY, hh = this.hh();
+    const hs = this.heroSceneEl;
+    if (hs) hs.style.transform = (!rm && window.innerWidth >= 1280) ? 'translate3d(0,' + (Math.min(y, 800) * 0.06).toFixed(1) + 'px,0)' : '';
+    const prog = el => { const t = this.track(el); return t.span > 0 ? Math.min(1, Math.max(0, (hh - t.top) / t.span)) : 0; };
+    if (this.slEl) { const p = prog(this.slEl); this.slEl.style.setProperty('--slp', p.toFixed(3)); const ph = p < 0.25 ? 0 : p < 0.5 ? 1 : p < 0.75 ? 2 : 3; if (ph !== this.state.slPhase) this.setState({ slPhase: ph }); }
+    if (this.idEl) { const p = prog(this.idEl); this.idEl.style.setProperty('--idp', rm ? '1' : Math.min(1, p * 1.25).toFixed(3)); const ix = Math.min(4, Math.floor(p * 5)); if (ix !== this.state.idIdx) this.setState({ idIdx: ix }); }
+  }
+  goTrack(el, frac) { if (!el) return; const t = this.track(el); window.scrollTo({ top: Math.round(t.abs + t.span * frac) + 2, behavior: this.rm() ? 'auto' : 'smooth' }); }
+  goPhase(i) { this.goTrack(this.slEl, [0.12, 0.37, 0.62, 0.88][i]); }
+  goLayer(i) { this.goTrack(this.idEl, (i + 0.5) / 5); }
+  heroPulse(key, d, w, dur, delay, ns) {
+    const h = React.createElement, anim = 'timpDash ' + dur + ' ' + delay + 's cubic-bezier(.45,0,.25,1) infinite';
+    const base = { d, pathLength: 100, fill: 'none', strokeLinecap: 'round', vectorEffect: ns ? 'non-scaling-stroke' : undefined };
+    const st = { strokeDasharray: '6 200', strokeDashoffset: 6, opacity: 0, animation: anim };
+    return h('g', { key }, h('path', Object.assign({}, base, { stroke: '#287DD2', strokeOpacity: 0.35, strokeWidth: w + 4, style: st })), h('path', Object.assign({}, base, { stroke: '#8CC2FF', strokeWidth: Math.max(2, w * 0.3), style: st })));
+  }
+  led(key, x, y, delay, w, hgt) { return React.createElement('rect', { key, x, y, width: w || 10, height: hgt || 8, rx: 1, fill: '#2FBF71', style: { animation: 'timpLed 3.6s ' + delay + 's linear infinite' } }); }
+  plug(key, tx, ty, rot, s, delay) {
+    const h = React.createElement;
+    const c = [-8, -5, -2, 1, 4, 7].map((yy, i) => h('line', { key: i, x1: -14, x2: -3, y1: yy, y2: yy, stroke: '#C9A24A', strokeWidth: 0.9 }));
+    return h('g', { key, transform: 'translate(' + tx + ' ' + ty + ') rotate(' + rot + ') scale(' + s + ')' }, h('g', { style: { animation: 'timpFade .6s ' + delay + 's ease-out both' } },
+      h('path', { d: 'M -56 -7 L -40 -10 L -40 10 L -56 7 Z', fill: '#1B2029', stroke: '#343E4B' }),
+      h('rect', { x: -40, y: -11, width: 40, height: 22, rx: 2, fill: 'rgba(140,194,255,.08)', stroke: '#8A94A3' }),
+      h('line', { x1: -40, x2: -16, y1: 0, y2: 0, stroke: '#343E4B' }),
+      h('path', { d: 'M -36 -11 L -14 -16 L -12 -11', fill: 'none', stroke: '#8A94A3' }), c));
+  }
+  heroScene(k) {
+    const h = React.createElement, G = HERO_GEO[k], sw = G.sw, ps = G.ps, kids = [];
+    kids.push(h('defs', { key: 'defs' }, h('radialGradient', { id: 'timpHeroGlow' }, h('stop', { offset: '0%', stopColor: '#287DD2', stopOpacity: 0.22 }), h('stop', { offset: '100%', stopColor: '#287DD2', stopOpacity: 0 }))));
+    kids.push(h('circle', { key: 'glow', cx: G.glow[0], cy: G.glow[1], r: G.glow[2], fill: 'url(#timpHeroGlow)' }));
+    kids.push(h('path', { key: 'up', d: G.up, fill: 'none', stroke: '#1E252F', strokeWidth: G.vert ? 6 * ps : 8, strokeLinecap: 'round' }));
+    kids.push(this.heroPulse('upp', G.up, G.vert ? 4 : 6, '1.8s', 1.6));
+    G.cables.forEach((d, i) => {
+      const w = G.widths[i], draw = 'timpDraw 1.4s ' + (0.1 + i * 0.12) + 's cubic-bezier(.2,.7,.2,1) both';
+      kids.push(h('path', { key: 'c' + i, d, pathLength: 100, fill: 'none', stroke: '#1E252F', strokeWidth: w, strokeLinecap: 'round', style: { strokeDasharray: 100, animation: draw } }));
+      kids.push(h('path', { key: 's' + i, d, pathLength: 100, fill: 'none', stroke: 'rgba(140,194,255,.16)', strokeWidth: 1.2, strokeLinecap: 'round', style: { strokeDasharray: 100, animation: draw } }));
+      kids.push(this.heroPulse('p' + i, d, w, '3.6s', 1.4 + i * 0.9));
+    });
+    kids.push(h('rect', { key: 'sw', x: sw.x, y: sw.y, width: sw.w, height: sw.h, rx: 6, fill: '#0C1015', stroke: '#343E4B' }));
+    if (!G.vert) {
+      kids.push(h('text', { key: 'swl', x: sw.x + sw.w / 2, y: sw.y + 32, textAnchor: 'middle', fill: '#EEF1F4', style: MONO(12, 500) }, 'TIMP'));
+            kids.push(h('rect', { key: 'uph', x: sw.x + sw.w - 16, y: G.upY - 10, width: 18, height: 20, rx: 2, fill: '#000', stroke: '#232B36' }));
+      kids.push(h('text', { key: 'upl', x: sw.x + sw.w + 16, y: G.upY - 14, fill: '#8A94A3', style: MONO(9) }, 'OPERAÇÃO'));
+      G.ports.forEach((py, i) => {
+        kids.push(h('rect', { key: 'ph' + i, x: sw.x - 2, y: py - 13, width: 22, height: 26, rx: 2, fill: '#000', stroke: '#232B36' }));
+        kids.push(h('text', { key: 'pl' + i, x: sw.x + 34, y: py + 3, fill: '#56616F', style: MONO(9) }, 'P' + (i + 1)));
+        kids.push(this.led('led' + i, sw.x + sw.w - 22, py - 4, 1.4 + i * 0.9));
+      });
+      G.ports.forEach((py, i) => kids.push(this.plug('pg' + i, sw.x + 6, py, 0, 1, 0.9 + i * 0.1)));
+    } else {
+      const cx = sw.x + sw.w / 2;
+      kids.push(h('text', { key: 'swl', x: sw.x + (k === 'm' ? 7 : 14), y: sw.y + sw.h / 2 + 4, fill: '#EEF1F4', style: MONO(k === 'm' ? 9 : 11, 500) }, 'TIMP'));
+      kids.push(h('text', { key: 'upl', x: cx + 12, y: sw.y + sw.h + 22, fill: '#8A94A3', style: MONO(9) }, 'OPERAÇÃO'));
+      G.ports.forEach((px, i) => {
+        kids.push(h('rect', { key: 'ph' + i, x: px - 13 * ps, y: sw.y - 2, width: 26 * ps, height: 22 * ps, rx: 2, fill: '#000', stroke: '#232B36' }));
+        kids.push(this.led('led' + i, px - 5 * ps, sw.y + sw.h - 14 * ps, 1.4 + i * 0.9, 10 * ps, 6 * ps));
+      });
+      G.ports.forEach((px, i) => kids.push(this.plug('pg' + i, px, sw.y + 6 * ps, 90, ps, 0.9 + i * 0.1)));
+    }
+    return h('svg', { viewBox: G.vb, preserveAspectRatio: G.par, width: '100%', height: '100%', focusable: 'false', style: { display: 'block', overflow: 'visible' } }, kids);
+  }
+  slScene(key, ph) {
+    const h = React.createElement, G = SL_GEO[key], k = G.k, X = x => (x - G.win) * k, base = G.base, W = G.W, H = G.H;
+    const sx = W / 2, sy = G.satY, cb = CITY.find(b => b[3]), cx = X(cb[0] + cb[1] / 2), roof = base - cb[2] * k;
+    const kids = [];
+    kids.push(h('defs', { key: 'defs' }, h('linearGradient', { id: 'timpAtm', x1: 0, y1: 0, x2: 0, y2: 1 }, h('stop', { offset: '0%', stopColor: '#0B1E3D', stopOpacity: 0 }), h('stop', { offset: '100%', stopColor: '#0B1E3D', stopOpacity: 0.6 }))));
+    kids.push(h('rect', { key: 'atm', x: -400, y: base - 300 * k, width: W + 800, height: 300 * k, fill: 'url(#timpAtm)' }));
+    kids.push(h('path', { key: 'orb', d: 'M -100 ' + (sy + 120 * k) + ' Q ' + sx + ' ' + (sy - 120 * k) + ' ' + (W + 100) + ' ' + (sy + 120 * k), fill: 'none', stroke: '#343E4B', strokeDasharray: '2 6' }));
+    const beamOn = ph !== 2, bd = 'M ' + sx + ' ' + (sy + 8) + ' L ' + cx + ' ' + (roof - 8);
+    kids.push(h('polygon', { key: 'cone', points: sx + ',' + (sy + 8) + ' ' + (cx - 70 * k) + ',' + roof + ' ' + (cx + 70 * k) + ',' + roof, fill: '#287DD2', opacity: beamOn ? 0.07 : 0.02, style: { transition: 'opacity 320ms' } }));
+    kids.push(h('path', { key: 'ridge', d: 'M ' + X(-400) + ' ' + base + RIDGE.map(p => ' L ' + X(p[0]) + ' ' + (base - p[1] * k)).join('') + ' L ' + X(1840) + ' ' + base + ' Z', fill: '#0A0E13', stroke: '#343E4B' }));
+    CITY.forEach((b, i) => kids.push(h('rect', { key: 'b' + i, x: X(b[0]), y: base - b[2] * k, width: b[1] * k, height: b[2] * k, fill: b[3] ? '#0C1622' : '#0A0E13', stroke: b[3] ? '#287DD2' : '#232B36' })));
+    [8, 16].forEach((o, i) => kids.push(h('line', { key: 'sea' + i, x1: -400, x2: W + 400, y1: base + o * k, y2: base + o * k, stroke: '#11151B' })));
+    kids.push(h('path', { key: 'beam', d: bd, fill: 'none', stroke: beamOn ? '#4C9BEA' : '#56616F', strokeWidth: 1.5, strokeOpacity: beamOn ? 0.9 : 0.5, style: { strokeDasharray: '3 7', animation: beamOn ? 'timpBeam 1s linear infinite' : 'none' } }));
+    if (beamOn) kids.push(this.heroPulse('bp', bd, 2, '2.4s', 0));
+    const fy = base + 5 * k, fd = 'M -400 ' + fy + ' L ' + (cx - 6) + ' ' + fy + ' L ' + (cx - 6) + ' ' + base;
+    const fs = ph < 2 ? ['#343E4B', '6 4', 1.5] : ph === 2 ? ['#4C9BEA', 'none', 2] : ['#E5484D', '4 5', 1.5];
+    kids.push(h('path', { key: 'fib', d: fd, fill: 'none', stroke: fs[0], strokeWidth: fs[2], strokeDasharray: fs[1] }));
+    if (ph === 2) kids.push(this.heroPulse('fp', fd, 2, '2.4s', 0));
+    if (ph === 3) { const bx = Math.max(40, X(560)); kids.push(h('text', { key: 'fx', x: bx, y: fy + 5, textAnchor: 'middle', fill: '#E5484D', style: { fontSize: 14, fontWeight: 700 } }, '✕')); kids.push(h('text', { key: 'fxl', x: bx, y: fy - 10, textAnchor: 'middle', fill: '#FF8A8E', style: MONO(9) }, 'FALHA')); }
+    kids.push(h('g', { key: 'dish', transform: 'translate(' + cx + ' ' + (roof - 4) + ') rotate(-24)' }, h('rect', { x: -10, y: -2.5, width: 20, height: 5, rx: 1, fill: '#DCE1E7' }), h('line', { x1: 0, y1: 2, x2: 0, y2: 6, stroke: '#DCE1E7' })));
+    kids.push(h('text', { key: 'dl', x: cx - 18, y: roof - 14, textAnchor: 'end', fill: '#DCE1E7', style: MONO(G.short ? 8.5 : 10) }, G.short ? 'STARLINK' : 'TERMINAL STARLINK'));
+    const S = G.sat;
+    kids.push(h('g', { key: 'sat', transform: 'translate(' + sx + ' ' + sy + ') scale(' + S + ')' },
+      h('line', { x1: -14, x2: 14, y1: 0, y2: 0, stroke: '#8A94A3' }),
+      h('rect', { x: -44, y: -5, width: 30, height: 10, fill: '#11305E', stroke: '#8A94A3' }), h('rect', { x: 14, y: -5, width: 30, height: 10, fill: '#11305E', stroke: '#8A94A3' }),
+      h('path', { d: 'M -34 -5 V 5 M -24 -5 V 5 M 24 -5 V 5 M 34 -5 V 5', stroke: '#8A94A3' }),
+      h('rect', { x: -9, y: -6, width: 18, height: 12, rx: 1, fill: '#0C1015', stroke: '#DCE1E7' })));
+    kids.push(h('text', { key: 'sl', x: sx + 54 * S, y: sy + 4, fill: '#B6BEC9', style: MONO(G.short ? 8.5 : 10) }, G.short ? 'SATÉLITE' : 'SATÉLITE · ÓRBITA BAIXA'));
+    kids.push(h('text', { key: 'fl', x: 12, y: H - 4, fill: ph < 2 ? '#56616F' : fs[0], style: MONO(G.short ? 8 : 9) }, G.short ? 'FIBRA' : 'FIBRA · LINK TERRESTRE'));
+    kids.push(h('text', { key: 'geo', x: W - 12, y: H - 4, textAnchor: 'end', fill: '#56616F', style: MONO(G.short ? 8 : 9) }, G.short ? 'RIO DE JANEIRO' : '22°54′S · 43°12′W · RIO DE JANEIRO'));
+    return h('svg', { viewBox: '0 0 ' + W + ' ' + H, preserveAspectRatio: 'xMidYMax meet', width: '100%', height: '100%', focusable: 'false', style: { display: 'block', overflow: 'visible' } }, kids);
+  }
+  slJoin(ph) {
+    const h = React.createElement;
+    const slS = ['dim', 'act', 'stby', 'act'][ph], fbS = ['dim', 'dim', 'act', 'fail'][ph];
+    const sty = { dim: ['#232B36', 'none', 1], act: ['#287DD2', 'none', 2], stby: ['#56616F', '4 4', 1.5], fail: ['#E5484D', '4 4', 1.5] };
+    const p1 = 'M 25 0 C 25 60 50 40 50 100', p2 = 'M 75 0 C 75 60 50 40 50 100';
+    const mk = (key, d, st) => { const v = sty[st]; return h('path', { key, d, fill: 'none', stroke: v[0], strokeWidth: v[2], strokeDasharray: v[1], vectorEffect: 'non-scaling-stroke' }); };
+    const a = mk('a', p1, slS), b = mk('b', p2, fbS);
+    const kids = slS === 'act' ? [b, a] : [a, b];
+    if (slS === 'act') kids.push(this.heroPulse('pa', p1, 0, '2s', 0, true));
+    if (fbS === 'act') kids.push(this.heroPulse('pb', p2, 0, '2s', 0, true));
+    return h('svg', { viewBox: '0 0 100 100', preserveAspectRatio: 'none', width: '100%', height: '100%', style: { display: 'block', overflow: 'visible' } }, kids);
+  }
+  planeArt(i, on) {
+    const h = React.createElement, c = on ? '#8CC2FF' : '#8A94A3', a = on ? '#4C9BEA' : '#56616F';
+    const ns = { vectorEffect: 'non-scaling-stroke', strokeWidth: 1.3 };
+    const L = (d, extra) => h('path', Object.assign({ d, fill: 'none', stroke: c }, ns, extra || {}));
+    const R = (x, y, w, hh, extra) => h('rect', Object.assign({ x, y, width: w, height: hh, fill: 'none', stroke: c }, ns, extra || {}));
+    const C = (cx, cy, r, extra) => h('circle', Object.assign({ cx, cy, r, fill: 'none', stroke: c }, ns, extra || {}));
+    let k = [];
+    if (i === 0) k = [R(0, 0, 100, 100), L('M 0 45 H 60 M 60 0 V 100 M 60 70 H 100'), L('M 30 45 A 12 12 0 0 1 42 33', { stroke: a }), L('M 60 20 A 12 12 0 0 1 72 32', { stroke: a })].concat([[8, 58], [30, 58], [8, 78], [30, 78], [70, 8], [70, 80]].map(p => R(p[0], p[1], 16, 10, { stroke: a })));
+    if (i === 1) k = [R(2, 2, 18, 18, { fill: a, fillOpacity: 0.3 }), L('M 20 11 H 82 V 58'), L('M 11 20 V 86 H 68'), L('M 20 20 L 48 48 H 90'), L('M -14 11 H 2', { stroke: a, strokeDasharray: '3 3' })].concat([[82, 58], [68, 86], [90, 48]].map(p => C(p[0], p[1], 3, { fill: c })));
+    if (i === 2) k = [R(36, 44, 28, 12, { fill: a, fillOpacity: 0.3 }), L('M 44 44 L 16 16 M 56 44 L 84 16 M 44 56 L 16 84 M 56 56 L 84 84', { stroke: a })].concat([[16, 16], [84, 16], [16, 84], [84, 84]].map(p => C(p[0], p[1], 4))).concat([[16, 16], [84, 16], [16, 84], [84, 84]].map(p => C(p[0], p[1], 11, { stroke: a, strokeDasharray: '2 3' })));
+    if (i === 3) k = [L('M 4 4 L 18 8 L 8 18 Z', { fill: a }), L('M 96 96 L 82 92 L 92 82 Z', { fill: a }), L('M 96 4 L 92 18 L 82 8 Z', { fill: a }), L('M 18 8 L 46 30 M 8 18 L 30 46 M 82 92 L 58 72 M 92 82 L 72 58', { stroke: a, strokeDasharray: '2 3' }), R(44, -2, 12, 5, { fill: c }), R(-2, 44, 5, 12, { fill: c })].concat([[50, 50], [28, 72], [72, 28]].map(p => C(p[0], p[1], 2.5, { fill: c })));
+    if (i === 4) { for (let r = 0; r < 3; r++) for (let q = 0; q < 3; q++) k.push(R(4 + q * 32, 4 + r * 32, 28, 28, (r === 1 && q === 1) ? { fill: a, fillOpacity: 0.35 } : {})); k.push(h('text', { x: 50, y: 53, textAnchor: 'middle', fill: '#EEF1F4', style: MONO(7, 500) }, '24H')); }
+    return h('svg', { viewBox: '0 0 100 100', width: '100%', height: '100%', style: { display: 'block', overflow: 'visible' } }, ...k);
+  }
+  riserPulse(delay) {
+    const h = React.createElement;
+    return h('span', { 'aria-hidden': true, style: { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, animation: 'timpRise 3.2s ' + delay + 's cubic-bezier(.4,0,.2,1) infinite' } }, h('span', { style: { position: 'absolute', left: -2.5, bottom: -3, width: 6, height: 6, borderRadius: '50%', background: '#8CC2FF', boxShadow: '0 0 10px #287DD2' } }));
+  }
+  componentDidMount() {
+    this.onR = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight, drawer: window.innerWidth >= 1280 ? false : this.state.drawer });
+    this.onK = e => { if (e.key === 'Escape') this.setState({ menu: null, drawer: false, sub: null }); };
+    window.addEventListener('resize', this.onR); window.addEventListener('keydown', this.onK); this.onR();
+    this.onS = () => { if (this.raf) return; this.raf = requestAnimationFrame(() => { this.raf = null; this.scrollTick(); }); };
+    window.addEventListener('scroll', this.onS, { passive: true }); this.applyMotion(); requestAnimationFrame(() => this.scrollTick());
+  }
+  componentWillUnmount() { window.removeEventListener('scroll', this.onS); window.removeEventListener('resize', this.onR); window.removeEventListener('keydown', this.onK); document.body.style.overflow = ''; }
+  componentDidUpdate() { document.body.style.overflow = this.state.drawer ? 'hidden' : ''; this.applyMotion(); this.scrollTick(); }
+  pulse(axis, delay) {
+    const h = React.createElement;
+    const dot = h('span', { style: { position: 'absolute', width: 6, height: 6, borderRadius: '50%', background: '#8CC2FF', boxShadow: '0 0 10px #287DD2', left: axis === 'X' ? -3 : -2.5, top: axis === 'X' ? -2.5 : -3 } });
+    return h('span', { key: axis + delay, 'aria-hidden': true, style: { position: 'absolute', inset: 0, animation: `timp${axis} 2.6s ${delay}s cubic-bezier(.4,0,.2,1) infinite` } }, dot);
+  }
+  renderVals() {
+    const s = this.state, vw = s.vw;
+    const isM = vw < 768, isT = vw >= 768 && vw < 1280, isD = vw >= 1280;
+    const hero = this.urlHero || this.props.hero || 'rj45';
+    const annotations = this.props.annotations ?? false;
+    const stickyOn = (this.props.stickyCta ?? true) && isM;
+    const set = o => () => this.setState(o);
+    const h = React.createElement;
+    const liveDot = [h('span', { key: 'a', style: { position: 'absolute', inset: 0, borderRadius: '50%', background: '#2FBF71' } }), h('span', { key: 'b', style: { position: 'absolute', inset: 0, borderRadius: '50%', background: '#2FBF71', animation: 'timpPulse 2s ease-out infinite' } })];
+
+    const goEco = (i, close) => () => this.setState({ eco: i, ecoOpen: i, menu: null, ...(close ? { drawer: false, sub: null } : {}) });
+    const navGroups = GROUPS.map(g => ({ ...g, links: g.links.map(label => ({ label, go: goEco(g.eco, false), goClose: goEco(g.eco, true) })) }));
+
+    const mkFlow = f => ({ title: f.title, nodes: f.nodes.map((label, i) => ({ label, sep: i > 0 ? f.sep : null, sepV: f.sep === '↔' ? '↕' : '↓', border: i === f.hl ? '#287DD2' : '#343E4B', style: 'solid' })) });
+    const ecos = ECOS.map((e, i) => {
+      const active = i === s.eco;
+      return { ...e, upper: e.name.toUpperCase(), flows: e.flows.map(mkFlow), items: e.items.map(label => ({ label, href: LINKS[label] || '#' })), active, open: i === s.ecoOpen, sign: i === s.ecoOpen ? '−' : '+',
+        select: () => this.setState({ eco: i }), toggle: () => this.setState(st => ({ ecoOpen: st.ecoOpen === i ? -1 : i })),
+        more: 'Ver todos os serviços de ' + e.short,
+        color: active ? '#FFFFFF' : '#8A94A3', numColor: active ? '#4C9BEA' : '#56616F',
+        bg: active ? (isD ? '#07090C' : 'transparent') : 'transparent',
+        mark: active ? (isD ? 'inset 3px 0 0 #287DD2' : 'inset 0 -2px 0 #287DD2') : 'none',
+        tabDir: isD ? 'row' : 'column', tabAlign: isD ? 'center' : 'flex-start', tabGap: isD ? '18px' : '6px',
+        pad: isD ? '22px 20px' : '14px 18px 16px', nameSize: isD ? '19px' : '15px', ws: isD ? 'normal' : 'nowrap',
+        showCount: isD, count: e.items.length + (e.items.length > 1 ? ' serviços' : ' serviço') };
+    });
+    const cur = ecos[s.eco];
+
+    const diagCols = [
+      { head: '01 · NO LOCAL', nodes: [['CAM', 'Câmeras'], ['SNS', 'Sensores e alarmes'], ['ACS', 'Controle de acesso'], ['LCK', 'Fechaduras'], ['AP', 'Wi-Fi'], ['VOZ', 'Telefonia IP']], flex: '1.35 1 0', border: '#232B36', bg: 'rgba(12,16,21,.85)', headColor: '#8A94A3', min: isM ? '140px' : '150px' },
+      { head: '02 · INFRAESTRUTURA', nodes: [['FIB', 'Fibra e cabeamento'], ['SW', 'Switch PoE'], ['FW', 'Firewall'], ['SRV', 'Servidores e cloud']], flex: '1 1 0', border: '#232B36', bg: 'rgba(12,16,21,.85)', headColor: '#8A94A3', min: isM ? '140px' : '170px' },
+      { head: '03 · CENTRAL TIMP 24H', nodes: [['EVT', 'Evento recebido'], ['VER', 'Verificação'], ['PRT', 'Protocolo do cliente'], ['REG', 'Registro e auditoria']], flex: '1 1 0', border: '#287DD2', bg: 'rgba(17,48,94,.28)', headColor: '#4C9BEA', min: isM ? '140px' : '170px' }
+    ].map((c, i) => ({ ...c, notFirst: i > 0, nodes: c.nodes.map(([code, label]) => ({ code, label })), pulse: i > 0 ? [this.pulse(isM ? 'Y' : 'X', 0), this.pulse(isM ? 'Y' : 'X', 1.3)] : null }));
+
+    const layers = LAYERS.map(([k, label]) => ({ k, label, active: s.layer === k, pick: set({ layer: k }), border: s.layer === k ? '#287DD2' : '#232B36', bg: s.layer === k ? 'rgba(40,125,210,.16)' : '#0C1015', color: s.layer === k ? '#FFFFFF' : '#B6BEC9' }));
+    const floors = FLOORS.map(f => ({ ...f, bg: f.lvl === 'SS' ? 'rgba(12,16,21,.9)' : 'transparent', sys: f.sys.map(([t, l]) => { const on = s.layer === 'all' || s.layer === l; const hl = s.layer !== 'all' && on; return { t, op: on ? 1 : 0.28, border: hl ? '#287DD2' : '#343E4B', bg: hl ? 'rgba(40,125,210,.16)' : '#07090C', color: on ? '#EEF1F4' : '#8A94A3' }; }) }));
+
+    const obraLayers = ['Cabeamento', 'Fibra', 'Wi-Fi', 'CFTV', 'Alarmes', 'Controle de acesso', 'Fechaduras', 'Automação', 'Sala técnica', 'Telefonia', 'Carregadores EV', 'Infraestrutura futura'].map((t, i) => ({ t, n: String(i + 1).padStart(2, '0') }));
+    const obraSteps = ['Planejamento', 'Projeto', 'Infraestrutura', 'Instalação', 'Configuração', 'Testes', 'Entrega', 'Operação', 'Manutenção'].map((t, i) => ({ t, n: String(i + 1).padStart(2, '0') }));
+
+    const monFlow = ['Dispositivo', 'Evento', 'Central TIMP', 'Verificação', 'Protocolo', 'Acionamento quando aplicável', 'Registro'].map((label, i) => ({ label, sep: i > 0, style: i === 5 ? 'dashed' : 'solid', border: i === 2 ? '#287DD2' : '#343E4B', color: i === 5 ? '#B6BEC9' : '#EEF1F4' }));
+    const monNotes = [
+      { n: 'A', t: 'Operador valida antes de qualquer acionamento', d: 'Ações externas dependem de verificação, do protocolo do cliente e da situação. Não há acionamento automático.' },
+      { n: 'B', t: 'Protocolo próprio por cliente e unidade', d: 'Horários, prioridades e ordem de contatos definidos na contratação e exibidos na ocorrência.' },
+      { n: 'C', t: 'Plataforma preparada para vários fabricantes', d: 'Recebimento de eventos em infraestrutura própria da TIMP. A compatibilidade de cada equipamento é avaliada no projeto.' }
+    ];
+    const step = s.step, ev = EV[step];
+    const evTimeline = [{ t: '02:14:37', what: 'Evento recebido · Zona 03', hex: '#E5484D' }, ...EV.slice(1, step + 1).map(x => x.add)];
+    const camsOpen = step >= 2;
+    const cams = ['CAM-07', 'CAM-08'].map((id, i) => ({ id, label: i ? 'Corredor lateral' : 'Entrada lateral', state: camsOpen ? '● AO VIVO' : 'fechada', border: camsOpen ? '#287DD2' : '#232B36', bg: camsOpen ? '#0B1E3D' : '#07090C' }));
+
+    const process = [
+      ['Planejar', 'Levantamento do ambiente, da operação e dos objetivos.'], ['Projetar', 'Projeto técnico com pontos, rotas, equipamentos e capacidade.'],
+      ['Implantar', 'Instalação da infraestrutura e dos equipamentos.'], ['Integrar', 'Rede, segurança, voz e automação funcionando em conjunto.'],
+      ['Operar', 'Configuração, testes e entrega do ambiente em uso.'], ['Monitorar', 'Acompanhamento de eventos e da saúde dos sistemas.'],
+      ['Manter', 'Manutenção preventiva e corretiva, suporte técnico.'], ['Evoluir', 'Expansões e atualizações planejadas conforme a operação cresce.']
+    ].map(([t, d], i) => ({ t, d, n: String(i + 1).padStart(2, '0'), line: i === 0 ? '#2359A5' : '#B6BEC9' }));
+
+    const caseSlots = ['CONSTRUTORAS E ENGENHARIA', 'CONDOMÍNIOS', 'EMPRESAS E ESCRITÓRIOS'].map(seg => ({ seg, fields: ['Desafio', 'Solução', 'Tecnologias', 'Resultado verificável'] }));
+    const segments = SEGMENTS.map((x, i) => ({ ...x, n: String(i + 1).padStart(2, '0') }));
+    const cv = (arr, hl) => arr.map((t, i) => ({ t, sep: i > 0, color: i === hl ? '#FFFFFF' : '#B6BEC9', border: i === hl ? '#287DD2' : '#343E4B' }));
+    const articles = [
+      { cat: 'SEGURANÇA ELETRÔNICA', catShort: 'SEGURANÇA ELETRÔNICA', title: 'Como funciona uma Central de Monitoramento 24h?', dek: 'O caminho de um evento, do sensor ao registro da ocorrência, e o papel do operador em cada etapa.', cover: cv(['Sensor', 'Central', 'Operador', 'Protocolo'], 2) },
+      { cat: 'REDES E INFRAESTRUTURA', catShort: 'REDES E INFRAESTRUTURA', title: 'O que é cabeamento estruturado e como funciona?', dek: 'Componentes, topologia e por que o cabeamento define a capacidade de toda a rede.', cover: cv(['Switch', 'Patch Panel', 'Tomada', 'Usuário'], 1) },
+      { cat: 'TECNOLOGIA PARA OBRAS', catShort: 'TECNOLOGIA PARA OBRAS', title: 'Infraestrutura tecnológica para construtoras', dek: 'O que prever no projeto da obra para evitar retrabalho na entrega e na operação.', cover: cv(['Projeto', 'Prumada', 'Sala técnica', 'Entrega'], 2) }
+    ];
+    const moreArticles = [['REDES E INFRAESTRUTURA', 'Cat6 ou Cat6A?'], ['SEGURANÇA ELETRÔNICA', 'CFTV IP ou analógico?'], ['TI CORPORATIVA', 'Servidor local, cloud ou híbrido?'], ['SEGURANÇA ELETRÔNICA', 'Controle de acesso para condomínios']].map(([cat, t]) => ({ cat, t }));
+
+    const f = s.form, er = s.errors;
+    const on = {}; ['nome', 'empresa', 'email', 'whats', 'tipo', 'msg'].forEach(k => { on[k] = e => { const v = e.target.value; this.setState(st => ({ form: { ...st.form, [k]: v }, errors: { ...st.errors, [k]: null } })); }; });
+    const fb = {}, inv = {}; ['nome', 'email', 'whats', 'tipo'].forEach(k => { fb[k] = er[k] ? '#E5484D' : '#343E4B'; inv[k] = !!er[k]; });
+    const submit = e => {
+      e.preventDefault(); const x = {};
+      if (!f.nome.trim()) x.nome = 'Informe seu nome.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) x.email = 'Informe um e-mail válido, como nome@empresa.com.br.';
+      if (f.whats.replace(/\D/g, '').length < 10) x.whats = 'Informe o número completo com DDD.';
+      if (!f.tipo) x.tipo = 'Selecione o tipo de projeto.';
+      this.setState(Object.keys(x).length ? { errors: x } : { errors: {}, sent: true });
+    };
+
+    const footCols = [
+      { t: 'SERVIÇOS', links: [['Cabeamento Estruturado', '#'], ['CFTV e Câmeras', '#'], ['Controle de Acesso', '#'], ['Wi-Fi Empresarial', '#'], ['Suporte de TI', '#'], ['Monitoramento 24h', '#monitoramento'], ['Todos os serviços', '#ecossistemas']] },
+      { t: 'SOLUÇÕES', links: SEGMENTS.map(x => [x.name, x.href]) },
+      { t: 'TIMP', links: [['Empresa', '#empresa'], ['Equipamentos e tecnologia', '#'], ['Projetos', '#projetos'], ['Clientes e parceiros', '#'], ['Conhecimento', '#conhecimento'], ['Contato', '#contato']] },
+      { t: 'ATENDIMENTO', links: [['(21) 98331-8387', WA('Olá, TIMP. Vim pelo site e quero falar sobre um projeto.')], ['comercial@timp.com.br', 'mailto:comercial@timp.com.br'], ['Instagram @timp.br', 'https://instagram.com/timp.br'], ['Facebook @timp.br', 'https://facebook.com/timp.br'], ['Área do Cliente', '#']] }
+    ].map(c => ({ t: c.t, links: c.links.map(([label, href]) => ({ label, href })) }));
+
+    const hk = isD ? 'd' : (isT ? 't' : 'm'), vh = s.vh || 900, hpx = isD ? 76 : 64;
+    const stickyH = 'calc(100svh - ' + hpx + 'px)';
+    const ph = s.slPhase;
+    const mkN = (n, st, bd) => Object.assign({}, n, SL_ST[st], { badge: bd ? SL_BD[bd][0] : '', badgeColor: bd ? SL_BD[bd][1] : '', badgeBorder: bd ? SL_BD[bd][2] : '' });
+    const slInputs = [
+      mkN({ code: 'SL', label: 'Terminal Starlink', sub: 'Satélite → antena' }, ['act', 'act', 'stby', 'act'][ph], ['sig', 'act', 'stby', 'act'][ph]),
+      mkN({ code: 'FIB', label: 'Fibra / link terrestre', sub: 'Operadora local' }, ['dim', 'dim', 'act', 'fail'][ph], [null, null, 'main', 'fail'][ph])
+    ];
+    const fwBd = [null, 'wanSl', 'wanFb', 'wanSl'][ph];
+    const slChain = [
+      { code: 'FW', label: 'Firewall · Dual WAN', sub: 'Define o link ativo', bd: fwBd },
+      { code: 'NET', label: 'Rede TIMP', sub: 'Switches, cabeamento e VLANs', bd: null },
+      { code: 'OPS', label: 'Wi-Fi · dispositivos · operação', sub: 'Equipe, sistemas e CFTV', bd: null }
+    ].map((n, i) => Object.assign(mkN(n, ph === 0 ? 'dim' : (i === 0 ? 'act' : 'on'), n.bd), { notFirst: i > 0, lineColor: ph === 0 ? '#232B36' : '#287DD2', lineW: ph === 0 ? '1px' : '2px', pulse: (ph === 0 || i === 0) ? null : this.pulse('Y', i * 0.5) }));
+    const stepIdx = Math.min(ph, 2);
+    const slSteps = [['01', 'Conectividade', 'Conectividade'], ['02', 'Integração TIMP', 'Integração'], ['03', 'Contingência', 'Contingência']].map((x, i) => { const cur = i === stepIdx; return { n: x[0], label: isM ? x[2] : x[1], current: cur ? 'step' : 'false', go: () => this.goPhase(i), bg: cur ? 'rgba(40,125,210,.16)' : 'transparent', border: cur ? '#287DD2' : '#232B36', color: cur ? '#FFFFFF' : '#B6BEC9', numColor: cur ? '#8CC2FF' : '#8A94A3' }; });
+    const slToggle = [['Operação normal', 2, '●', '#2FBF71'], ['Falha do link terrestre', 3, '✕', '#E5484D']].map(x => { const on = ph === x[1]; return { label: x[0], glyph: x[2], dot: x[3], on, go: () => this.goPhase(x[1]), bg: on ? '#232B36' : 'transparent', color: on ? '#FFFFFF' : '#B6BEC9' }; });
+    const idx = s.idIdx;
+    const idStage = isD ? Math.min(640, vh - 76 - 60) : (isT ? 480 : Math.max(230, Math.min(330, vh - 64 - 330)));
+    const idS = Math.round(isD ? Math.min(300, idStage * 0.47) : (isT ? 240 : idStage * 0.5));
+    const G0 = isD ? 26 : (isT ? 20 : 14), G1 = Math.max(10, Math.min(Math.round(idS * 0.22), Math.floor((idStage - 0.72 * idS) / 4) - G0 - 4));
+    const g = G0 + 'px + var(--idp, 0) * ' + G1 + 'px';
+    const idPlanes = ID_LAYERS.map((l, i) => ({ top: 'calc(50% + ' + (2 - i) + ' * (' + g + '))', z: i + 1, tag: l.tag, art: this.planeArt(i, i === idx), bc: i === idx ? '#287DD2' : '#343E4B', bg: i === idx ? 'rgba(17,48,94,.6)' : 'rgba(12,16,21,.94)', op: i <= idx ? 1 : 0.35, labelColor: i === idx ? '#8CC2FF' : '#8A94A3' }));
+    const idRisers = [-0.354, 0, 0.354].map((o, i) => ({ left: 'calc(50% + ' + Math.round(o * idS) + 'px)', pulse: this.riserPulse(i * 1.05) }));
+    const idLayers = ID_LAYERS.map((l, i) => ({ n: l.n, name: l.name, desc: l.desc, current: i === idx ? 'step' : 'false', go: () => this.goLayer(i), color: i === idx ? '#FFFFFF' : (i < idx ? '#DCE1E7' : '#8A94A3'), numColor: i === idx ? '#4C9BEA' : '#56616F', showDesc: !isM || i === idx }));
+    return {
+      heroR: hero === 'rj45', heroScene: this.heroScene(hk), heroSceneRef: this.heroSceneRef,
+      heroMinH: isD ? 'min(max(calc(100svh - 76px), 640px), 880px)' : 'auto', heroPad: isD ? '56px 64px 72px' : (isT ? '56px 40px 12px' : '36px 20px 8px'),
+      h1MaxR: isD ? '12ch' : (isT ? '13ch' : 'none'), hsPos: isD ? 'absolute' : 'relative', hsW: isD ? '60%' : '100%', hsAR: isD ? 'auto' : (isT ? '1000 / 440' : '390 / 300'),
+      stickyH, slRef: this.slRef, slTrackH: 'calc(' + stickyH + ' + 210svh)', slScene: this.slScene(hk, ph), slJoin: this.slJoin(ph), slFail: ph === 3,
+      slScenePos: isM ? 'relative' : 'absolute', slSceneFlex: isM ? '1 1 0' : 'none', slSceneMin: isM ? '120px' : '0',
+      slGridH: isM ? 'auto' : '100%', slPad: isD ? '56px 64px' : (isT ? '40px 40px' : '0 12px 12px'), slCols: isD ? 'minmax(0,6fr) minmax(0,5fr)' : (isT ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)'),
+      slGap: isD ? '48px' : (isT ? '28px' : '0'), slAlign: isD ? 'center' : (isT ? 'start' : 'end'),
+      cardPad: isM ? '14px' : '20px', cardGap: isM ? '12px' : '16px', nodePad: isM ? '8px 10px' : '10px 12px', nodeFs: isM ? '14px' : '15px', stepFs: isM ? '12px' : '13px',
+      joinH: isM ? '24px' : '36px', vlineH: isM ? '10px' : '18px', showSub: !isM, capMinH: isM ? '66px' : '72px', capFs: isM ? '14px' : '15px', tgFs: isM ? '13px' : '14px',
+      slInputs, slChain, slSteps, slToggle, slCapTitle: SL_CAP[ph][0], slCapText: SL_CAP[ph][1], slCapColor: SL_CAP[ph][2],
+      idRef: this.idRef, idTrackH: 'calc(' + stickyH + ' + 150svh)', idPad: isD ? '24px 64px' : (isT ? '24px 40px' : '12px 20px'),
+      idCols: isD ? 'minmax(0,5fr) minmax(0,7fr)' : 'minmax(0,1fr)', idGap: isD ? '64px' : '16px', idStackOrder: isD ? 2 : 1, idListOrder: isD ? 1 : 2,
+      idStageH: idStage + 'px', idS: idS + 'px', idHalfNeg: (-idS / 2) + 'px', idGrid: (idS / 10) + 'px ' + (idS / 10) + 'px', idPlaneFs: isM ? '8px' : '10px',
+      idRiserTop: 'calc(50% - 2 * (' + g + '))', idRiserH: 'calc(4 * (' + g + '))', idPlanes, idRisers, idLayers,
+      idNameFs: isD ? '22px' : (isT ? '19px' : '16px'), idRowPad: isD ? '16px 0' : (isT ? '12px 0' : '8px 0'),
+      stickyProp: this.props.stickyCta ?? true, isM, isT, isD, notD: !isD, h1Max: isM ? 'none' : '14ch', notM: !isM, heroA: hero === 'sistema', heroB: hero === 'edificacao', annotations, stickyOn,
+      headerH: isD ? '76px' : '64px', logoH: isD ? '40px' : '32px', liveDot,
+      servOpen: s.menu === 'serv', soluOpen: s.menu === 'solu',
+      servLine: s.menu === 'serv' ? '#287DD2' : 'transparent', soluLine: s.menu === 'solu' ? '#287DD2' : 'transparent',
+      servColor: s.menu === 'serv' ? '#FFFFFF' : '#B6BEC9', soluColor: s.menu === 'solu' ? '#FFFFFF' : '#B6BEC9',
+      openServ: set({ menu: 'serv' }), openSolu: set({ menu: 'solu' }), closeMenu: set({ menu: null }),
+      toggleServ: () => this.setState(st => ({ menu: st.menu === 'serv' ? null : 'serv' })), toggleSolu: () => this.setState(st => ({ menu: st.menu === 'solu' ? null : 'solu' })),
+      drawer: s.drawer, drawerLabel: s.drawer ? 'Fechar' : 'Menu', drawerW: isM ? '100%' : '440px',
+      toggleDrawer: () => this.setState(st => ({ drawer: !st.drawer, sub: null })), closeDrawer: set({ drawer: false, sub: null }),
+      subNone: !s.sub, subServ: s.sub === 'serv', subSolu: s.sub === 'solu', openSubServ: set({ sub: 'serv' }), openSubSolu: set({ sub: 'solu' }), backSub: set({ sub: null }),
+      navGroups, segmentsNav: SEGMENTS,
+      drawerLinks: [['Equipamentos e tecnologia', '#'], ['Projetos', '#projetos'], ['Conhecimento', '#conhecimento'], ['Empresa', '#empresa'], ['Contato', '#contato']].map(([label, href]) => ({ label, href })),
+      waHome: WA('Olá, TIMP. Vim pelo site e quero falar sobre um projeto.'), waObra: WA('Olá, TIMP. Sou de uma construtora e quero falar sobre a infraestrutura de uma obra.'),
+      diagCols, diagDir: isM ? 'column' : 'row',
+      connW: isM ? '100%' : (isT ? '28px' : '48px'), connH: isM ? '36px' : 'auto',
+      lineL: isM ? '50%' : '0', lineT: isM ? '0' : '50%', lineW: isM ? '1px' : '100%', lineHh: isM ? '100%' : '1px',
+      layers, floors, riserOp: s.layer === 'all' || s.layer === 'rede' ? 1 : 0.35,
+      facts: [
+        { q: 'QUEM É', a: 'TIMP Tecnologia, empresa de tecnologia fundada em 24 de fevereiro de 2016 no Rio de Janeiro.' },
+        { q: 'O QUE FAZ', a: 'Infraestrutura de TI, redes, Wi-Fi, fibra, instalação de Starlink, servidores e cloud, segurança eletrônica, automação, telefonia IP, suporte, monitoramento 24h, carregadores de veículos elétricos e energia solar.' },
+        { q: 'ONDE ATENDE', a: 'Todo o estado do Rio de Janeiro, com prioridade para a capital. Projetos especiais de grande porte em outras regiões do Brasil sob avaliação técnica e logística.' },
+        { q: 'QUEM ATENDE', a: 'Empresas, construtoras, condomínios, clínicas, comércio, indústrias e operações com várias unidades.' },
+        { q: 'COMO CONTRATAR', a: 'Pelo formulário de projeto, pelo WhatsApp (21) 98331-8387 ou por comercial@timp.com.br.' }
+      ],
+      ecos, cur, ecoCols: isD ? 'minmax(300px,4fr) minmax(0,7fr)' : 'minmax(0,1fr)', ecoGap: isD ? '40px' : '20px', ecoDir: isD ? 'column' : 'row', ecoOrient: isD ? 'vertical' : 'horizontal', ecoListBorder: isD ? '1px solid #171D26' : '0',
+      obraLayers, obraSteps,
+      trackCols: isM ? 'minmax(0,1fr)' : (isD ? 'repeat(9,minmax(0,1fr))' : 'repeat(3,minmax(0,1fr))'), trackGap: isM ? '0' : '32px 8px',
+      trackItemDir: isM ? 'row' : 'column', trackItemPad: isM ? '12px 0 12px 22px' : '20px 8px 0 0',
+      trackBL: isM ? '1px solid rgba(140,194,255,.35)' : '0', trackBT: isM ? '0' : '1px solid rgba(140,194,255,.35)', dotL: isM ? '-5px' : '0', dotT: isM ? '17px' : '-5px',
+      monFlow, monNotes, cams, evTimeline, evStatus: ev.status, evStatusColor: ev.color, evAction: ev.action, evHint: ev.hint, evTop: step === 4 ? '#2FBF71' : '#E5484D',
+      evNext: () => this.setState(st => ({ step: st.step >= 4 ? 0 : st.step + 1 })),
+      process, caseSlots, segments, segSticky: isM ? 'static' : 'sticky', articles, moreArticles,
+      form: f, errors: er, on, fb, inv, submit, sent: s.sent, notSent: !s.sent,
+      tipos: ['Infraestrutura & Conectividade', 'Segurança Eletrônica', 'TI Corporativa', 'Automação & Comunicação', 'Monitoramento 24h', 'Obra / construtora', 'Ainda não sei — preciso de um diagnóstico'],
+      resetForm: () => this.setState({ sent: false, form: { nome: '', empresa: '', email: '', whats: '', tipo: '', msg: '' } }),
+      footCols, footSpan: isD ? 2 : 1
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>TIMP — Rodada 2 · Templates públicos</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>html,body{margin:0;background:#07090C;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif}*{box-sizing:border-box}a{color:#4C9BEA;text-decoration:none}a:hover{color:#8CC2FF}</style>
+</helmet>
+<div style="max-width:1200px;margin:0 auto;padding:clamp(32px,6vw,80px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:48px">
+<header style="display:flex;flex-direction:column;gap:16px">
+<img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP Tecnologia" style="height:44px;width:auto;align-self:flex-start">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8A94A3">RODADA 2 · TEMPLATES PÚBLICOS · PARA VALIDAÇÃO</span>
+<h1 style="margin:0;font-size:clamp(36px,5vw,64px);line-height:1;letter-spacing:-.04em;font-weight:700">Páginas navegáveis</h1>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#B6BEC9;max-width:40em">Todas usam o mesmo header, rodapé, formulário e CTA fixo mobile. Redimensione a janela para ver desktop, tablet e mobile. Anotações internas ficam desligadas por padrão e podem ser ativadas nos ajustes de cada página.</p>
+</header>
+<nav style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ pages }}" as="p" hint-placeholder-count="9">
+<a href="{{ p.href }}" style="display:grid;grid-template-columns:40px minmax(0,1fr) 24px;gap:14px;align-items:start;padding:20px 0;border-bottom:1px solid #171D26;color:#EEF1F4" style-hover="background:#0C1015;color:#FFFFFF">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4C9BEA;padding-top:5px">{{ p.n }}</span>
+<span style="display:flex;flex-direction:column;gap:6px"><span style="font-size:20px;font-weight:700">{{ p.t }}</span><span style="font-size:15px;line-height:1.5;color:#8A94A3">{{ p.d }}</span></span>
+<span style="color:#4C9BEA;padding-top:4px" aria-hidden="true">→</span>
+</a>
+</sc-for>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return { pages: [
+      ['Home.dc.html', 'Home (ajustada)', 'Hero 1A oficial, headline mobile reduzida, CTA fixo mobile por scroll, Starlink no ecossistema, área de atuação e formulário atualizados.'],
+      ['Pagina%20de%20Servico.dc.html?s=cabeamento', 'Template de serviço · Cabeamento', 'Resumo direto, diagrama próprio, escopo, fatores, contratação, relacionados, segmentos, FAQ, conteúdo e CTA específico.'],
+      ['Pagina%20de%20Servico.dc.html?s=cftv', 'Template de serviço · CFTV', 'Mesmo template, diagrama e conteúdo do serviço.'],
+      ['Pagina%20de%20Servico.dc.html?s=wifi', 'Template de serviço · Wi-Fi', 'Mesmo template, diagrama e conteúdo do serviço.'],
+      ['Pagina%20de%20Servico.dc.html?s=acesso', 'Template de serviço · Controle de acesso', 'Mesmo template, diagrama e conteúdo do serviço.'],
+      ['Construtoras%20e%20Engenharia.dc.html', 'Construtoras e Engenharia', 'Edificação em camadas (conceito 1B), papéis, camadas, 9 etapas, projetos fora do RJ e formulário de obra.'],
+      ['Instalacao%20Starlink.dc.html', 'Instalação de Starlink', 'Ambientes, instalação, resiliência, solução integrada (dupla WAN, rede, Wi-Fi), processo, FAQ e cluster Starlink de 18 conteúdos.'],
+      ['Seguranca%20Eletronica.dc.html', 'Segurança Eletrônica (hub)', 'CFTV, alarmes, controle de acesso, fechaduras e monitoramento como um sistema; direciona para cada solução.'],
+      ['Monitoramento%2024h.dc.html', 'Monitoramento 24h', 'Landing do serviço recorrente: fluxo do evento, verificação, protocolo, demonstração da Central, independência de fabricante, FAQ.'],
+      ['Conhecimento.dc.html', 'Conhecimento · listagem', 'Busca, filtro por categoria e Cluster Starlink, destaques e conteúdos planejados.'],
+      ['Artigo.dc.html', 'Artigo editorial', 'Resposta direta, sumário, H2/H3, diagrama, figura, callout, tabela comparativa, CTA, FAQ, autoria, revisão e relacionados.']
+    ].map(([href, t, d], i) => ({ href, t, d, n: String(i + 1).padStart(2, '0') })) };
+  }
+}
+</script>
+</body>
+</html>

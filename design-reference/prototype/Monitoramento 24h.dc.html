@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Monitoramento 24h no Rio de Janeiro | Central TIMP</title>
+<meta name="description" content="Segurança acompanhada 24 horas por dia. Eventos verificados por operador, protocolo por cliente e unidade, registro completo de cada ocorrência.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07090C;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+*{box-sizing:border-box}
+a{color:#4C9BEA;text-decoration:none}
+a:hover{color:#8CC2FF}
+:focus-visible{outline:2px solid #4C9BEA;outline-offset:2px}
+[id]{scroll-margin-top:80px}
+summary::-webkit-details-marker{display:none}
+@keyframes timpPulse{0%{transform:scale(1);opacity:.6}70%{transform:scale(2.8);opacity:0}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</helmet>
+<dc-import name="SiteHeader" current="servicos" wa-text="Olá, TIMP. Quero avaliar o monitoramento 24h para minha empresa." style="position:sticky;top:0;z-index:60;display:block" hint-size="100%,76px"></dc-import>
+<main>
+<section data-screen-label="Monitoramento · Hero" style="background:#000;background-image:linear-gradient(rgba(23,29,38,.55) 1px,transparent 1px),linear-gradient(90deg,rgba(23,29,38,.55) 1px,transparent 1px);background-size:48px 48px;border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(28px,4vw,48px) clamp(20px,5vw,64px) clamp(56px,7vw,104px);display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+<nav aria-label="Breadcrumb" style="display:flex;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8A94A3"><a href="Home.dc.html" style="color:#8A94A3">Início</a><span aria-hidden="true">/</span><a href="Home.dc.html#ecossistemas" style="color:#8A94A3">Serviços</a><span aria-hidden="true">/</span><a href="Seguranca%20Eletronica.dc.html" style="color:#8A94A3">Segurança Eletrônica</a><span aria-hidden="true">/</span><span aria-current="page" style="color:#DCE1E7">Monitoramento 24h</span></nav>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:clamp(36px,5vw,80px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:28px">
+<span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA"><span style="position:relative;width:8px;height:8px;display:inline-block">{{ liveDot }}</span>MONITORAMENTO 24H · CENTRAL TIMP</span>
+<h1 style="margin:0;font-size:clamp(40px,5.4vw,84px);line-height:.98;letter-spacing:-.045em;font-weight:700;text-wrap:balance">Segurança acompanhada 24 horas por dia.</h1>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid #232B36">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">EM RESUMO</span>
+<p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.6;color:#DCE1E7;max-width:36em;text-wrap:pretty">A Central TIMP recebe os eventos dos sistemas de segurança instalados, verifica cada ocorrência com as câmeras relacionadas e segue o protocolo definido para cada cliente e unidade. Toda ação fica registrada.</p>
+</div>
+<div data-hero-cta="" style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(140,194,255,.35)" style-hover="background:#2A66BC;color:#FFFFFF">Solicitar avaliação de monitoramento <span aria-hidden="true">→</span></a>
+<a href="{{ wa }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 20px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="border-color:#8A94A3;color:#FFFFFF"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>WhatsApp</a>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">CONTRATAÇÃO INTEGRADA</span>
+<ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ commercial }}" as="c" hint-placeholder-count="6"><li style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid #171D26"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4C9BEA">{{ c.n }}</span><span style="font-size:18px;font-weight:600;color:{{ c.color }}">{{ c.t }}</span><span style="font-size:13px;color:#8A94A3;text-align:right">{{ c.d }}</span></li></sc-for>
+</ol>
+<span style="font-size:13px;color:#8A94A3;line-height:1.5">Um único responsável do projeto dos equipamentos ao suporte da operação.</span>
+</div>
+</div>
+</div>
+</section>
+
+<section data-screen-label="Monitoramento · Como funciona" style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+<div style="display:flex;flex-direction:column;gap:18px;max-width:760px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">01 — DO EVENTO AO REGISTRO</span><h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700">O caminho de cada ocorrência.</h2></div>
+<ol style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:0 20px">
+<sc-for list="{{ flow }}" as="f" hint-placeholder-count="7"><li style="display:flex;flex-direction:column;gap:8px;padding:20px 0 24px;border-top:2px {{ f.style }} {{ f.line }}"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4C9BEA">{{ f.n }}</span><span style="font-size:19px;font-weight:700;line-height:1.2">{{ f.t }}</span><span style="font-size:14px;line-height:1.5;color:#8A94A3">{{ f.d }}</span></li></sc-for>
+</ol>
+<div style="display:flex;gap:14px;padding:16px 18px;border:1px solid #232B36;border-radius:4px;background:#0C1015;max-width:880px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#E8A33D;padding-top:2px">!</span><span style="font-size:15px;line-height:1.55;color:#DCE1E7">Não há acionamento externo automático. Ações externas dependem de validação do operador, do protocolo do cliente e da situação verificada, e ficam rastreadas.</span></div>
+</section>
+
+<section data-screen-label="Monitoramento · Sensor zona câmera" style="background:#0C1015;border-top:1px solid #171D26;border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,88px);align-items:center">
+<div style="display:flex;flex-direction:column;gap:22px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">02 — VERIFICAÇÃO POR VÍDEO</span>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Cada sensor sabe quais câmeras olham para ele.</h2>
+<p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:32em">No projeto, cada sensor é associado a uma zona e às câmeras que cobrem aquela área. Quando o sensor dispara, o operador abre diretamente as imagens relacionadas.</p>
+</div>
+<figure aria-label="Relação sensor, zona e câmeras" style="margin:0;border:1px solid #232B36;border-radius:8px;background:#000;padding:clamp(18px,2.6vw,32px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px;align-items:stretch">
+<span style="display:flex;flex-direction:column;gap:6px;padding:14px;border:1px solid #343E4B;border-radius:4px;background:#07090C"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">SENSOR</span><span style="font-size:17px;font-weight:600">Estoque 05</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#56616F">infravermelho</span></span>
+<span style="display:flex;flex-direction:column;gap:6px;padding:14px;border:1px solid #287DD2;border-radius:4px;background:rgba(17,48,94,.3)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8CC2FF">ZONA</span><span style="font-size:17px;font-weight:600">Zona 05</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8CC2FF">↔ sensor ↔ câmeras</span></span>
+<span style="display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #343E4B;border-radius:4px;background:#07090C"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">CÂMERAS RELACIONADAS</span><span style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid #232B36;border-radius:3px;padding:4px 8px">CAM-07</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid #232B36;border-radius:3px;padding:4px 8px">CAM-08</span></span></span>
+<figcaption style="grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#56616F">EXEMPLO ILUSTRATIVO</figcaption>
+</figure>
+</div>
+</section>
+
+<section data-screen-label="Monitoramento · Demonstração" style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,5vw,88px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:22px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">03 — PROTOCOLO POR UNIDADE</span>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700;text-wrap:balance">O protocolo do cliente aparece na ocorrência.</h2>
+<p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:32em">Horários, prioridades e ordem de contatos são definidos na contratação para cada unidade. O operador vê o protocolo ao lado do evento e segue as etapas previstas.</p>
+<dl style="margin:0;display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ protocol }}" as="p" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:minmax(120px,.5fr) minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid #171D26"><dt style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#8A94A3;padding-top:3px">{{ p.k }}</dt><dd style="margin:0;font-size:16px;color:#EEF1F4;line-height:1.5">{{ p.v }}</dd></div></sc-for>
+</dl>
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#56616F">PROTOCOLO DE EXEMPLO · DEFINIDO POR CLIENTE NA CONTRATAÇÃO</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">INTERFACE DA CENTRAL · DEMONSTRAÇÃO</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3;border:1px solid #343E4B;border-radius:3px;padding:4px 8px;white-space:nowrap">DADOS ILUSTRATIVOS</span></div>
+<div style="background:#0C1015;border:1px solid #232B36;border-radius:6px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #171D26;border-top:3px solid {{ evTop }};flex-wrap:wrap">
+<span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.06em;color:#07090C;background:#E5484D;border-radius:3px;padding:4px 8px"><span style="width:7px;height:7px;background:#07090C;border-radius:1px"></span>CRÍTICO</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ evColor }};border:1px solid {{ evColor }};border-radius:3px;padding:3px 8px">{{ evStatus }}</span></span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500">02:14:37</span>
+</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+<span style="font-size:20px;font-weight:700;color:#FFFFFF">Abertura fora do horário</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:12px">
+<span style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">CLIENTE</span><span style="font-size:14px;color:#DCE1E7">Empresa X</span></span>
+<span style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">UNIDADE</span><span style="font-size:14px;color:#DCE1E7">Barra</span></span>
+<span style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">LOCAL</span><span style="font-size:14px;color:#DCE1E7">Entrada lateral</span></span>
+<span style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">ZONA</span><span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:#DCE1E7">03</span></span>
+</div>
+<div style="display:flex;flex-direction:column;padding:2px 0">
+<sc-for list="{{ evTimeline }}" as="a" hint-placeholder-count="1"><div style="display:grid;grid-template-columns:70px 14px minmax(0,1fr);gap:10px;align-items:start;padding:6px 0"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#B6BEC9">{{ a.t }}</span><span style="width:9px;height:9px;border-radius:50%;border:2px solid {{ a.hex }};margin-top:3px"></span><span style="font-size:14px;color:#EEF1F4">{{ a.what }}</span></div></sc-for>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid #171D26;padding-top:14px"><button type="button" onClick="{{ evNext }}" style="height:44px;padding:0 16px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit" style-hover="background:#2A66BC">{{ evAction }}</button><span style="display:flex;align-items:center;font-size:13px;color:#8A94A3">{{ evHint }}</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-screen-label="Monitoramento · Multifabricante" style="background:#000;border-top:1px solid #171D26;border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,88px);align-items:center">
+<div style="display:flex;flex-direction:column;gap:22px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">04 — PLATAFORMA PRÓPRIA</span>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Central independente de fabricante.</h2>
+<p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:32em">Os eventos chegam à infraestrutura própria da TIMP. Cada família de equipamentos é integrada por um adaptador, e a operação trabalha com eventos padronizados: cliente, unidade, zona, tipo, prioridade e câmeras relacionadas.</p>
+<p style="margin:0;font-size:15px;line-height:1.6;color:#8A94A3;max-width:34em">A compatibilidade de cada equipamento é avaliada no projeto. Estar conectado à internet não torna um equipamento compatível: depende de protocolo, API ou integração específica.</p>
+</div>
+<figure aria-label="Diagrama: fabricantes, adaptadores, gateway e Central" style="margin:0;border:1px solid #232B36;border-radius:8px;background:#07090C;padding:clamp(18px,2.6vw,32px);display:flex;flex-direction:column;gap:12px;background-image:linear-gradient(rgba(35,43,54,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.35) 1px,transparent 1px);background-size:24px 24px">
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px"><sc-for list="{{ vendors }}" as="v" hint-placeholder-count="3"><span style="font-size:13px;font-weight:600;text-align:center;padding:10px 6px;border:1px {{ v.style }} #343E4B;border-radius:4px;background:#000;color:#DCE1E7">{{ v.t }}</span></sc-for></div>
+<sc-for list="{{ gw }}" as="g" hint-placeholder-count="4"><span aria-hidden="true" style="display:flex;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:#287DD2">↓</span><span style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid {{ g.border }};border-radius:4px;background:{{ g.bg }}"><span style="font-size:15px;font-weight:600">{{ g.t }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A94A3;text-align:right">{{ g.d }}</span></span></sc-for>
+<figcaption style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#56616F">DIAGRAMA CONCEITUAL · TIMP</figcaption>
+</figure>
+</div>
+</section>
+
+<section data-screen-label="Monitoramento · Sistemas" style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(28px,4vw,40px)">
+<div style="display:flex;flex-direction:column;gap:18px;max-width:760px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">05 — INTEGRAÇÕES E SUPORTE</span><h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700">Alarmes, câmeras e acessos conectados à Central.</h2></div>
+<nav aria-label="Serviços de segurança" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:0 32px">
+<sc-for list="{{ systems }}" as="s" hint-placeholder-count="4"><a href="{{ s.href }}" style="display:flex;flex-direction:column;gap:8px;padding:22px 0;border-top:1px solid #232B36;color:#EEF1F4" style-hover="color:#FFFFFF"><span style="display:flex;justify-content:space-between;font-size:20px;font-weight:700">{{ s.t }}<span style="color:#4C9BEA" aria-hidden="true">→</span></span><span style="font-size:15px;line-height:1.5;color:#8A94A3">{{ s.d }}</span></a></sc-for>
+</nav>
+</section>
+
+<section id="faq" data-screen-label="Monitoramento · FAQ" style="border-top:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,88px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:20px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">06 — PERGUNTAS FREQUENTES</span><h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700">Dúvidas sobre o monitoramento</h2></div>
+<div style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ faq }}" as="q" hint-placeholder-count="4"><details style="border-bottom:1px solid #232B36"><summary style="list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:16px 0;cursor:pointer;font-size:18px;font-weight:600;color:#EEF1F4">{{ q.q }}<span style="font-family:'JetBrains Mono',monospace;color:#4C9BEA;font-size:18px" aria-hidden="true">+</span></summary><p style="margin:0;padding:0 0 22px;font-size:16px;line-height:1.65;color:#B6BEC9;max-width:40em">{{ q.a }}</p></details></sc-for>
+</div>
+</div>
+</section>
+
+<section data-screen-label="Monitoramento · Conteúdo" style="background:#FFFFFF;color:#07090C">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,104px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px"><div style="display:flex;flex-direction:column;gap:16px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#2359A5">SEGURANÇA ELETRÔNICA</span><h2 style="margin:0;font-size:clamp(26px,2.6vw,38px);line-height:1.1;letter-spacing:-.025em;font-weight:700">Para aprofundar</h2></div><a href="Conhecimento.dc.html" style="font-size:16px;font-weight:600;color:#2359A5">Ver todos os conteúdos →</a></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));column-gap:32px;border-top:1px solid #DCE1E7">
+<sc-for list="{{ articles }}" as="m" hint-placeholder-count="4"><a href="Artigo.dc.html" style="display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:72px;border-bottom:1px solid #DCE1E7;color:#07090C;font-size:17px;font-weight:600;line-height:1.3" style-hover="color:#2359A5"><span style="padding:14px 0">{{ m }}</span><span style="color:#2359A5" aria-hidden="true">→</span></a></sc-for>
+</div>
+</div>
+</section>
+
+<section id="contato" data-final-cta="" data-screen-label="Monitoramento · CTA" style="background:#0B1E3D">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,88px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:24px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8CC2FF">SOLICITAR AVALIAÇÃO</span>
+<h2 style="margin:0;font-size:clamp(32px,4vw,58px);line-height:1.02;letter-spacing:-.035em;font-weight:700;text-wrap:balance">Avalie o monitoramento para sua operação.</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#DCE1E7;max-width:30em">Informe as unidades e os sistemas existentes. A equipe avalia a compatibilidade dos equipamentos e propõe o projeto de monitoramento.</p>
+</div>
+<dc-import name="ProjectForm" submit-label="Solicitar avaliação de monitoramento" default-solucao="Monitoramento 24h" placeholder="Número de unidades, sistemas existentes (alarme, câmeras, controle de acesso), horários de funcionamento…" wa-text="Olá, TIMP. Quero avaliar o monitoramento 24h para minha empresa." annotations="{{ annotations }}" hint-size="100%,900px"></dc-import>
+</div>
+</section>
+</main>
+<dc-import name="SiteFooter" cta-label="Solicitar avaliação" wa-text="Olá, TIMP. Quero avaliar o monitoramento 24h para minha empresa." hint-size="100%,520px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Protótipo&quot;}}">
+const SV = s => 'Pagina%20de%20Servico.dc.html?s=' + s;
+const EV = [
+  { status: 'NOVO', color: '#E8A33D', action: 'Assumir evento', hint: 'Evento aguardando operador', add: null },
+  { status: 'ASSUMIDO', color: '#4C9BEA', action: 'Abrir câmeras relacionadas', hint: 'Zona 03 · CAM-07, CAM-08', add: { t: '02:14:41', what: 'Operador assumiu o evento', hex: '#287DD2' } },
+  { status: 'EM VERIFICAÇÃO', color: '#4C9BEA', action: 'Registrar contato', hint: 'Protocolo: contato 1', add: { t: '02:15:03', what: 'CAM-07 e CAM-08 abertas', hex: '#287DD2' } },
+  { status: 'EM VERIFICAÇÃO', color: '#4C9BEA', action: 'Classificar e encerrar', hint: 'Contato registrado', add: { t: '02:16:02', what: 'Contato com responsável principal', hex: '#287DD2' } },
+  { status: 'ENCERRADO', color: '#5FD49A', action: 'Reiniciar demonstração', hint: 'Histórico preservado na auditoria', add: { t: '02:30:00', what: 'Encerrado · classificação registrada', hex: '#2FBF71' } }
+];
+class Component extends DCLogic {
+  state = { step: 0 };
+  renderVals() {
+    const h = React.createElement, pad = i => String(i + 1).padStart(2, '0'), step = this.state.step, ev = EV[step];
+    return {
+      annotations: this.props.annotations ?? false,
+      liveDot: [h('span', { key: 'a', style: { position: 'absolute', inset: 0, borderRadius: '50%', background: '#2FBF71' } }), h('span', { key: 'b', style: { position: 'absolute', inset: 0, borderRadius: '50%', background: '#2FBF71', animation: 'timpPulse 2s ease-out infinite' } })],
+      wa: 'https://wa.me/5521983318387?text=' + encodeURIComponent('Olá, TIMP. Quero avaliar o monitoramento 24h para minha empresa.'),
+      commercial: [['Projeto', 'riscos e pontos'], ['Equipamentos', 'especificação'], ['Instalação', 'execução'], ['Monitoramento', 'Central TIMP 24h'], ['Manutenção', 'preventiva e corretiva'], ['Suporte', 'contínuo']].map(([t, d], i) => ({ t, d, n: pad(i), color: i === 3 ? '#8CC2FF' : '#EEF1F4' })),
+      flow: [
+        ['Equipamento', 'Alarme, câmera ou controle de acesso detecta uma ocorrência.'], ['Evento', 'O equipamento do local envia o evento pela rede.'],
+        ['Central TIMP', 'O evento é recebido e entra na fila por prioridade.'], ['Verificação', 'O operador assume e abre as câmeras relacionadas.'],
+        ['Protocolo', 'Contatos e etapas definidos para a unidade.'], ['Ação', 'Contato ou acionamento quando aplicável, após validação.'], ['Registro', 'Cada ação fica na linha do tempo da ocorrência.']
+      ].map(([t, d], i) => ({ t, d, n: pad(i), style: i === 5 ? 'dashed' : 'solid', line: i === 2 ? '#287DD2' : '#343E4B' })),
+      protocol: [{ k: 'HORÁRIO', v: '08h–19h' }, { k: 'FORA DO HORÁRIO', v: 'Alta prioridade' }, { k: 'CONTATOS', v: '1. Responsável principal · 2. Responsável secundário' }, { k: 'DEPOIS', v: 'Seguir o protocolo específico da unidade' }],
+      evTimeline: [{ t: '02:14:37', what: 'Evento recebido · Zona 03', hex: '#E5484D' }, ...EV.slice(1, step + 1).map(x => x.add)],
+      evStatus: ev.status, evColor: ev.color, evAction: ev.action, evHint: ev.hint, evTop: step === 4 ? '#2FBF71' : '#E5484D',
+      evNext: () => this.setState(st => ({ step: st.step >= 4 ? 0 : st.step + 1 })),
+      vendors: [['Fabricante A', 'solid'], ['Fabricante B', 'solid'], ['Novos fabricantes', 'dashed']].map(([t, style]) => ({ t, style })),
+      gw: [['Adaptadores', 'um por família de equipamentos', '#343E4B', '#000'], ['TIMP Monitoring Gateway', 'infraestrutura própria', '#287DD2', 'rgba(17,48,94,.35)'], ['Eventos padronizados', 'mesmo formato para todos', '#343E4B', '#000'], ['Central TIMP', 'operação 24h', '#287DD2', 'rgba(17,48,94,.35)']].map(([t, d, border, bg]) => ({ t, d, border, bg })),
+      systems: [
+        { t: 'Alarmes', d: 'Sensores e central de alarme preparados para monitoramento.', href: 'Seguranca%20Eletronica.dc.html#alarmes' },
+        { t: 'CFTV e câmeras', d: 'Câmeras associadas às zonas para verificação por vídeo.', href: SV('cftv') },
+        { t: 'Controle de acesso', d: 'Eventos de porta e acessos fora do horário.', href: SV('acesso') },
+        { t: 'Manutenção e suporte', d: 'Equipamentos mantidos e comunicação verificada continuamente.', href: 'Seguranca%20Eletronica.dc.html' }
+      ],
+      faq: [
+        { q: 'A Central aciona a polícia automaticamente?', a: 'Não. Todo evento é verificado por um operador, que segue o protocolo do cliente. Acionamentos externos acontecem apenas quando aplicáveis e após validação, e ficam registrados.' },
+        { q: 'Posso monitorar um sistema que já tenho instalado?', a: 'Depende da compatibilidade do equipamento, que é avaliada no projeto. Em alguns casos é necessário substituir ou complementar a central do local.' },
+        { q: 'Quem define o protocolo de atendimento?', a: 'O protocolo é definido com o cliente na contratação, por unidade: horários, prioridades, contatos e etapas.' },
+        { q: 'Consigo consultar o histórico das ocorrências?', a: 'Sim. Cada ocorrência tem uma linha do tempo com horários, ações do operador e conclusão, disponível na Área do Cliente.' }
+      ],
+      articles: ['Como funciona uma Central de Monitoramento 24h?', 'O que acontece quando um alarme dispara?', 'Sistema de alarme monitorado', 'Integração CFTV + alarme']
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Conteúdo · Admin TIMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07090C;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4C9BEA;text-decoration:none}
+a:hover{color:#8CC2FF}
+:focus-visible{outline:2px solid #4C9BEA;outline-offset:2px}
+input,button,select,textarea{font-family:inherit}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+<header style="position:sticky;top:0;z-index:20;height:52px;background:#0C1015;border-bottom:1px solid #171D26;display:flex;align-items:center;gap:14px;padding:0 clamp(12px,2vw,20px)">
+<a href="Admin%20TIMP.dc.html" style="display:flex;align-items:center;gap:10px"><img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP" style="height:22px;width:auto"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#4C9BEA;border:1px solid #11305E;border-radius:3px;padding:2px 6px">ADMIN</span></a>
+<nav aria-label="Conteúdo" style="display:flex;gap:2px;overflow-x:auto">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button type="button" onClick="{{ t.go }}" aria-current="{{ t.cur }}" style="flex:none;height:34px;padding:0 12px;border:0;border-radius:3px;background:{{ t.bg }};color:{{ t.color }};font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ t.label }}</button></sc-for>
+</nav>
+<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:#E8A33D;border:1px dashed #E8A33D;border-radius:3px;padding:3px 7px;white-space:nowrap;display:{{ demoDisp }}">DEMONSTRAÇÃO</span>
+</header>
+
+<sc-if value="{{ is.artigos }}" hint-placeholder-val="{{ true }}">
+<main style="padding:clamp(14px,2vw,24px);display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#4C9BEA">CONHECIMENTO TIMP</span><h1 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.02em">Artigos</h1></div><button type="button" onClick="{{ goNew }}" style="height:38px;padding:0 14px;border:0;border-radius:3px;background:#2359A5;color:#FFFFFF;font-size:13px;font-weight:600;cursor:pointer">+ Novo artigo</button></div>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ aFilters }}" as="f" hint-placeholder-count="6"><button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" style="height:32px;padding:0 10px;border-radius:3px;border:1px solid {{ f.border }};background:{{ f.bg }};color:#EEF1F4;font-size:12px;font-weight:600;cursor:pointer">{{ f.label }} <span style="font-family:'JetBrains Mono',monospace;color:#8A94A3">{{ f.n }}</span></button></sc-for></div>
+<section style="border:1px solid #171D26;border-radius:4px;background:#0C1015;overflow-x:auto">
+<div style="min-width:880px">
+<div style="display:grid;grid-template-columns:minmax(0,2.4fr) 1.2fr 1fr 110px 120px 90px;gap:12px;padding:8px 14px;border-bottom:1px solid #171D26;background:#07090C"><sc-for list="{{ aHead }}" as="h"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#8A94A3">{{ h }}</span></sc-for></div>
+<sc-for list="{{ articles }}" as="a" hint-placeholder-count="8"><button type="button" onClick="{{ a.open }}" style="width:100%;display:grid;grid-template-columns:minmax(0,2.4fr) 1.2fr 1fr 110px 120px 90px;gap:12px;align-items:center;padding:10px 14px;border:0;border-bottom:1px solid #171D26;background:none;color:#EEF1F4;text-align:left;cursor:pointer;font-size:13px" style-hover="background:#11161D"><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.t }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#56616F">/conhecimento/{{ a.slug }}/</span></span><span style="color:#B6BEC9">{{ a.cat }}</span><span style="color:#B6BEC9">{{ a.page }}</span><span style="justify-self:start;display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ a.fg }};border:1px solid {{ a.bc }};border-radius:3px;padding:2px 6px"><span style="width:6px;height:6px;border-radius:{{ a.shape }};background:{{ a.bc }}"></span>{{ a.status }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#B6BEC9">{{ a.date }}</span><span style="display:flex;align-items:center;gap:6px"><span style="flex:1;height:5px;border-radius:3px;background:#171D26;overflow:hidden"><span style="display:block;height:100%;width:{{ a.pct }};background:{{ a.sc }}"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">{{ a.score }}</span></span></button></sc-for>
+</div>
+</section>
+<span style="font-size:12px;color:#8A94A3">Coluna SEO: itens do checklist editorial concluídos (title, description, H1, canonical, OG, alt, links, schema, FAQ, autoria, referências).</span>
+</main>
+</sc-if>
+
+<sc-if value="{{ is.editor }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:grid;grid-template-columns:{{ edCols }};min-height:0">
+<section style="display:flex;flex-direction:column;min-width:0;border-right:1px solid #171D26">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid #171D26;background:#0C1015;position:{{ barPos }};top:52px;z-index:10">
+<button type="button" onClick="{{ goList }}" style="height:32px;padding:0 8px;border:0;background:none;color:#4C9BEA;font-size:13px;font-weight:600;cursor:pointer">‹ Artigos</button>
+<span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ stFg }};border:1px solid {{ stC }};border-radius:3px;padding:2px 7px"><span style="width:6px;height:6px;border-radius:50%;background:{{ stC }}"></span>{{ pubState }}</span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#56616F">SALVO 02:41 · VERSÃO 7</span>
+<div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+<div role="group" aria-label="Modo" style="display:flex;border:1px solid #232B36;border-radius:3px;overflow:hidden"><sc-for list="{{ modes }}" as="m"><button type="button" onClick="{{ m.pick }}" aria-pressed="{{ m.on }}" style="height:30px;padding:0 10px;border:0;background:{{ m.bg }};color:#EEF1F4;font-size:12px;font-weight:600;cursor:pointer">{{ m.label }}</button></sc-for></div>
+<button type="button" onClick="{{ schedule }}" style="height:32px;padding:0 10px;border:1px solid #343E4B;border-radius:3px;background:none;color:#EEF1F4;font-size:12px;font-weight:600;cursor:pointer">Agendar</button>
+<button type="button" onClick="{{ publish }}" style="height:32px;padding:0 12px;border:0;border-radius:3px;background:#2359A5;color:#FFFFFF;font-size:12px;font-weight:600;cursor:pointer">{{ pubLabel }}</button>
+</div>
+</div>
+
+<sc-if value="{{ editMode }}">
+<div style="flex:1;overflow-y:auto;padding:clamp(14px,3vw,32px);display:flex;flex-direction:column;gap:10px;max-width:860px;width:100%;margin:0 auto">
+<textarea rows="2" value="{{ h1 }}" onChange="{{ onH1 }}" aria-label="Título (H1)" style="border:0;border-bottom:1px solid #232B36;background:none;color:#FFFFFF;font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:-.02em;line-height:1.15;padding:6px 0 12px;outline:none;resize:none"></textarea>
+<sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+<div style="display:grid;grid-template-columns:{{ blkCols }};gap:{{ blkGap }};align-items:start;padding:10px;border:1px solid {{ b.border }};border-radius:3px;background:#0C1015" style-hover="border-color:#343E4B">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#4C9BEA;padding-top:3px;grid-column:{{ typeCol }}">{{ b.type }}</span>
+<span style="display:flex;flex-direction:column;gap:6px;font-size:{{ b.fs }};font-weight:{{ b.fw }};line-height:1.5;color:#DCE1E7;min-width:0"><span style="display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:{{ clamp }};overflow:hidden">{{ b.text }}</span><sc-if value="{{ b.meta }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">{{ b.meta }}</span></sc-if></span>
+<span style="display:flex;gap:2px"><button type="button" onClick="{{ b.up }}" aria-label="Mover para cima" style="width:26px;height:26px;border:1px solid #232B36;border-radius:2px;background:none;color:#8A94A3;cursor:pointer;font-size:11px">↑</button><button type="button" onClick="{{ b.down }}" aria-label="Mover para baixo" style="width:26px;height:26px;border:1px solid #232B36;border-radius:2px;background:none;color:#8A94A3;cursor:pointer;font-size:11px">↓</button><button type="button" onClick="{{ b.del }}" aria-label="Remover bloco" style="width:26px;height:26px;border:1px solid #232B36;border-radius:2px;background:none;color:#FF8A8D;cursor:pointer;font-size:11px">✕</button></span>
+</div>
+</sc-for>
+<div style="display:flex;flex-direction:column;gap:8px;padding:12px;border:1px dashed #343E4B;border-radius:3px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">ADICIONAR BLOCO</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ palette }}" as="p" hint-placeholder-count="14"><button type="button" onClick="{{ p.add }}" style="height:30px;padding:0 10px;border:1px solid #232B36;border-radius:3px;background:#07090C;color:#DCE1E7;font-size:12px;font-weight:600;cursor:pointer" style-hover="border-color:#287DD2">{{ p.label }}</button></sc-for></div>
+<span style="font-size:11px;color:#56616F">Sem edição de HTML. Cada bloco tem campos próprios e é renderizado com os componentes do Design System.</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ previewMode }}">
+<div style="flex:1;overflow-y:auto;background:#EEF1F4;padding:20px">
+<article style="max-width:720px;margin:0 auto;background:#FFFFFF;color:#07090C;border-radius:4px;padding:clamp(20px,4vw,40px);display:flex;flex-direction:column;gap:16px;font-size:17px;line-height:1.7">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#2359A5">PRÉ-VISUALIZAÇÃO · REDES E INFRAESTRUTURA</span>
+<h1 style="margin:0;font-size:32px;line-height:1.1;letter-spacing:-.03em">{{ h1 }}</h1>
+<sc-for list="{{ blocks }}" as="b"><div style="font-size:{{ b.pfs }};font-weight:{{ b.pfw }};background:{{ b.pbg }};border-radius:4px;padding:{{ b.ppad }};color:{{ b.pfg }}">{{ b.text }}</div></sc-for>
+</article>
+</div>
+</sc-if>
+</section>
+
+<aside style="display:flex;flex-direction:column;min-width:0;background:#0C1015;overflow-y:auto">
+<div role="tablist" style="display:flex;border-bottom:1px solid #171D26;position:sticky;top:0;background:#0C1015;z-index:2"><sc-for list="{{ panels }}" as="p" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ p.on }}" onClick="{{ p.pick }}" style="flex:1;height:40px;border:0;border-bottom:2px solid {{ p.line }};background:none;color:{{ p.color }};font-size:12px;font-weight:600;cursor:pointer">{{ p.label }}</button></sc-for></div>
+
+<sc-if value="{{ panel.seo }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #232B36;border-radius:3px;background:#07090C">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3"><span>CHECKLIST</span><span style="color:{{ scoreC }}">{{ doneCount }}/11</span></span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px"><sc-for list="{{ checklist }}" as="c"><span style="display:flex;align-items:center;gap:6px;font-size:12px;color:{{ c.fg }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ c.mc }}">{{ c.mark }}</span>{{ c.t }}</span></sc-for></div>
+</div>
+<sc-for list="{{ seoFields }}" as="f" hint-placeholder-count="8"><label style="display:flex;flex-direction:column;gap:4px"><span style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:#DCE1E7">{{ f.label }}<span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:400;color:{{ f.cc }}">{{ f.count }}</span></span><input type="text" value="{{ f.v }}" onChange="{{ f.on }}" style="height:34px;border:1px solid #343E4B;border-radius:3px;background:#07090C;color:#EEF1F4;font-size:13px;padding:0 8px;font-family:{{ f.ff }}"><sc-if value="{{ f.hint }}"><span style="font-size:11px;color:{{ f.hc }};line-height:1.4">{{ f.hint }}</span></sc-if></label></sc-for>
+<div style="display:flex;flex-direction:column;gap:6px;padding:10px;border:1px solid #232B36;border-radius:3px;background:#07090C"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">PRÉVIA NA BUSCA</span><span style="font-size:15px;color:#8CC2FF;line-height:1.3">{{ serpTitle }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5FD49A">timp.com.br › conhecimento › {{ slug }}</span><span style="font-size:12px;color:#B6BEC9;line-height:1.45">{{ metaDesc }}</span></div>
+<sc-if value="{{ canib }}"><div role="alert" style="display:flex;gap:8px;padding:10px;border:1px solid #E8A33D;background:rgba(232,163,61,.08);border-radius:3px;font-size:12px;line-height:1.5;color:#EEF1F4"><span style="font-family:'JetBrains Mono',monospace;color:#F2C27A">!</span>{{ canib }}</div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ panel.links }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px;display:flex;flex-direction:column;gap:14px">
+<sc-for list="{{ linkGroups }}" as="g" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:{{ g.hc }}"><span>{{ g.title }}</span><span>{{ g.n }}</span></span>
+<sc-for list="{{ g.items }}" as="l"><div style="display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid {{ l.border }};border-radius:3px;background:#07090C"><span style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:13px;font-weight:600">{{ l.t }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:{{ l.sc }};white-space:nowrap">{{ l.s }}</span></span><span style="font-size:11px;color:#8A94A3">Âncora: “{{ l.anchor }}”</span><sc-if value="{{ l.action }}"><button type="button" onClick="{{ l.go }}" style="align-self:flex-start;height:26px;padding:0 8px;border:1px solid #287DD2;border-radius:2px;background:none;color:#8CC2FF;font-size:11px;font-weight:600;cursor:pointer">{{ l.action }}</button></sc-if></div></sc-for>
+</div>
+</sc-for>
+<span style="font-size:11px;line-height:1.5;color:#56616F">Sugestões são indicativas (sem automação nesta fase). Links só entram quando fazem sentido para o leitor; âncoras naturais e variadas.</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ panel.autoria }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ authorFields }}" as="f"><label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:#DCE1E7">{{ f.k }}<input type="text" value="{{ f.v }}" style="height:34px;border:1px solid #343E4B;border-radius:3px;background:#07090C;color:#EEF1F4;font-size:13px;padding:0 8px"></label></sc-for>
+<span style="font-size:11px;color:#56616F;line-height:1.5">Data de atualização só muda com revisão de conteúdo real, não com correções de digitação.</span>
+</div>
+</sc-if>
+</aside>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.midia }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:grid;grid-template-columns:{{ mdCols }};min-height:0">
+<main style="padding:clamp(14px,2vw,20px);display:flex;flex-direction:column;gap:12px;min-width:0">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#4C9BEA">CONTEÚDO › BIBLIOTECA DE MÍDIA</span><h1 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.02em">Biblioteca de mídia</h1></div><button type="button" style="height:38px;padding:0 14px;border:0;border-radius:3px;background:#2359A5;color:#FFFFFF;font-size:13px;font-weight:600;cursor:pointer">+ Enviar arquivos</button></div>
+<input type="search" value="{{ mq }}" onChange="{{ onMq }}" placeholder="Buscar por nome, alt text ou legenda" style="height:38px;border:1px solid #343E4B;border-radius:3px;background:#0C1015;color:#EEF1F4;font-size:13px;padding:0 10px;max-width:420px">
+<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px"><sc-for list="{{ mCats }}" as="c" hint-placeholder-count="9"><button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.on }}" style="flex:none;height:30px;padding:0 10px;border-radius:3px;border:1px solid {{ c.border }};background:{{ c.bg }};color:#EEF1F4;font-size:12px;font-weight:600;cursor:pointer">{{ c.label }} <span style="font-family:'JetBrains Mono',monospace;color:#8A94A3">{{ c.n }}</span></button></sc-for></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
+<sc-for list="{{ media }}" as="m" hint-placeholder-count="10"><button type="button" onClick="{{ m.pick }}" aria-pressed="{{ m.on }}" style="display:flex;flex-direction:column;border:1px solid {{ m.border }};border-radius:3px;background:#0C1015;padding:0;overflow:hidden;cursor:pointer;text-align:left;color:#EEF1F4"><span style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:{{ m.bg }};border-bottom:1px solid #171D26;background-image:{{ m.grid }};background-size:16px 16px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ m.fg }};border:1px solid {{ m.fg }};border-radius:2px;padding:2px 6px">{{ m.fmt }}</span></span><span style="display:flex;flex-direction:column;gap:2px;padding:8px"><span style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.name }}</span><span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:#8A94A3"><span>{{ m.cat }}</span><span style="color:{{ m.altC }}">{{ m.alt }}</span></span></span></button></sc-for>
+</div>
+<sc-if value="{{ noMedia }}"><div style="padding:28px;text-align:center;font-size:13px;color:#8A94A3;border:1px dashed #343E4B;border-radius:3px">Nenhum arquivo encontrado.</div></sc-if>
+</main>
+<aside style="border-left:1px solid #171D26;background:#0C1015;padding:14px;display:flex;flex-direction:column;gap:10px;overflow-y:auto">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">METADADOS</span>
+<span style="font-size:15px;font-weight:700">{{ mSel.name }}</span>
+<dl style="margin:0;display:grid;grid-template-columns:90px 1fr;gap:6px 10px;font-size:12px"><sc-for list="{{ mSel.info }}" as="i"><dt style="color:#8A94A3">{{ i.k }}</dt><dd style="margin:0;font-family:'JetBrains Mono',monospace;color:#DCE1E7">{{ i.v }}</dd></sc-for></dl>
+<sc-for list="{{ mSel.edit }}" as="f"><label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:#DCE1E7">{{ f.k }}<textarea key="{{ f.key }}" rows="{{ f.rows }}" defaultValue="{{ f.v }}" style="border:1px solid {{ f.border }};border-radius:3px;background:#07090C;color:#EEF1F4;font-size:13px;padding:6px 8px;resize:vertical"></textarea><sc-if value="{{ f.warn }}"><span style="font-size:11px;color:#F2C27A">{{ f.warn }}</span></sc-if></label></sc-for>
+<div style="display:flex;flex-direction:column;gap:4px;font-size:12px"><span style="font-weight:600;color:#DCE1E7">Usado em</span><sc-for list="{{ mSel.used }}" as="u"><span style="color:#8CC2FF">{{ u }}</span></sc-for></div>
+<div style="display:flex;gap:6px;padding-top:6px"><button type="button" style="flex:1;height:34px;border:1px solid #343E4B;border-radius:3px;background:none;color:#EEF1F4;font-size:12px;font-weight:600;cursor:pointer">Salvar metadados</button><button type="button" onClick="{{ insert }}" style="flex:1;height:34px;border:0;border-radius:3px;background:#2359A5;color:#FFFFFF;font-size:12px;font-weight:600;cursor:pointer">Inserir no artigo</button></div>
+</aside>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ARTS = [
+  ['Instalação de Starlink: o que considerar', 'starlink-o-que-considerar', 'Redes e Infra · Starlink', 'Instalação de Starlink', 'RASCUNHO', '—', 6, 'starlink'],
+  ['Starlink para empresas: quando vale a pena?', 'starlink-para-empresas', 'Redes e Infra · Starlink', 'Instalação de Starlink', 'AGENDADO', '30 set 09:00', 10, 'starlink'],
+  ['O que acontece quando um alarme dispara?', 'o-que-acontece-quando-um-alarme-dispara', 'Segurança Eletrônica', 'Monitoramento 24h', 'PUBLICADO', '26 set', 11, 'seg'],
+  ['O que é cabeamento estruturado e como funciona?', 'o-que-e-cabeamento-estruturado', 'Redes e Infraestrutura', 'Cabeamento Estruturado', 'ATUALIZADO', '24 set', 11, 'redes'],
+  ['Cat6 ou Cat6A?', 'cat6-ou-cat6a', 'Redes e Infraestrutura', 'Cabeamento Estruturado', 'PUBLICADO', '18 set', 9, 'redes'],
+  ['Infraestrutura tecnológica para construtoras', 'infraestrutura-tecnologica-para-construtoras', 'Tecnologia para Obras', 'Construtoras e Engenharia', 'PUBLICADO', '12 set', 10, 'obras'],
+  ['CFTV IP ou analógico?', 'cftv-ip-ou-analogico', 'Segurança Eletrônica', 'CFTV e Câmeras', 'RASCUNHO', '—', 4, 'seg'],
+  ['Servidor local, cloud ou híbrido?', 'servidor-local-cloud-ou-hibrido', 'TI Corporativa', 'Servidores, Cloud e Virtualização', 'PUBLICADO', '02 set', 8, 'ti']
+];
+const AST = { 'RASCUNHO': ['#B6BEC9', '#56616F', '50%'], 'AGENDADO': ['#8CC2FF', '#287DD2', '50%'], 'PUBLICADO': ['#5FD49A', '#2FBF71', '50%'], 'ATUALIZADO': ['#5FD49A', '#2FBF71', '1px'] };
+const BT = { 'RESPOSTA DIRETA': ['16px', 500], 'TÍTULO H2': ['18px', 700], 'TÍTULO H3': ['16px', 700], 'TEXTO': ['14px', 400], 'IMAGEM': ['13px', 400], 'IMAGEM FULL': ['13px', 400], 'GALERIA': ['13px', 400], 'DIAGRAMA': ['13px', 400], 'VÍDEO': ['13px', 400], 'TABELA': ['13px', 400], 'COMPARATIVO': ['13px', 400], 'CALLOUT': ['14px', 500], 'CTA': ['14px', 600], 'FAQ': ['14px', 500], 'RELACIONADOS': ['13px', 400], 'REFERÊNCIAS': ['13px', 400] };
+const START = [['RESPOSTA DIRETA', 'A instalação de Starlink envolve análise de obstruções, posicionamento, fixação, passagem de cabos, alimentação e integração com a rede local. Em empresas, pode ser configurada como link principal ou de contingência.'], ['TÍTULO H2', '1. Análise de obstruções'], ['TEXTO', 'Antes de fixar a antena, verificamos o campo de visão livre no local escolhido…'], ['DIAGRAMA', 'Diagrama: Starlink → roteador → firewall / dupla WAN → rede → Wi-Fi', 'diagrams/starlink-integracao.svg · alt preenchido'], ['CALLOUT', 'A TIMP presta serviço de instalação e integração; não é representante oficial da Starlink.'], ['CTA', 'Solicitar instalação de Starlink → /servicos/instalacao-starlink/'], ['FAQ', '3 perguntas · visível na página · gera FAQPage']];
+const MEDIA = [['timp-logo-dark-bg', 'PNG', 'Marca', 'Logo TIMP Tecnologia para fundo escuro', 840, 440, '38 KB', ['Todas as páginas']], ['starlink-integracao', 'SVG', 'Diagramas', 'Diagrama da integração Starlink com firewall e Wi-Fi', 1600, 900, '14 KB', ['Instalação de Starlink: o que considerar']], ['cabeamento-fluxo', 'SVG', 'Diagramas', 'Fluxo internet, firewall, switch, patch panel e pontos', 1600, 900, '11 KB', ['Cabeamento Estruturado', 'O que é cabeamento estruturado']], ['central-evento-timeline', 'SVG', 'Monitoramento', 'Timeline de uma ocorrência na Central TIMP', 1600, 1000, '9 KB', ['O que acontece quando um alarme dispara?']], ['capa-cat6-cat6a', 'WEBP', 'Blog', '', 1600, 1000, '96 KB', ['Cat6 ou Cat6A?']], ['obra-sala-tecnica-01', 'AVIF', 'Fotos TIMP', 'Sala técnica em obra com racks organizados', 2400, 1600, '312 KB', ['Construtoras e Engenharia']], ['home-hero-diagrama', 'SVG', 'Home', 'Diagrama conceitual do sistema TIMP', 1600, 900, '12 KB', ['Home']], ['servico-cftv-diagrama', 'SVG', 'Serviços', 'Fluxo câmera, PoE, NVR, visualização e monitoramento', 1600, 900, '10 KB', ['CFTV e Câmeras']]];
+class Component extends DCLogic {
+  state = { vw: typeof window !== 'undefined' ? window.innerWidth : 1440, scr: 'artigos', af: 'todos', mode: 'edit', panel: 'seo', blocks: START.map((b, i) => ({ id: i, type: b[0], text: b[1], meta: b[2] || '' })), nid: 100, h1: 'Instalação de Starlink: o que considerar', seo: { kw: 'instalação de starlink', intent: 'Informacional', cluster: 'Starlink · Redes e Infraestrutura', page: '/servicos/instalacao-starlink/', seg: 'Empresas e Escritórios', title: 'Instalação de Starlink: o que considerar | TIMP', desc: 'Obstruções, fixação, cabos, energia e integração com a rede: o que avaliar antes de instalar Starlink em casa, empresa, veículo ou embarcação.', slug: 'starlink-o-que-considerar', canon: 'https://timp.com.br/conhecimento/starlink-o-que-considerar/', og: 'starlink-integracao.svg' }, pub: 'RASCUNHO', mcat: 'Todas', mq: '', msel: 1, linked: [] };
+  componentDidMount() { this.onR = () => this.setState({ vw: window.innerWidth }); window.addEventListener('resize', this.onR); const t = new URLSearchParams(location.search).get('tela'); if (t) this.setState({ scr: t === 'seo' ? 'editor' : t }); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); }
+  mv(id, d) { this.setState(st => { const b = [...st.blocks], i = b.findIndex(x => x.id === id), j = i + d; if (j < 0 || j >= b.length) return null; [b[i], b[j]] = [b[j], b[i]]; return { blocks: b }; }); }
+  renderVals() {
+    const s = this.state, vw = s.vw, isM = vw < 768, isD = vw >= 1180, M = "'JetBrains Mono',monospace";
+    const sv = s.seo, types = s.blocks.map(b => b.type);
+    const checks = [['Title', sv.title.length >= 30 && sv.title.length <= 60], ['Description', sv.desc.length >= 120 && sv.desc.length <= 160], ['H1', s.h1.length > 10], ['Canonical', !!sv.canon], ['OG image', !!sv.og], ['Alt images', true], ['Links internos', s.linked.length >= 1 || types.includes('CTA')], ['Schema', true], ['FAQ', types.includes('FAQ')], ['Autor/Revisor', true], ['Referências', types.includes('REFERÊNCIAS')]];
+    const done = checks.filter(c => c[1]).length;
+    const onS = k => e => { const v = e.target.value; this.setState(st => ({ seo: { ...st.seo, [k]: v } })); };
+    const F = (label, k, o = {}) => ({ label, v: sv[k], on: onS(k), ff: o.m ? M : "'Archivo',sans-serif", count: o.max ? sv[k].length + '/' + o.max : '', cc: o.max && (sv[k].length > o.max || sv[k].length < o.min) ? '#F2C27A' : '#8A94A3', hint: o.hint || '', hc: o.hc || '#56616F' });
+    const mFiltered = MEDIA.filter(m => (s.mcat === 'Todas' || m[2] === s.mcat) && (!s.mq || (m[0] + m[3]).toLowerCase().includes(s.mq.toLowerCase())));
+    const ms = MEDIA[s.msel] || MEDIA[0];
+    const cats = ['Todas', 'Marca', 'Home', 'Serviços', 'Blog', 'Cases', 'Fotos TIMP', 'Diagramas', 'Monitoramento'];
+    return {
+      demoDisp: isM ? 'none' : 'inline',
+      tabs: [['artigos', 'Artigos'], ['editor', 'Editor'], ['midia', 'Biblioteca de mídia']].map(([k, label]) => ({ label, go: () => this.setState({ scr: k }), cur: s.scr === k ? 'page' : undefined, bg: s.scr === k ? '#11305E' : 'transparent', color: s.scr === k ? '#FFFFFF' : '#B6BEC9' })),
+      is: { artigos: s.scr === 'artigos', editor: s.scr === 'editor', midia: s.scr === 'midia' },
+      goNew: () => this.setState({ scr: 'editor' }), goList: () => this.setState({ scr: 'artigos' }),
+      aFilters: [['todos', 'Todos', 8], ['RASCUNHO', 'Rascunhos', 2], ['AGENDADO', 'Agendados', 1], ['PUBLICADO', 'Publicados', 4], ['ATUALIZADO', 'Atualizados', 1], ['starlink', 'Cluster Starlink', 2]].map(([k, label, n]) => ({ label, n, on: s.af === k, pick: () => this.setState({ af: k }), border: s.af === k ? '#287DD2' : '#232B36', bg: s.af === k ? 'rgba(40,125,210,.14)' : 'transparent' })),
+      aHead: ['ARTIGO', 'CATEGORIA · CLUSTER', 'PÁGINA APOIADA', 'STATUS', 'PUBLICAÇÃO', 'SEO'],
+      articles: ARTS.filter(a => s.af === 'todos' || a[4] === s.af || a[7] === s.af).map(a => ({ t: a[0], slug: a[1], cat: a[2], page: a[3], status: a[4], date: a[5], fg: AST[a[4]][0], bc: AST[a[4]][1], shape: AST[a[4]][2], score: a[6] + '/11', pct: Math.round(a[6] / 11 * 100) + '%', sc: a[6] >= 10 ? '#2FBF71' : a[6] >= 7 ? '#E8A33D' : '#E5484D', open: () => this.setState({ scr: 'editor' }) })),
+      blkCols: isM ? 'minmax(0,1fr) auto' : '92px minmax(0,1fr) auto', blkGap: isM ? '6px 10px' : '10px', typeCol: isM ? '1 / -1' : 'auto', clamp: isM ? '3' : 'unset', barPos: isM ? 'sticky' : 'static', edCols: isD ? 'minmax(0,1fr) 380px' : 'minmax(0,1fr)',
+      pubState: s.pub, stC: AST[s.pub][1], stFg: AST[s.pub][0], pubLabel: s.pub === 'RASCUNHO' ? 'Publicar' : 'Atualizar',
+      publish: () => this.setState(st => ({ pub: st.pub === 'RASCUNHO' || st.pub === 'AGENDADO' ? 'PUBLICADO' : 'ATUALIZADO' })), schedule: () => this.setState({ pub: 'AGENDADO' }),
+      modes: [['edit', 'Editar'], ['preview', 'Preview']].map(([k, label]) => ({ label, on: s.mode === k, pick: () => this.setState({ mode: k }), bg: s.mode === k ? '#11305E' : 'transparent' })),
+      editMode: s.mode === 'edit', previewMode: s.mode === 'preview', h1: s.h1, onH1: e => this.setState({ h1: e.target.value }),
+      blocks: s.blocks.map(b => { const [fs, fw] = BT[b.type] || ['14px', 400]; const box = ['RESPOSTA DIRETA', 'CALLOUT', 'CTA', 'DIAGRAMA', 'IMAGEM', 'IMAGEM FULL', 'GALERIA', 'VÍDEO', 'TABELA', 'COMPARATIVO', 'FAQ', 'RELACIONADOS', 'REFERÊNCIAS'].includes(b.type); return { ...b, fs, fw, border: '#171D26', up: () => this.mv(b.id, -1), down: () => this.mv(b.id, 1), del: () => this.setState(st => ({ blocks: st.blocks.filter(x => x.id !== b.id) })), pfs: b.type === 'TÍTULO H2' ? '24px' : b.type === 'TÍTULO H3' ? '20px' : '17px', pfw: b.type.startsWith('TÍTULO') || b.type === 'CTA' ? 700 : 400, pbg: b.type === 'CTA' ? '#0B1E3D' : box ? '#EEF1F4' : 'transparent', pfg: b.type === 'CTA' ? '#FFFFFF' : '#07090C', ppad: box ? '14px 16px' : '0' }; }),
+      palette: Object.keys(BT).filter(k => k !== 'RESPOSTA DIRETA').map(k => ({ label: k.charAt(0) + k.slice(1).toLowerCase(), add: () => this.setState(st => ({ blocks: [...st.blocks, { id: st.nid, type: k, text: k === 'REFERÊNCIAS' ? 'Referências verificáveis indicadas pelo revisor técnico' : 'Novo bloco: ' + k.toLowerCase(), meta: ['IMAGEM', 'IMAGEM FULL', 'GALERIA'].includes(k) ? 'Selecionar da Biblioteca de mídia · alt obrigatório' : '' }], nid: st.nid + 1 })) })),
+      panels: [['seo', 'SEO / GEO'], ['links', 'Links internos'], ['autoria', 'Autoria']].map(([k, label]) => ({ label, on: s.panel === k, pick: () => this.setState({ panel: k }), line: s.panel === k ? '#287DD2' : 'transparent', color: s.panel === k ? '#FFFFFF' : '#8A94A3' })),
+      panel: { seo: s.panel === 'seo', links: s.panel === 'links', autoria: s.panel === 'autoria' },
+      checklist: checks.map(([t, ok]) => ({ t, mark: ok ? '✓' : '○', mc: ok ? '#5FD49A' : '#F2C27A', fg: ok ? '#DCE1E7' : '#F2C27A' })), doneCount: done, scoreC: done >= 10 ? '#5FD49A' : '#F2C27A',
+      seoFields: [F('Keyword proprietária', 'kw', { hint: 'Uma keyword por conteúdo. Ver alerta de canibalização abaixo.' }), F('Intenção', 'intent'), F('Cluster', 'cluster'), F('Página comercial apoiada', 'page', { m: true }), F('Segmento relacionado', 'seg'), F('SEO Title', 'title', { max: 60, min: 30 }), F('Meta description', 'desc', { max: 160, min: 120 }), F('Slug', 'slug', { m: true }), F('Canonical', 'canon', { m: true }), F('OG image', 'og', { m: true, hint: 'Selecionada da Biblioteca de mídia.' })],
+      serpTitle: sv.title, metaDesc: sv.desc, slug: sv.slug,
+      canib: sv.kw.toLowerCase().includes('instalação de starlink') ? 'A keyword “instalação de starlink” pertence à página comercial /servicos/instalacao-starlink/. Para este artigo informacional, use uma keyword própria (ex.: “o que considerar antes de instalar starlink”) e linke para a página comercial.' : '',
+      linkGroups: [
+        { title: 'LINKS DE SAÍDA PLANEJADOS', hc: '#8A94A3', n: '3', items: [['Instalação de Starlink', 'instalação profissional de Starlink', 'NO TEXTO', '#5FD49A'], ['Wi-Fi Empresarial', 'cobertura Wi-Fi planejada', 'NO TEXTO', '#5FD49A'], ['Infraestrutura de Redes', 'firewall com dupla WAN', 'PENDENTE', '#F2C27A']].map(([t, anchor, st, sc]) => ({ t, anchor, s: st, sc, border: '#232B36' })) },
+        { title: 'LINKS DE ENTRADA PLANEJADOS', hc: '#8A94A3', n: '1', items: [['Starlink para empresas: quando vale a pena?', 'o que avaliar na instalação', 'AGENDADO', '#8CC2FF']].map(([t, anchor, st, sc]) => ({ t, anchor, s: st, sc, border: '#232B36' })) },
+        { title: 'CONTEÚDOS EXISTENTES QUE PODEM LINKAR PARA ESTE', hc: '#8CC2FF', n: '3', items: [['Wi-Fi empresarial', 'instalar Starlink e integrar ao Wi-Fi'], ['Infraestrutura tecnológica para construtoras', 'conexão via satélite no canteiro'], ['O que é cabeamento estruturado e como funciona?', 'antena Starlink com cabeamento dedicado']].map(([t, anchor]) => { const done = s.linked.includes(t); return { t, anchor, s: done ? 'PLANEJADO ✓' : 'SUGESTÃO', sc: done ? '#5FD49A' : '#8CC2FF', border: done ? '#2FBF71' : '#11305E', action: done ? '' : 'Planejar link de entrada', go: () => this.setState(st => ({ linked: [...st.linked, t] })) }; }) }
+      ],
+      authorFields: [['Autor', 'Equipe técnica TIMP'], ['Revisor técnico', 'Responsável técnico TIMP'], ['Data de publicação', '—'], ['Data de atualização', '—'], ['Categoria', 'Redes e Infraestrutura']].map(([k, v]) => ({ k, v })),
+      mdCols: isD ? 'minmax(0,1fr) 320px' : 'minmax(0,1fr)', mq: s.mq, onMq: e => this.setState({ mq: e.target.value }),
+      mCats: cats.map(c => ({ label: c, n: c === 'Todas' ? MEDIA.length : MEDIA.filter(m => m[2] === c).length, on: s.mcat === c, pick: () => this.setState({ mcat: c }), border: s.mcat === c ? '#287DD2' : '#232B36', bg: s.mcat === c ? 'rgba(40,125,210,.14)' : 'transparent' })),
+      media: mFiltered.map(m => { const i = MEDIA.indexOf(m), dia = m[1] === 'SVG'; return { name: m[0], fmt: m[1], cat: m[2].toUpperCase(), alt: m[3] ? 'ALT ✓' : 'SEM ALT', altC: m[3] ? '#5FD49A' : '#F2C27A', on: s.msel === i, pick: () => this.setState({ msel: i }), border: s.msel === i ? '#287DD2' : '#171D26', bg: dia ? '#000' : '#11161D', grid: dia ? 'linear-gradient(rgba(35,43,54,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.6) 1px,transparent 1px)' : 'none', fg: dia ? '#4C9BEA' : '#8A94A3' }; }), noMedia: mFiltered.length === 0,
+      mSel: { name: ms[0] + '.' + ms[1].toLowerCase(), info: [['Tipo', ms[1] === 'SVG' ? 'Diagrama vetorial' : 'Imagem'], ['Categoria', ms[2]], ['Dimensões', ms[4] + ' × ' + ms[5]], ['Formato', ms[1]], ['Tamanho', ms[6]], ['Data', '26 set 2026']].map(([k, v]) => ({ k, v })), edit: [['Alt text', ms[3], 2, ms[3] ? '' : 'Alt text obrigatório antes de publicar.'], ['Legenda', ms[2] === 'Diagramas' ? 'Diagrama conceitual · TIMP' : '', 2, ''], ['Crédito', 'TIMP Tecnologia', 1, '']].map(([k, v, rows, warn]) => ({ k, v, rows, warn, key: ms[0] + k, border: warn ? '#E8A33D' : '#343E4B' })), used: ms[7] },
+      insert: () => this.setState(st => ({ scr: 'editor', mode: 'edit', blocks: [...st.blocks, { id: st.nid, type: ms[1] === 'SVG' ? 'DIAGRAMA' : 'IMAGEM', text: (MEDIA[st.msel] || MEDIA[0])[3] || 'Imagem sem alt text', meta: ms[0] + '.' + ms[1].toLowerCase() + ' · da Biblioteca de mídia' }], nid: st.nid + 1 }))
+    };
+  }
+}
+</script>
+</body>
+</html>

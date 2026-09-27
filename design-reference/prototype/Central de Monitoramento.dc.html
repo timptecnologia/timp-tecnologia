@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Central TIMP · Operação 24h</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#000;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#4C9BEA;text-decoration:none}
+a:hover{color:#8CC2FF}
+:focus-visible{outline:2px solid #4C9BEA;outline-offset:1px}
+input,button,select,textarea{font-family:inherit}
+@keyframes timpBlink{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+<header style="position:sticky;top:0;z-index:20;background:#07090C;border-bottom:1px solid #232B36;display:flex;align-items:stretch;min-height:48px">
+<div style="display:flex;align-items:center;gap:10px;padding:0 14px;border-right:1px solid #171D26"><img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP" style="height:20px;width:auto"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#4C9BEA">CENTRAL 24H</span></div>
+<sc-if value="{{ notM }}"><div style="display:flex;align-items:stretch">
+<sc-for list="{{ counters }}" as="c" hint-placeholder-count="4"><button type="button" onClick="{{ c.go }}" style="display:flex;align-items:center;gap:8px;padding:0 14px;border:0;border-right:1px solid #171D26;background:{{ c.bg }};color:{{ c.fg }};cursor:pointer"><span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600">{{ c.n }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-align:left;line-height:1.2">{{ c.label }}</span></button></sc-for>
+</div></sc-if>
+<div style="margin-left:auto;display:flex;align-items:center;gap:14px;padding:0 14px">
+<sc-if value="{{ isWideish }}"><span style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#B6BEC9"><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:{{ primC }}"></span>PRIMARY</span><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:{{ secShape }};background:{{ secC }}"></span>SECONDARY</span></span></sc-if>
+<span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500;color:#FFFFFF">{{ clock }}</span>
+<sc-if value="{{ isWideish }}"><span style="font-size:12px;color:#8A94A3;white-space:nowrap">Operador Carlos · Turno B</span></sc-if>
+</div>
+</header>
+
+<div style="flex:1;display:flex;min-height:0">
+<sc-if value="{{ showRail }}" hint-placeholder-val="{{ true }}">
+<nav aria-label="Central" style="flex:none;width:{{ railW }};background:#07090C;border-right:1px solid #171D26;display:flex;flex-direction:column;padding:6px;gap:1px;position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="14"><button type="button" onClick="{{ n.go }}" aria-current="{{ n.cur }}" title="{{ n.label }}" style="display:flex;align-items:center;gap:8px;min-height:32px;padding:0 8px;border:0;border-radius:2px;background:{{ n.bg }};color:{{ n.color }};font-size:12px;font-weight:{{ n.fw }};text-align:left;cursor:pointer;justify-content:{{ n.jc }}" style-hover="background:#11161D;color:#FFFFFF"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;min-width:18px;color:{{ n.codeColor }}">{{ n.code }}</span><sc-if value="{{ railLabels }}"><span style="flex:1">{{ n.label }}</span></sc-if><sc-if value="{{ n.badge }}"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;background:{{ n.badgeBg }};color:#07090C;border-radius:2px;padding:0 4px">{{ n.badge }}</span></sc-if></button></sc-for>
+</nav>
+</sc-if>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+<sc-if value="{{ mobileSup }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px;display:flex;flex-direction:column;gap:14px">
+<div role="note" style="display:flex;gap:10px;padding:10px 12px;border:1px solid #232B36;background:#07090C;border-radius:3px;font-size:13px;line-height:1.5;color:#B6BEC9"><span style="font-family:'JetBrains Mono',monospace;color:#4C9BEA">i</span>Modo supervisão. A operação completa de eventos é feita na estação desktop.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#232B36;border:1px solid #232B36;border-radius:3px;overflow:hidden"><sc-for list="{{ counters }}" as="c"><div style="background:{{ c.bgM }};padding:12px;display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:{{ c.fg }}">{{ c.n }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#8A94A3">{{ c.label }}</span></div></sc-for></div>
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3">FILA · POR PRIORIDADE</span>
+<sc-for list="{{ queue }}" as="e" hint-placeholder-count="4"><button type="button" onClick="{{ e.pickM }}" style="display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid #232B36;border-left:3px solid {{ e.sevC }};border-radius:3px;background:{{ e.bgM }};color:#EEF1F4;text-align:left;cursor:pointer"><span style="display:flex;justify-content:space-between;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:{{ e.sevFg }};background:{{ e.sevBg }};border:1px solid {{ e.sevC }};border-radius:2px;padding:1px 6px"><span style="width:6px;height:6px;border-radius:{{ e.sevShape }};background:{{ e.sevDot }}"></span>{{ e.sev }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ e.time }}</span></span><span style="font-size:15px;font-weight:600">{{ e.type }}</span><span style="font-size:12px;color:#8A94A3">{{ e.client }} · {{ e.unit }} · {{ e.loc }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ e.stFg }}">{{ e.status }} · {{ e.age }}</span></button></sc-for>
+<sc-if value="{{ mSel }}"><div style="display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid #287DD2;border-radius:3px;background:#07090C"><span style="font-size:14px;font-weight:600">{{ ev.type }} · {{ ev.unit }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">{{ ev.status }} · SUPERVISÃO</span>
+<div role="group" aria-label="Perfil de teste" style="display:flex;gap:4px"><sc-for list="{{ supRoles }}" as="r"><button type="button" onClick="{{ r.pick }}" aria-pressed="{{ r.on }}" style="height:28px;padding:0 8px;border-radius:2px;border:1px solid {{ r.border }};background:{{ r.bg }};color:#EEF1F4;font-size:11px;font-weight:600">{{ r.label }}</button></sc-for></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+<button type="button" onClick="{{ doAck }}" style="height:44px;border-radius:3px;font-size:13px;font-weight:600;border:1px solid #343E4B;background:none;color:#EEF1F4">{{ ackLabel }}</button>
+<button type="button" onClick="{{ doAssign }}" style="height:44px;border-radius:3px;font-size:13px;font-weight:600;border:1px solid #343E4B;background:none;color:#EEF1F4">{{ assignLabel }}</button>
+<button type="button" onClick="{{ toggleCams }}" style="height:44px;border-radius:3px;font-size:13px;font-weight:600;border:1px solid #343E4B;background:none;color:#EEF1F4">{{ camsLabelM }}</button>
+<button type="button" onClick="{{ toggleInfo }}" style="height:44px;border-radius:3px;font-size:13px;font-weight:600;border:1px solid #343E4B;background:none;color:#EEF1F4">Protocolo e contatos</button>
+<sc-if value="{{ canOperate }}"><button type="button" onClick="{{ doAssume }}" style="height:44px;border-radius:3px;font-size:13px;font-weight:600;border:0;background:#2359A5;color:#FFFFFF">{{ mAssume }}</button></sc-if>
+<button type="button" onClick="{{ openEscalate }}" style="height:44px;border-radius:3px;font-size:13px;font-weight:600;border:1px solid #E8A33D;background:none;color:#F2C27A">Escalonar</button>
+</div>
+<sc-if value="{{ mInfo }}"><div style="display:flex;flex-direction:column;gap:4px;padding-top:6px;border-top:1px solid #171D26"><sc-for list="{{ protoSteps }}" as="p"><span style="font-size:12px;color:{{ p.fg }}">{{ p.mark }} · {{ p.t }}</span></sc-for><sc-for list="{{ contacts }}" as="c"><span style="font-size:12px;color:#DCE1E7">{{ c.order }}. {{ c.name }} · {{ c.tel }}</span></sc-for></div></sc-if>
+<sc-if value="{{ mCams }}"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><sc-for list="{{ cams }}" as="c"><div style="aspect-ratio:16/9;border:1px solid #287DD2;border-radius:2px;background:#0B1E3D;display:flex;justify-content:space-between;align-items:flex-start;padding:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#EEF1F4">{{ c.id }}<span style="color:#FF8A8D">● AO VIVO</span></div></sc-for></div></sc-if>
+<div style="display:flex;flex-direction:column;gap:3px;padding-top:6px;border-top:1px solid #171D26"><sc-for list="{{ timeline }}" as="t"><span style="display:flex;gap:8px;font-size:11px;color:#B6BEC9"><span style="font-family:'JetBrains Mono',monospace">{{ t.t }}</span>{{ t.w }}</span></sc-for></div>
+<span style="font-size:11px;line-height:1.5;color:#56616F">Indisponível no mobile: editar protocolos, integrações, gateway, endpoints e redundância; apagar histórico ou auditoria; acionamento de serviço de emergência e ações administrativas críticas.</span></div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.aovivo }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;display:grid;grid-template-columns:{{ liveCols }};min-height:0">
+<section aria-label="Fila de eventos" style="border-right:1px solid #171D26;display:flex;flex-direction:column;min-width:0;background:#07090C">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid #171D26"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8A94A3">EVENTOS AO VIVO</span><span style="display:flex;gap:4px"><sc-for list="{{ qFilters }}" as="f"><button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" style="height:22px;padding:0 6px;border-radius:2px;border:1px solid {{ f.border }};background:{{ f.bg }};color:#EEF1F4;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer">{{ f.label }}</button></sc-for></span></div>
+<div style="overflow-y:auto;flex:1">
+<sc-for list="{{ queue }}" as="e" hint-placeholder-count="6"><button type="button" onClick="{{ e.pick }}" aria-current="{{ e.cur }}" style="width:100%;display:grid;grid-template-columns:4px minmax(0,1fr);border:0;border-bottom:1px solid #171D26;background:{{ e.bg }};color:#EEF1F4;text-align:left;cursor:pointer;padding:0" style-hover="background:#11161D"><span style="background:{{ e.sevC }};opacity:{{ e.barOp }}"></span><span style="display:flex;flex-direction:column;gap:3px;padding:8px 10px;min-width:0"><span style="display:flex;justify-content:space-between;gap:6px;align-items:center"><span style="display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;color:{{ e.sevFg }};background:{{ e.sevBg }};border:1px solid {{ e.sevC }};border-radius:2px;padding:0 5px;animation:{{ e.blink }}"><span style="width:5px;height:5px;border-radius:{{ e.sevShape }};background:{{ e.sevDot }}"></span>{{ e.sev }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#DCE1E7">{{ e.time }}</span></span><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.type }}</span><span style="font-size:11px;color:#8A94A3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.client }} · {{ e.unit }} · Z{{ e.zone }}</span><span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.04em"><span style="color:{{ e.stFg }}">{{ e.status }}</span><span style="color:{{ e.ageC }}">{{ e.age }}</span></span></span></button></sc-for>
+</div>
+<div style="padding:6px 10px;border-top:1px solid #171D26;font-family:'JetBrains Mono',monospace;font-size:9px;color:#56616F;line-height:1.6">J/K navegar · A assumir · C câmeras · E escalonar</div>
+</section>
+
+<section aria-label="Detalhe do evento" style="display:flex;flex-direction:column;min-width:0;overflow-y:auto">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 14px;border-bottom:1px solid #171D26;border-top:3px solid {{ ev.sevC }};background:#07090C">
+<span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;color:{{ ev.sevFg }};background:{{ ev.sevBg }};border:1px solid {{ ev.sevC }};border-radius:2px;padding:2px 7px"><span style="width:7px;height:7px;border-radius:{{ ev.sevShape }};background:{{ ev.sevDot }}"></span>{{ ev.sev }}</span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ev.stFg }};border:1px solid {{ ev.stFg }};border-radius:2px;padding:2px 7px;white-space:nowrap">{{ ev.status }}</span>
+<span style="font-size:18px;font-weight:700;letter-spacing:-.01em">{{ ev.type }}</span>
+<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500">{{ ev.time }}</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:1px;background:#171D26;border-bottom:1px solid #171D26">
+<sc-for list="{{ evMeta }}" as="m" hint-placeholder-count="7"><span style="display:flex;flex-direction:column;gap:2px;padding:8px 12px;background:#000"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;color:#56616F">{{ m.k }}</span><span style="font-family:{{ m.ff }};font-size:13px;color:#EEF1F4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.v }}</span></span></sc-for>
+</div>
+<sc-if value="{{ ev.suggest }}"><div role="note" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #171D26;background:rgba(232,163,61,.08)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#F2C27A;border:1px solid #E8A33D;border-radius:2px;padding:1px 6px">RECORRÊNCIA</span><span style="flex:1;min-width:200px;font-size:13px;color:#EEF1F4">{{ ev.suggest }}</span><button type="button" onClick="{{ openTicket }}" style="height:30px;padding:0 12px;border:1px solid #E8A33D;border-radius:2px;background:none;color:#F2C27A;font-size:12px;font-weight:600;cursor:pointer">{{ ticketLabel }}</button></div></sc-if>
+
+<div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-bottom:1px solid #171D26;background:#07090C">
+<sc-for list="{{ evActions }}" as="a" hint-placeholder-count="8"><button type="button" onClick="{{ a.go }}" disabled="{{ a.off }}" title="{{ a.why }}" style="height:34px;padding:0 12px;border-radius:2px;border:1px solid {{ a.border }};background:{{ a.bg }};color:{{ a.fg }};font-size:12px;font-weight:600;cursor:{{ a.cursor }};opacity:{{ a.op }};white-space:nowrap">{{ a.label }}<sc-if value="{{ a.key }}"> <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8A94A3;border:1px solid #343E4B;border-radius:2px;padding:0 3px">{{ a.key }}</span></sc-if></button></sc-for>
+</div>
+
+<div style="display:grid;grid-template-columns:{{ detailCols }};gap:1px;background:#171D26;flex:1">
+<div style="background:#000;display:flex;flex-direction:column;min-width:0">
+<div style="padding:10px 14px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #171D26">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3"><span>CÂMERAS RELACIONADAS · ZONA {{ ev.zone }}</span><span>VIA TIMP VIDEO GATEWAY</span></span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px"><sc-for list="{{ cams }}" as="c" hint-placeholder-count="2"><div style="aspect-ratio:16/9;border:1px solid {{ c.border }};border-radius:2px;background:{{ c.bg }};display:flex;flex-direction:column;justify-content:space-between;padding:6px 8px;background-image:repeating-linear-gradient(0deg,rgba(35,43,54,.35) 0 1px,transparent 1px 5px)"><span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px"><span style="color:#EEF1F4">{{ c.id }}</span><span style="color:{{ c.stC }};animation:{{ c.blink }}">{{ c.state }}</span></span><span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:#8A94A3"><span>{{ c.label }}</span><span>{{ c.proto }}</span></span></div></sc-for></div>
+<span style="font-size:11px;color:#56616F">Vídeo entregue pelo gateway. Credenciais dos equipamentos nunca são exibidas ao operador.</span>
+</div>
+<div style="padding:10px 14px;display:flex;flex-direction:column;gap:2px">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3;padding-bottom:4px"><span>TIMELINE</span><span>AUDITADA</span></span>
+<sc-for list="{{ timeline }}" as="t" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:62px 10px minmax(0,1fr);gap:8px;align-items:start;padding:3px 0;font-size:12px"><span style="font-family:'JetBrains Mono',monospace;color:#B6BEC9">{{ t.t }}</span><span style="width:8px;height:8px;border-radius:50%;border:2px solid {{ t.c }};margin-top:3px"></span><span style="line-height:1.45"><span style="color:#EEF1F4">{{ t.w }}</span> <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#56616F">{{ t.who }}</span></span></div></sc-for>
+<form onSubmit="{{ addObs }}" style="display:flex;gap:6px;padding-top:8px"><input type="text" value="{{ obs }}" onChange="{{ onObs }}" placeholder="Registrar observação…" style="flex:1;min-width:0;height:32px;border:1px solid #343E4B;border-radius:2px;background:#07090C;color:#EEF1F4;font-size:12px;padding:0 8px"><button type="submit" style="height:32px;padding:0 10px;border:1px solid #343E4B;border-radius:2px;background:none;color:#EEF1F4;font-size:12px;font-weight:600;cursor:pointer">Registrar</button></form>
+</div>
+</div>
+<div style="background:#000;display:flex;flex-direction:column;min-width:0">
+<div style="padding:10px 14px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #171D26">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3"><span>PROTOCOLO · {{ ev.unitUp }}</span><span>V3</span></span>
+<sc-for list="{{ protoSteps }}" as="p" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px;font-size:12px;line-height:1.45;padding:3px 0;color:{{ p.fg }}"><span style="font-family:'JetBrains Mono',monospace;color:{{ p.nc }}">{{ p.mark }}</span><span>{{ p.t }}</span></div></sc-for>
+</div>
+<div style="padding:10px 14px;display:flex;flex-direction:column;gap:6px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">CONTATOS DE EMERGÊNCIA</span>
+<sc-for list="{{ contacts }}" as="c" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:6px;padding:8px;border:1px solid {{ c.border }};border-radius:2px;background:#07090C"><span style="display:flex;justify-content:space-between;gap:6px"><span style="display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:600">{{ c.order }}. {{ c.name }}</span><span style="font-size:11px;color:#8A94A3">{{ c.role }} · {{ c.avail }}</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#DCE1E7">{{ c.tel }}</span></span><sc-if value="{{ c.result }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ c.resC }}">{{ c.result }}</span></sc-if><sc-if value="{{ c.canLog }}"><span style="display:flex;gap:4px"><button type="button" onClick="{{ c.ok }}" style="flex:1;height:28px;border:1px solid #2FBF71;border-radius:2px;background:none;color:#5FD49A;font-size:11px;font-weight:600;cursor:pointer">Atendeu</button><button type="button" onClick="{{ c.no }}" style="flex:1;height:28px;border:1px solid #E8A33D;border-radius:2px;background:none;color:#F2C27A;font-size:11px;font-weight:600;cursor:pointer">Sem resposta</button></span></sc-if></div></sc-for>
+</div>
+</div>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.table }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:8px"><div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#4C9BEA">{{ pageEyebrow }}</span><h1 style="margin:0;font-size:20px;font-weight:700;letter-spacing:-.015em">{{ pageTitle }}</h1></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#E8A33D;border:1px dashed #E8A33D;border-radius:2px;padding:2px 6px">DADOS FICTÍCIOS</span></div>
+<sc-if value="{{ pageNote }}"><p style="margin:0;font-size:13px;line-height:1.55;color:#B6BEC9;max-width:60em">{{ pageNote }}</p></sc-if>
+<sc-if value="{{ tFilters.length }}"><div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"><sc-for list="{{ tFilters }}" as="f"><label style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#8A94A3">{{ f.k }}<select style="height:30px;border:1px solid #343E4B;border-radius:2px;background:#07090C;color:#EEF1F4;font-size:12px;padding:0 6px"><sc-for list="{{ f.opts }}" as="o"><option>{{ o }}</option></sc-for></select></label></sc-for></div></sc-if>
+
+<sc-if value="{{ diagram.length }}"><div style="display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;padding:12px;border:1px solid #171D26;border-radius:3px;background:#07090C;background-image:linear-gradient(rgba(35,43,54,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.35) 1px,transparent 1px);background-size:24px 24px"><sc-for list="{{ diagram }}" as="d"><sc-if value="{{ d.sep }}"><span style="align-self:center;font-family:'JetBrains Mono',monospace;color:#287DD2" aria-hidden="true">→</span></sc-if><span style="display:flex;flex-direction:column;gap:3px;padding:8px 10px;border:1px solid {{ d.border }};border-radius:2px;background:#000;min-width:90px"><span style="font-size:12px;font-weight:600">{{ d.t }}</span><span style="display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9px;color:{{ d.fg }}"><span style="width:6px;height:6px;border-radius:{{ d.shape }};background:{{ d.c }}"></span>{{ d.s }}</span></span></sc-for></div></sc-if>
+
+<sc-if value="{{ redund }}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px">
+<sc-for list="{{ endpoints }}" as="p"><div style="display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid {{ p.border }};border-radius:3px;background:#07090C"><span style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ p.name }}</span><span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:{{ p.fg }};border:1px solid {{ p.c }};border-radius:2px;padding:1px 6px"><span style="width:6px;height:6px;border-radius:{{ p.shape }};background:{{ p.c }}"></span>{{ p.s }}</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A94A3;line-height:1.6">{{ p.d }}</span></div></sc-for>
+<div style="display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid #171D26;border-radius:3px;background:#07090C"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">SIMULAR ESTADO DE REDUNDÂNCIA</span><div style="display:flex;flex-wrap:wrap;gap:4px"><sc-for list="{{ redBtns }}" as="b"><button type="button" onClick="{{ b.pick }}" aria-pressed="{{ b.on }}" style="height:28px;padding:0 8px;border-radius:2px;border:1px solid {{ b.border }};background:{{ b.bg }};color:#EEF1F4;font-size:11px;font-weight:600;cursor:pointer">{{ b.label }}</button></sc-for></div><span style="font-size:12px;color:#B6BEC9;line-height:1.5">{{ redNote }}</span></div>
+</div></sc-if>
+
+<sc-for list="{{ tables }}" as="tb">
+<section style="border:1px solid #171D26;border-radius:3px;background:#07090C;min-width:0;overflow-x:auto">
+<div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #171D26"><h2 style="margin:0;font-size:13px;font-weight:700">{{ tb.title }}</h2><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#56616F">{{ tb.meta }}</span></div>
+<div style="min-width:{{ tb.minW }}">
+<div style="display:grid;grid-template-columns:{{ tb.cols }};gap:10px;padding:6px 12px;border-bottom:1px solid #171D26;background:#000"><sc-for list="{{ tb.head }}" as="h"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;color:#8A94A3;white-space:nowrap">{{ h }}</span></sc-for></div>
+<sc-for list="{{ tb.rows }}" as="r"><div style="display:grid;grid-template-columns:{{ tb.cols }};gap:10px;align-items:center;padding:6px 12px;border-bottom:1px solid #11161D;font-size:12px" style-hover="background:#0C1015"><sc-for list="{{ r }}" as="c"><sc-if value="{{ c.chip }}"><span style="justify-self:start;display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;color:{{ c.fg }};background:{{ c.bg }};border:1px solid {{ c.bc }};border-radius:2px;padding:1px 5px;white-space:nowrap"><span style="width:5px;height:5px;border-radius:{{ c.shape }};background:{{ c.dot }}"></span>{{ c.v }}</span></sc-if><sc-if value="{{ c.plain }}"><span style="font-family:{{ c.ff }};color:{{ c.fg }};font-weight:{{ c.fw }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.v }}</span></sc-if></sc-for></div></sc-for>
+</div>
+</section>
+</sc-for>
+
+<sc-if value="{{ show.protoEdit }}">
+<section style="border:1px solid #171D26;border-radius:3px;background:#07090C;padding:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">EDITAR PROTOCOLO · EMPRESA ALFA · UNIDADE BARRA</span>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#B6BEC9">Horário normal<input type="text" value="08h–19h · seg a sáb" style="height:34px;border:1px solid #343E4B;border-radius:2px;background:#000;color:#EEF1F4;font-size:13px;padding:0 8px"></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#B6BEC9">Evento fora do horário<select style="height:34px;border:1px solid #343E4B;border-radius:2px;background:#000;color:#EEF1F4;font-size:13px;padding:0 6px"><option>Prioridade alta</option><option>Prioridade crítica</option></select></label>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#B6BEC9">Tempo máximo para assumir<input type="text" value="00:30" style="height:34px;border:1px solid #343E4B;border-radius:2px;background:#000;color:#EEF1F4;font-size:13px;padding:0 8px;font-family:'JetBrains Mono',monospace"></label>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#8A94A3">SEQUÊNCIA</span>
+<sc-for list="{{ protoEditSteps }}" as="p"><div style="display:grid;grid-template-columns:22px minmax(0,1fr) 24px;gap:8px;align-items:center;padding:8px;border:1px solid #232B36;border-radius:2px;background:#000;font-size:12px"><span style="font-family:'JetBrains Mono',monospace;color:#4C9BEA">{{ p.n }}</span><span>{{ p.t }}</span><span style="color:#56616F;cursor:grab" aria-hidden="true">⋮⋮</span></div></sc-for>
+<button type="button" style="height:32px;border:1px dashed #56616F;border-radius:2px;background:none;color:#B6BEC9;font-size:12px;font-weight:600;cursor:pointer">+ Adicionar etapa</button>
+<div style="display:flex;gap:6px;justify-content:flex-end;padding-top:4px"><button type="button" style="height:32px;padding:0 12px;border:1px solid #343E4B;border-radius:2px;background:none;color:#EEF1F4;font-size:12px;font-weight:600">Cancelar</button><button type="button" style="height:32px;padding:0 12px;border:0;border-radius:2px;background:#2359A5;color:#FFFFFF;font-size:12px;font-weight:600">Publicar versão 4</button></div>
+<span style="font-size:11px;color:#56616F">Cada publicação gera nova versão e registro de auditoria. Versões anteriores ficam consultáveis.</span>
+</div>
+</section>
+</sc-if>
+</div>
+</sc-if>
+</main>
+</div>
+
+<sc-if value="{{ modal }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:16px">
+<div role="dialog" aria-modal="true" aria-label="{{ md.title }}" style="width:100%;max-width:480px;background:#0C1015;border:1px solid {{ md.border }};border-radius:4px;display:flex;flex-direction:column">
+<div style="padding:14px 16px;border-bottom:1px solid #171D26;display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:{{ md.hc }}">{{ md.tag }}</span><span style="font-size:17px;font-weight:700">{{ md.title }}</span></div>
+<div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.55;color:#B6BEC9">
+<span>{{ md.body }}</span>
+<sc-if value="{{ md.classify }}"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><sc-for list="{{ classes }}" as="c"><button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.on }}" style="height:36px;border-radius:2px;border:1px solid {{ c.border }};background:{{ c.bg }};color:#EEF1F4;font-size:12px;font-weight:600;cursor:pointer">{{ c.label }}</button></sc-for></div></sc-if>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#DCE1E7">Justificativa (obrigatória)<textarea rows="3" value="{{ just }}" onChange="{{ onJust }}" style="border:1px solid #343E4B;border-radius:2px;background:#000;color:#EEF1F4;font-size:13px;padding:8px;resize:vertical"></textarea></label>
+<sc-if value="{{ md.perm }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8CC2FF">{{ md.perm }}</span></sc-if>
+</div>
+<div style="padding:12px 16px;border-top:1px solid #171D26;display:flex;justify-content:flex-end;gap:8px"><button type="button" onClick="{{ closeModal }}" style="height:36px;padding:0 14px;border:1px solid #343E4B;border-radius:2px;background:none;color:#EEF1F4;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button><button type="button" onClick="{{ confirmModal }}" disabled="{{ mdOff }}" style="height:36px;padding:0 14px;border:0;border-radius:2px;background:{{ md.btnBg }};color:{{ md.btnFg }};font-size:13px;font-weight:700;cursor:pointer;opacity:{{ mdOp }}">{{ md.btn }}</button></div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const NAV = [['visao', 'Visão Geral', 'VG'], ['aovivo', 'Eventos ao Vivo', 'AV'], ['ocorrencias', 'Ocorrências', 'OC'], ['clientes', 'Clientes', 'CL'], ['unidades', 'Unidades', 'UN'], ['dispositivos', 'Dispositivos', 'DV'], ['cameras', 'Câmeras', 'CM'], ['protocolos', 'Protocolos', 'PR'], ['contatos', 'Contatos de Emergência', 'CE'], ['acionamentos', 'Acionamentos', 'AC'], ['integracoes', 'Integrações', 'IN'], ['saude', 'Saúde', 'SD'], ['relatorios', 'Relatórios', 'RL'], ['auditoria', 'Auditoria', 'AU']];
+const SEV = { 'CRÍTICO': ['#E5484D', '#07090C', '#E5484D', '#07090C', '1px'], 'ALTO': ['#E8A33D', '#F2C27A', 'rgba(232,163,61,.14)', '#E8A33D', '1px'], 'MÉDIO': ['#287DD2', '#8CC2FF', 'rgba(40,125,210,.14)', '#287DD2', '50%'], 'BAIXO': ['#56616F', '#B6BEC9', 'transparent', '#8A94A3', '50%'] };
+const STC = { 'NOVO': '#F2C27A', 'RECEBIDO': '#F2C27A', 'ASSUMIDO': '#8CC2FF', 'EM VERIFICAÇÃO': '#8CC2FF', 'CONFIRMADO': '#FF8A8D', 'FALSO POSITIVO': '#B6BEC9', 'FALHA TÉCNICA': '#8CC2FF', 'SEM RESPOSTA': '#F2C27A', 'ESCALONADO': '#F2C27A', 'ENCERRADO': '#5FD49A' };
+const EVENTS = [
+  { id: 'E-20931', sev: 'CRÍTICO', type: 'Abertura fora do horário', client: 'Empresa Alfa', unit: 'Barra', loc: 'Entrada lateral', zone: '03', dev: 'AMT-BAR-01', sensor: 'Porta lateral', t0: 8077, cams: [['CAM-07', 'Entrada lateral'], ['CAM-08', 'Corredor lateral']] },
+  { id: 'E-20930', sev: 'ALTO', type: 'Sensor disparado', client: 'Condomínio Delta', unit: 'Portaria', loc: 'Porta 03', zone: '03', dev: 'PT-03', sensor: 'Porta 03', t0: 8041, cams: [['CAM-02', 'Hall'], ['CAM-03', 'Garagem']], suggest: 'Sensor Porta 03: 5 falsos disparos em 7 dias. Possível falha técnica.' },
+  { id: 'E-20928', sev: 'MÉDIO', type: 'Dispositivo sem comunicação', client: 'Empresa Alfa', unit: 'Tijuca', loc: 'Rack', zone: '—', dev: 'NVR-TIJ-01', sensor: '—', t0: 7210, cams: [['CAM-11', 'Rack'], ['CAM-12', 'Entrada']] },
+  { id: 'E-20925', sev: 'ALTO', type: 'Movimento na área de estoque', client: 'Empresa Alfa', unit: 'Barra', loc: 'Estoque 05', zone: '05', dev: 'IVP-BAR-05', sensor: 'Estoque 05', t0: 6480, cams: [['CAM-07', 'Entrada lateral'], ['CAM-08', 'Corredor lateral']], preset: 'EM VERIFICAÇÃO' },
+  { id: 'E-20921', sev: 'BAIXO', type: 'Bateria baixa', client: 'Empresa Gama', unit: 'Botafogo', loc: 'Controle XAC', zone: '—', dev: 'XAC-GAM-02', sensor: '—', t0: 5102, cams: [['CAM-01', 'Recepção'], ['CAM-02', 'Corredor']], preset: 'ASSUMIDO' }
+];
+const pad = n => String(n).padStart(2, '0');
+const hms = s => pad(Math.floor(s / 3600) % 24) + ':' + pad(Math.floor(s / 60) % 60) + ':' + pad(s % 60);
+const ms = s => pad(Math.floor(s / 60)) + ':' + pad(s % 60);
+class Component extends DCLogic {
+  state = { vw: typeof window !== 'undefined' ? window.innerWidth : 1440, scr: 'aovivo', now: 8114, sel: 'E-20931', ev: {}, qf: 'todos', camsOpen: {}, modal: null, just: '', cls: '', obs: '', tickets: {}, red: 'normal', mSel: false, supRole: 'sup', mInfo: false, acked: {}, assigned: {} };
+  componentDidMount() {
+    this.onR = () => this.setState({ vw: window.innerWidth }); window.addEventListener('resize', this.onR);
+    this.iv = setInterval(() => this.setState(st => ({ now: st.now + 1 })), 1000);
+    const t = new URLSearchParams(location.search).get('tela'); if (t) this.setState({ scr: t });
+    this.onK = e => { if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || this.state.scr !== 'aovivo') return; const k = e.key.toLowerCase(); if (k === 'a') this.act('assume'); if (k === 'c') this.act('cams'); if (k === 'e') this.setState({ modal: 'escalar' }); if (k === 'j' || k === 'k') { const ids = EVENTS.map(x => x.id), i = ids.indexOf(this.state.sel); this.setState({ sel: ids[(i + (k === 'j' ? 1 : ids.length - 1)) % ids.length] }); } };
+    window.addEventListener('keydown', this.onK);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); window.removeEventListener('keydown', this.onK); clearInterval(this.iv); }
+  evState(id) { const e = EVENTS.find(x => x.id === id); const st = this.state.ev[id]; if (st) return st; const base = [{ t: e.t0, w: 'Evento recebido via gateway · normalizado', who: 'sistema', c: SEV[e.sev][0] }]; if (e.preset) base.push({ t: e.t0 + 22, w: 'Operador assumiu', who: 'op-carlos', c: '#287DD2' }); if (e.preset === 'EM VERIFICAÇÃO') base.push({ t: e.t0 + 40, w: 'Verificação iniciada', who: 'op-carlos', c: '#287DD2' }); return { status: e.preset || 'NOVO', tl: base, contacts: {} }; }
+  upd(id, fn) { this.setState(st => { const cur = st.ev[id] || this.evState(id); return { ev: { ...st.ev, [id]: fn(cur) } }; }); }
+  log(id, w, c, status) { const t = this.state.now; this.upd(id, cur => ({ ...cur, status: status || cur.status, tl: [...cur.tl, { t, w, who: 'op-carlos', c: c || '#287DD2' }] })); }
+  act(a) {
+    const id = this.state.sel, cur = this.evState(id), s = cur.status;
+    if (a === 'assume' && ['NOVO', 'RECEBIDO'].includes(s)) this.log(id, 'Operador assumiu', '#287DD2', 'ASSUMIDO');
+    if (a === 'verify' && s === 'ASSUMIDO') this.log(id, 'Verificação iniciada', '#287DD2', 'EM VERIFICAÇÃO');
+    if (a === 'cams') { const e = EVENTS.find(x => x.id === id); const opening = !this.state.camsOpen[id], t = this.state.now; this.setState(st => { const cur = st.ev[id] || this.evState(id); return { camsOpen: { ...st.camsOpen, [id]: opening }, ev: opening ? { ...st.ev, [id]: { ...cur, tl: [...cur.tl, { t, w: e.cams.map(c => c[0]).join(' e ') + ' abertas via Video Gateway', who: 'op-carlos', c: '#287DD2' }] } } : st.ev }; }); }
+  }
+  renderVals() {
+    const s = this.state, vw = s.vw, isM = vw < 768, isT = vw >= 768 && vw < 1200, isWide = vw >= 1680;
+    const M = "'JetBrains Mono',monospace", A = "'Archivo',sans-serif";
+    const e = EVENTS.find(x => x.id === s.sel), cur = this.evState(s.sel), status = cur.status;
+    const sevO = k => ({ sevC: SEV[k][0], sevFg: SEV[k][1], sevBg: SEV[k][2], sevDot: SEV[k][3], sevShape: SEV[k][4] });
+    const closed = ['ENCERRADO'].includes(status), assumed = !['NOVO', 'RECEBIDO'].includes(status), verifying = ['EM VERIFICAÇÃO', 'CONFIRMADO', 'SEM RESPOSTA', 'ESCALONADO', 'FALSO POSITIVO', 'FALHA TÉCNICA'].includes(status);
+    const qEvents = EVENTS.filter(x => s.qf === 'todos' || (s.qf === 'novos' ? ['NOVO', 'RECEBIDO'].includes(this.evState(x.id).status) : x.sev === 'CRÍTICO' || x.sev === 'ALTO'));
+    const queue = qEvents.map(x => { const st = this.evState(x.id).status, age = s.now - x.t0, unassigned = ['NOVO', 'RECEBIDO'].includes(st), over = unassigned && age > 30; return { ...x, ...sevO(x.sev), time: hms(x.t0), status: st, stFg: STC[st], age: unassigned ? 'há ' + ms(Math.min(age, 5999)) + (over ? ' · SLA' : '') : st === 'ENCERRADO' ? 'encerrado' : 'em curso', ageC: over ? '#FF8A8D' : '#56616F', blink: x.sev === 'CRÍTICO' && unassigned ? 'timpBlink 1.2s ease-in-out infinite' : 'none', pick: () => this.setState({ sel: x.id }), pickM: () => this.setState({ sel: x.id, mSel: true }), cur: x.id === s.sel ? 'true' : undefined, bg: x.id === s.sel ? '#11161D' : 'transparent', bgM: x.id === s.sel ? '#0C1015' : '#07090C', barOp: st === 'ENCERRADO' ? 0.3 : 1 }; });
+    const newCount = EVENTS.filter(x => ['NOVO', 'RECEBIDO'].includes(this.evState(x.id).status)).length;
+    const critOpen = EVENTS.filter(x => x.sev === 'CRÍTICO' && this.evState(x.id).status !== 'ENCERRADO').length;
+    const overSla = EVENTS.filter(x => ['NOVO', 'RECEBIDO'].includes(this.evState(x.id).status) && s.now - x.t0 > 30).length;
+    const contactsBase = [['1', 'Aline Souza', 'Responsável principal', '(21) 9 0000-0001', '24h'], ['2', 'Thiago Lima', 'Responsável secundário', '(21) 9 0000-0002', '07h–23h'], ['3', 'Portaria / zelador', 'Apoio local', '(21) 3000-0000', 'comercial']];
+    const logContact = (c, ok) => () => { this.upd(s.sel, x => ({ ...x, contacts: { ...x.contacts, [c[0]]: ok ? 'atendeu' : 'sem' } })); this.log(s.sel, (ok ? 'Contato realizado: ' : 'Sem resposta: ') + c[1], ok ? '#2FBF71' : '#E8A33D', ok ? undefined : (c[0] === '2' ? 'SEM RESPOSTA' : undefined)); };
+    const nextContact = ['1', '2', '3'].find(n => !cur.contacts[n]);
+    const btn = (label, go, o = {}) => ({ label, go, off: !!o.off, why: o.why || '', key: o.key || '', border: o.border || '#343E4B', bg: o.bg || 'transparent', fg: o.fg || '#EEF1F4', op: o.off ? 0.35 : 1, cursor: o.off ? 'not-allowed' : 'pointer' });
+    const evActions = [
+      btn(assumed ? 'Assumido ✓' : 'Assumir', () => this.act('assume'), { key: 'A', off: assumed, bg: assumed ? 'transparent' : '#2359A5', border: assumed ? '#343E4B' : '#2359A5' }),
+      btn('Iniciar verificação', () => this.act('verify'), { off: status !== 'ASSUMIDO', why: 'Assuma o evento primeiro' }),
+      btn(s.camsOpen[s.sel] ? 'Fechar câmeras' : 'Abrir câmeras', () => this.act('cams'), { key: 'C' }),
+      btn('Escalonar', () => this.setState({ modal: 'escalar', just: '' }), { key: 'E', off: !assumed || closed, border: '#E8A33D', fg: '#F2C27A' }),
+      btn('Acionar serviço de emergência', () => this.setState({ modal: 'emergencia', just: '' }), { off: !verifying || closed, why: 'Disponível após verificação, conforme protocolo', border: '#E5484D', fg: '#FF8A8D' }),
+      btn(s.tickets[s.sel] ? 'Chamado #1046 ✓' : 'Abrir chamado técnico', () => { if (!s.tickets[s.sel]) { this.setState(st => ({ tickets: { ...st.tickets, [s.sel]: true } })); this.log(s.sel, 'Chamado técnico #1046 aberto e vinculado ao ativo ' + e.dev, '#8A94A3'); } }, { off: !!s.tickets[s.sel] }),
+      btn('Classificar e encerrar', () => this.setState({ modal: 'encerrar', just: '', cls: '' }), { off: !assumed || closed, bg: closed ? 'transparent' : '#11161D' })
+    ];
+    const cams = e.cams.map(([id, label]) => { const on = !!s.camsOpen[s.sel]; return { id, label, state: on ? '● AO VIVO' : 'FECHADA', stC: on ? '#FF8A8D' : '#56616F', blink: on ? 'timpBlink 1.6s ease-in-out infinite' : 'none', border: on ? '#287DD2' : '#232B36', bg: on ? '#0B1E3D' : '#07090C', proto: on ? 'ONVIF · RTSP' : '' }; });
+    const outOfHours = e.t0 > 19 * 3600 || e.t0 < 8 * 3600;
+    const protoSteps = [['Horário normal 08h–19h', true], ['Evento fora do horário → prioridade alta' + (outOfHours ? ' (aplicado)' : ''), outOfHours], ['Verificar câmeras relacionadas', !!s.camsOpen[s.sel]], ['Contato 1: responsável principal', !!cur.contacts['1']], ['Contato 2: responsável secundário', !!cur.contacts['2']], ['Sem resposta ou confirmado → escalonar ao supervisor', status === 'ESCALONADO'], ['Serviço de emergência somente com confirmação e validação', false]].map(([t, done], i) => ({ t, mark: done ? '✓' : String(i + 1), nc: done ? '#5FD49A' : '#4C9BEA', fg: done ? '#8A94A3' : '#EEF1F4' }));
+    const MD = {
+      escalar: { tag: 'ESCALONAMENTO · AUDITADO', title: 'Escalonar para o supervisor de turno', body: 'O evento passa para o supervisor com o histórico completo. Informe o motivo.', btn: 'Escalonar', border: '#E8A33D', hc: '#F2C27A', btnBg: '#E8A33D', btnFg: '#07090C', perm: 'PERMISSÃO: TIMP OPERADOR · REGISTRO EM AUDITORIA' },
+      emergencia: { tag: 'AÇÃO CRÍTICA · REQUER VALIDAÇÃO', title: 'Acionar serviço de emergência', body: 'Use apenas com ocorrência confirmada e conforme a etapa do protocolo da unidade. O acionamento é feito pelo operador e registrado com horário, justificativa e responsável. Não há acionamento automático.', btn: 'Confirmar acionamento', border: '#E5484D', hc: '#FF8A8D', btnBg: '#E5484D', btnFg: '#07090C', perm: 'PERMISSÃO: TIMP OPERADOR N2 · DUPLA CONFIRMAÇÃO · AUDITORIA' },
+      encerrar: { tag: 'CLASSIFICAÇÃO OBRIGATÓRIA', title: 'Classificar e encerrar ocorrência', body: 'O evento não desaparece: fica em Ocorrências com a timeline completa.', btn: 'Encerrar', border: '#343E4B', hc: '#8A94A3', btnBg: '#2359A5', btnFg: '#FFFFFF', classify: true }
+    }[s.modal] || {};
+    const mdOff = !s.just.trim() || (s.modal === 'encerrar' && !s.cls);
+    const confirmModal = () => { if (mdOff) return; if (s.modal === 'escalar') this.log(s.sel, 'Escalonado ao supervisor · ' + s.just, '#E8A33D', 'ESCALONADO'); if (s.modal === 'emergencia') this.log(s.sel, 'Serviço de emergência acionado pelo operador · ' + s.just, '#E5484D', 'CONFIRMADO'); if (s.modal === 'encerrar') { this.log(s.sel, 'Classificado: ' + s.cls + ' · ' + s.just, '#8A94A3'); setTimeout(() => this.log(s.sel, 'Ocorrência encerrada', '#2FBF71', 'ENCERRADO'), 0); } this.setState({ modal: null, just: '', cls: '' }); };
+    // table pages
+    const P = (v, o = {}) => ({ v, plain: true, ff: o.m ? M : A, fg: o.c || (o.b ? '#EEF1F4' : '#B6BEC9'), fw: o.b ? 600 : 400 });
+    const CH = { ok: ['#5FD49A', 'rgba(47,191,113,.1)', '#2FBF71', '#2FBF71', '50%'], warn: ['#F2C27A', 'rgba(232,163,61,.12)', '#E8A33D', '#E8A33D', '1px'], crit: ['#07090C', '#E5484D', '#E5484D', '#07090C', '1px'], info: ['#8CC2FF', 'rgba(40,125,210,.12)', '#287DD2', '#287DD2', '50%'], mute: ['#B6BEC9', 'transparent', '#343E4B', '#8A94A3', '50%'] };
+    const C = (v, k) => ({ v, chip: true, fg: CH[k][0], bg: CH[k][1], bc: CH[k][2], dot: CH[k][3], shape: CH[k][4] });
+    const T = (title, meta, head, cols, rows, minW) => ({ title, meta, head, cols, rows, minW: minW || '720px' });
+    const RS = { normal: ['Normal', 'ok', 'ok', 'Eventos recebidos pelo Primary; Secondary em espera com heartbeat.'], degradado: ['Degradado', 'ok', 'warn', 'Secondary com latência alta. Primary operando; alerta de infraestrutura aberto.'], failover: ['Failover', 'crit', 'info', 'Primary indisponível. Equipamentos transmitindo para o Secondary. Nenhum evento perdido; fila reconciliada ao retornar.'], offline: ['Offline', 'crit', 'crit', 'Ambos os endpoints indisponíveis. Incidente crítico de infraestrutura; equipamentos retêm eventos localmente e retransmitem.'] };
+    const rs = RS[s.red];
+    const stLabel = { ok: 'ONLINE', warn: 'DEGRADADO', crit: 'OFFLINE', info: 'ATIVO (FAILOVER)' };
+    let pageEyebrow = 'CENTRAL TIMP', pageTitle = '', pageNote = '', tables = [], tFilters = [], diagram = [], redund = false;
+    const occRows = [['E-20925', '02:08:00', 'Empresa Alfa · Barra', 'Movimento na área de estoque', 'ALTO', 'EM VERIFICAÇÃO', 'op-carlos', '—'], ['E-20911', '23:48:10', 'Empresa Alfa · Centro', 'Sensor disparado · Z05', 'ALTO', 'FALHA TÉCNICA', 'op-lia', '00:07:12'], ['E-20897', '21:02:44', 'Condomínio Delta · Portaria', 'Sensor disparado · Porta 03', 'ALTO', 'FALSO POSITIVO', 'op-lia', '00:04:30'], ['E-20880', '19:12:03', 'Empresa Alfa · Tijuca', 'Falha de energia', 'MÉDIO', 'ENCERRADO', 'op-lia', '00:28:00'], ['E-20874', '18:40:51', 'Empresa Gama · Botafogo', 'Pânico acionado', 'CRÍTICO', 'CONFIRMADO', 'op-lia', '00:16:40']];
+    const sevK = { 'CRÍTICO': 'crit', 'ALTO': 'warn', 'MÉDIO': 'info', 'BAIXO': 'mute' };
+    const stK = { 'EM VERIFICAÇÃO': 'info', 'FALHA TÉCNICA': 'info', 'FALSO POSITIVO': 'mute', 'ENCERRADO': 'ok', 'CONFIRMADO': 'crit', 'ESCALONADO': 'warn' };
+    switch (s.scr) {
+      case 'visao': pageTitle = 'Visão geral do turno'; pageNote = 'Turno B · 00h–08h · 2 operadores ativos. Clique em Eventos ao Vivo para operar.';
+        diagram = [['Equipamentos', '412 ativos', 'ok'], ['Endpoint Primary', stLabel[rs[1]], rs[1]], ['Monitoring Gateway', 'online', 'ok'], ['Adapters', '1 com falha', 'warn'], ['Normalização', 'ok', 'ok'], ['Event Queue', 'lag 0,4 s', 'ok'], ['Rules / Protocol', 'ok', 'ok'], ['Central TIMP', newCount + ' novos', newCount ? 'warn' : 'ok']].map(([t, s2, k], i) => ({ t, s: s2, sep: i > 0, c: CH[k][3] === '#07090C' ? '#E5484D' : CH[k][3], fg: CH[k][0] === '#07090C' ? '#FF8A8D' : CH[k][0], shape: CH[k][4], border: k === 'ok' ? '#232B36' : CH[k][2] }));
+        tables = [T('Operadores', 'TURNO B', ['OPERADOR', 'EVENTOS', 'EM CURSO', 'TEMPO MÉDIO P/ ASSUMIR', 'STATUS'], '1fr 90px 90px 180px 110px', [[P('Operador Carlos', { b: true }), P('14', { m: true }), P('2', { m: true }), P('00:11', { m: true }), C('ATIVO', 'ok')], [P('Operadora Lia', { b: true }), P('11', { m: true }), P('1', { m: true }), P('00:14', { m: true }), C('PAUSA', 'mute')]], '560px')]; break;
+      case 'ocorrencias': pageTitle = 'Ocorrências'; pageNote = 'Todo evento vira ocorrência com timeline completa, inclusive falsos positivos e falhas técnicas.';
+        tFilters = [['PERÍODO', ['Últimas 24 h', '7 dias', '30 dias']], ['CLIENTE', ['Todos', 'Empresa Alfa', 'Condomínio Delta', 'Empresa Gama']], ['CLASSIFICAÇÃO', ['Todas', 'Confirmado', 'Falso positivo', 'Falha técnica', 'Sem resposta', 'Escalonado']], ['OPERADOR', ['Todos', 'op-carlos', 'op-lia']]].map(([k, opts]) => ({ k, opts }));
+        tables = [T('Ocorrências', '5 DE 128', ['ID', 'HORÁRIO', 'CLIENTE · UNIDADE', 'EVENTO', 'PRIORIDADE', 'RESULTADO', 'OPERADOR', 'DURAÇÃO'], '80px 80px 1.3fr 1.5fr 90px 130px 90px 80px', occRows.map(r => [P(r[0], { m: true }), P(r[1], { m: true }), P(r[2]), P(r[3], { b: true }), C(r[4], sevK[r[4]]), C(r[5], stK[r[5]]), P(r[6], { m: true }), P(r[7], { m: true })]), '980px')]; break;
+      case 'protocolos': pageTitle = 'Protocolos'; pageNote = 'Protocolo por empresa e unidade. O operador vê a versão vigente dentro do evento.';
+        tables = [T('Protocolos vigentes', '46', ['EMPRESA · UNIDADE', 'HORÁRIO NORMAL', 'FORA DO HORÁRIO', 'CONTATOS', 'VERSÃO', 'ATUALIZADO'], '1.4fr 120px 140px 80px 70px 110px', [['Empresa Alfa · Barra', '08h–19h', 'Prioridade alta', '3', 'v3', '02 set'], ['Empresa Alfa · Centro', '08h–18h', 'Prioridade alta', '2', 'v2', '11 jul'], ['Condomínio Delta · Portaria', '24h', 'Não se aplica', '4', 'v5', '19 set']].map(r => [P(r[0], { b: true }), P(r[1], { m: true }), P(r[2]), P(r[3], { m: true }), P(r[4], { m: true, c: '#8CC2FF' }), P(r[5], { m: true })]), '700px')]; break;
+      case 'integracoes': pageEyebrow = 'ADMIN › MONITORAMENTO › INTEGRAÇÕES'; pageTitle = 'Integrações · independente de fabricante'; pageNote = 'A Central opera eventos normalizados. Cada fabricante entra por um adapter; trocar ou adicionar fornecedor não altera Central, Portal, protocolos, relatórios nem a experiência do operador. Compatibilidade depende de protocolo, API, SDK ou adapter desenvolvido pela TIMP.';
+        diagram = [['Equipamento do cliente', 'IP / protocolo / API', 'ok'], ['Endpoint TIMP', 'primary + secondary', 'ok'], ['Monitoring Gateway', 'online', 'ok'], ['Adapter', 'por fabricante', 'ok'], ['Normalização', 'modelo único', 'ok'], ['Event Queue', 'ok', 'ok'], ['Rules / Protocol Engine', 'ok', 'ok'], ['Central TIMP', 'operação', 'ok']].map(([t, s2, k], i) => ({ t, s: s2, sep: i > 0, c: CH[k][3], fg: CH[k][0], shape: CH[k][4], border: i === 2 || i === 7 ? '#287DD2' : '#232B36' }));
+        tables = [T('Fabricantes e adapters', '', ['FABRICANTE', 'ADAPTER', 'TIPOS', 'PROTOCOLO', 'DISPOSITIVOS', 'ÚLTIMO EVENTO', 'STATUS'], '1fr 1fr 1.4fr 1fr 90px 110px 110px', [[P('Intelbras', { b: true }), P('intelbras-alarm v1.2', { m: true }), P('AMT 8000 LITE · IVP 8000 PET CAM · IVP 8000 PET G2 · XAC 8000'), P('receptor IP', { m: true }), P('318', { m: true }), P('há 3 s', { m: true }), C('ATIVO', 'ok')], [P('Fabricante B', { b: true }), P('fab-b-video v0.9', { m: true }), P('NVR / câmeras'), P('ONVIF · RTSP', { m: true }), P('86', { m: true }), P('há 1 min', { m: true }), C('RETRY 3/5', 'warn')], [P('Fabricante C', { b: true }), P('fab-c-access v0.3', { m: true }), P('Controle de acesso'), P('API documentada', { m: true }), P('8', { m: true }), P('há 12 min', { m: true }), C('HOMOLOGAÇÃO', 'info')], [P('Novo fabricante', { c: '#8A94A3' }), P('—', { m: true }), P('—'), P('—', { m: true }), P('0', { m: true }), P('—', { m: true }), C('NÃO CONFIGURADO', 'mute')]], '900px'), T('Logs do gateway', 'ÚLTIMOS', ['HORÁRIO', 'ORIGEM', 'MENSAGEM', 'NÍVEL'], '90px 160px 1fr 90px', [['02:15:10', 'fab-b-video', 'Timeout ao obter stream do NVR-TIJ-01 · retry 3/5', 'warn'], ['02:14:37', 'intelbras-alarm', 'Evento AMT-BAR-01 Z03 normalizado → E-20931', 'ok'], ['02:14:01', 'gateway', 'Heartbeat secondary OK · 42 ms', 'ok']].map(r => [P(r[0], { m: true }), P(r[1], { m: true }), P(r[2]), C(r[3] === 'ok' ? 'INFO' : 'AVISO', r[3])]), '640px')]; break;
+      case 'saude': pageTitle = 'Saúde dos sistemas'; pageNote = 'Status com forma, cor e texto. Nunca apenas cor.'; redund = true;
+        tables = [T('Componentes', '', ['COMPONENTE', 'ESTADO', 'ÚLTIMA COMUNICAÇÃO', 'DETALHE'], '1.2fr 150px 150px 1.8fr', [[P('Endpoint Primary', { b: true }), C(stLabel[rs[1]], rs[1]), P('02:15:09', { m: true }), P(s.red === 'normal' || s.red === 'degradado' ? 'Recebendo eventos' : 'Sem resposta ao health check')], [P('Endpoint Secondary', { b: true }), C(stLabel[rs[2]], rs[2]), P('02:15:08', { m: true }), P(s.red === 'failover' ? 'Recebendo eventos em failover' : s.red === 'degradado' ? 'Latência 840 ms' : 'Em espera · heartbeat 30 s')], [P('Monitoring Gateway', { b: true }), C('ONLINE', 'ok'), P('02:15:10', { m: true }), P('3 adapters carregados')], [P('Video Gateway', { b: true }), C('DEGRADADO', 'warn'), P('02:15:10', { m: true }), P('NVR-TIJ-01 sem stream · retry em curso')], [P('Event Queue', { b: true }), C('ONLINE', 'ok'), P('02:15:10', { m: true }), P('Lag 0,4 s · 0 mensagens retidas')], [P('Integração Fabricante B', { b: true }), C('FALHA', 'warn'), P('02:14:12', { m: true }), P('Timeout de API · retry 3/5')], [P('Dispositivo NVR-TIJ-01', { b: true }), C('SEM COMUNICAÇÃO', 'crit'), P('06:12:03 (ontem)', { m: true }), P('Chamado #1044 aberto')], [P('Evento crítico não assumido', { b: true }), C(overSla ? 'ACIMA DO SLA' : 'OK', overSla ? 'crit' : 'ok'), P('—', { m: true }), P(overSla ? overSla + ' evento(s) sem operador há mais de 30 s' : 'Nenhum')]], '760px')]; break;
+      case 'auditoria': pageTitle = 'Auditoria'; pageNote = 'Toda ação operacional e administrativa gera registro imutável.';
+        tFilters = [['PERÍODO', ['Hoje', '7 dias', '30 dias']], ['USUÁRIO', ['Todos', 'op-carlos', 'op-lia', 'sistema']], ['TIPO', ['Todos', 'Evento', 'Contato', 'Escalonamento', 'Acionamento', 'Protocolo', 'Acesso']], ['OCORRÊNCIA', ['Todas', 'E-20931', 'E-20925']]].map(([k, opts]) => ({ k, opts }));
+        tables = [T('Registro', 'E-20931 · EXEMPLO DO BRIEFING', ['HORÁRIO', 'OCORRÊNCIA', 'USUÁRIO', 'AÇÃO', 'DETALHE'], '90px 90px 100px 180px 1fr', [['02:14:37', 'Evento recebido', 'sistema', 'Gateway · AMT-BAR-01 · Z03'], ['02:14:41', 'Operador assumiu', 'op-carlos', 'Estação OP-02'], ['02:15:03', 'Câmera aberta', 'op-carlos', 'CAM-07 via Video Gateway'], ['02:16:02', 'Responsável contatado', 'op-carlos', 'Contato 1 · Aline Souza'], ['02:16:37', 'Sem resposta', 'op-carlos', 'Contato 1'], ['02:17:03', 'Segundo contato acionado', 'op-carlos', 'Contato 2 · Thiago Lima'], ['02:18:10', 'Evento escalonado', 'op-carlos', 'Supervisor de turno · justificativa registrada'], ['02:32:55', 'Ocorrência encerrada', 'op-carlos', 'Classificação: sem resposta · verificado por vídeo']].map(r => [P(r[0], { m: true }), P('E-20931', { m: true }), P(r[2], { m: true }), P(r[1], { b: true }), P(r[3])]), '760px')]; break;
+      default: {
+        const D = { clientes: ['Clientes', ['CLIENTE', 'UNIDADES MONITORADAS', 'DISPOSITIVOS', 'OCORRÊNCIAS 30D', 'STATUS'], [['Empresa Alfa', '3', '47', '12', 'ok'], ['Condomínio Delta', '1', '18', '9', 'warn'], ['Empresa Gama', '6', '64', '4', 'ok']]], unidades: ['Unidades', ['UNIDADE', 'CLIENTE', 'PROTOCOLO', 'DISPOSITIVOS', 'STATUS'], [['Barra', 'Empresa Alfa', 'v3', '22', 'ok'], ['Tijuca', 'Empresa Alfa', 'v1', '11', 'warn'], ['Portaria', 'Condomínio Delta', 'v5', '18', 'ok']]], dispositivos: ['Dispositivos', ['ID', 'TIPO', 'UNIDADE', 'ZONA', 'STATUS'], [['AMT-BAR-01', 'Central de alarme', 'Barra', '—', 'ok'], ['IVP-BAR-05', 'Sensor · Estoque 05', 'Barra', '05', 'ok'], ['PT-03', 'Sensor · Porta 03', 'Portaria', '03', 'warn'], ['NVR-TIJ-01', 'NVR', 'Tijuca', '—', 'crit']]], cameras: ['Câmeras', ['ID', 'LOCAL', 'ZONAS', 'PROTOCOLO', 'STATUS'], [['CAM-07', 'Barra · Entrada lateral', '03, 05', 'ONVIF', 'ok'], ['CAM-08', 'Barra · Corredor lateral', '03, 05', 'ONVIF', 'ok'], ['CAM-11', 'Tijuca · Rack', '—', 'RTSP', 'crit']]], contatos: ['Contatos de emergência', ['UNIDADE', 'ORDEM', 'NOME', 'FUNÇÃO', 'DISPONIBILIDADE'], [['Barra', '1', 'Aline Souza', 'Responsável principal', 'ok'], ['Barra', '2', 'Thiago Lima', 'Responsável secundário', 'ok'], ['Barra', '3', 'Portaria / zelador', 'Apoio local', 'mute']]], acionamentos: ['Acionamentos', ['HORÁRIO', 'OCORRÊNCIA', 'TIPO', 'RESPONSÁVEL', 'VALIDAÇÃO'], [['18:52:10', 'E-20874', 'Serviço de emergência', 'op-lia', 'ok'], ['02:18:10', 'E-20931', 'Escalonamento', 'op-carlos', 'ok'], ['23:55:02', 'E-20911', 'Chamado técnico', 'op-lia', 'ok']]], relatorios: ['Relatórios', ['RELATÓRIO', 'PERÍODO', 'FORMATO', 'CLIENTE', 'STATUS'], [['Ocorrências por cliente', 'Agosto', 'PDF', 'Todos', 'ok'], ['Tempo para assumir', 'Semana 38', 'XLSX', 'Todos', 'ok'], ['Falsos positivos por dispositivo', '30 dias', 'PDF', 'Todos', 'ok']]] }[s.scr] || ['', [], []];
+        pageTitle = D[0]; if (s.scr === 'acionamentos') pageNote = 'Nenhum acionamento externo é automático. Cada registro exige protocolo, validação, permissão e auditoria.';
+        const labels = { ok: s.scr === 'acionamentos' ? 'VALIDADO' : s.scr === 'contatos' ? '24H' : 'NORMAL', warn: 'ATENÇÃO', crit: 'OFFLINE', mute: 'HORÁRIO COMERCIAL' };
+        tables = [T(D[0], '', D[1], '1fr 1.2fr 1fr 1fr 130px', D[2].map(r => [...r.slice(0, 4).map((v, i) => P(v, { m: i === 0 || /^[A-Z]{2,}-/.test(v), b: i === 0 })), C(labels[r[4]], r[4])]), '640px')];
+      }
+    }
+    const tl = cur.tl.map(x => ({ t: hms(x.t), w: x.w, who: x.who, c: x.c }));
+    return {
+      isM, notM: !isM, isWideish: vw >= 1100, showRail: !isM, railW: isWide ? '200px' : isT ? '48px' : '176px', railLabels: !isT,
+      mobileSup: isM, mSel: isM && s.mSel,
+      clock: hms(s.now), primC: rs[1] === 'ok' ? '#2FBF71' : '#E5484D', secC: rs[2] === 'ok' ? '#2FBF71' : rs[2] === 'warn' ? '#E8A33D' : rs[2] === 'info' ? '#287DD2' : '#E5484D', secShape: rs[2] === 'ok' ? '50%' : '1px',
+      counters: [[critOpen, 'CRÍTICOS\nABERTOS', critOpen ? '#FF8A8D' : '#8A94A3', critOpen ? 'rgba(229,72,77,.12)' : 'transparent'], [newCount, 'NOVOS SEM\nOPERADOR', newCount ? '#F2C27A' : '#8A94A3', 'transparent'], [overSla, 'ACIMA DO\nSLA', overSla ? '#FF8A8D' : '#8A94A3', overSla ? 'rgba(229,72,77,.08)' : 'transparent'], [1, 'INTEGRAÇÃO\nCOM FALHA', '#F2C27A', 'transparent']].map(([n, label, fg, bg]) => ({ n: String(n), label: label.replace('\n', ' '), fg, bg, bgM: '#07090C', go: () => this.setState({ scr: label.startsWith('INTEG') ? 'saude' : 'aovivo' }) })),
+      nav: NAV.map(([k, label, code]) => { const on = s.scr === k; const badge = k === 'aovivo' && newCount ? String(newCount) : k === 'saude' ? '!' : ''; return { label, code, go: () => this.setState({ scr: k }), cur: on ? 'page' : undefined, bg: on ? '#11305E' : 'transparent', color: on ? '#FFFFFF' : '#B6BEC9', codeColor: on ? '#8CC2FF' : '#56616F', fw: on ? 600 : 500, jc: isT ? 'center' : 'flex-start', badge, badgeBg: k === 'aovivo' ? '#E8A33D' : '#E8A33D' }; }),
+      show: { aovivo: s.scr === 'aovivo' && !isM, table: s.scr !== 'aovivo' && !isM, protoEdit: s.scr === 'protocolos' },
+      liveCols: isT ? '240px minmax(0,1fr)' : isWide ? '320px minmax(0,1fr)' : '280px minmax(0,1fr)', detailCols: isT ? 'minmax(0,1fr)' : 'minmax(0,1.5fr) minmax(280px,1fr)',
+      qFilters: [['todos', 'TODOS'], ['novos', 'NOVOS'], ['alta', 'ALTA+']].map(([k, label]) => ({ label, on: s.qf === k, pick: () => this.setState({ qf: k }), border: s.qf === k ? '#287DD2' : '#232B36', bg: s.qf === k ? 'rgba(40,125,210,.16)' : 'transparent' })),
+      queue, ev: { ...e, ...sevO(e.sev), time: hms(e.t0), status, stFg: STC[status], unitUp: (e.client + ' · ' + e.unit).toUpperCase() },
+      evMeta: [['CLIENTE', e.client], ['UNIDADE', e.unit], ['LOCAL', e.loc], ['ZONA', e.zone, M], ['DISPOSITIVO', e.dev, M], ['SENSOR', e.sensor], ['ID', e.id, M]].map(([k, v, ff]) => ({ k, v, ff: ff || A })),
+      openTicket: () => { if (!s.tickets[s.sel]) { this.setState(st => ({ tickets: { ...st.tickets, [s.sel]: true } })); this.log(s.sel, 'Chamado técnico #1046 aberto: ' + e.sensor + ' · ativo ' + e.dev + ' · técnico a atribuir', '#8A94A3'); } }, ticketLabel: s.tickets[s.sel] ? 'Chamado #1046 aberto ✓' : 'Abrir chamado técnico',
+      evActions, cams, timeline: tl, protoSteps,
+      contacts: contactsBase.map(c => { const r = cur.contacts[c[0]]; return { order: c[0], name: c[1], role: c[2], tel: c[3], avail: c[4], result: r ? (r === 'atendeu' ? '✓ ATENDEU · ' + hms(s.now) : '✕ SEM RESPOSTA') : '', resC: r === 'atendeu' ? '#5FD49A' : '#F2C27A', canLog: !r && assumed && !closed && c[0] === nextContact, border: c[0] === nextContact && assumed && !closed ? '#287DD2' : '#232B36', ok: logContact(c, true), no: logContact(c, false) }; }),
+      obs: s.obs, onObs: ev => this.setState({ obs: ev.target.value }), addObs: ev => { ev.preventDefault(); if (s.obs.trim()) { this.log(s.sel, 'Observação: ' + s.obs, '#8A94A3'); this.setState({ obs: '' }); } },
+      doAssume: () => this.act('assume'), canOperate: s.supRole === 'op', mInfo: !!s.mInfo, mCams: !!s.camsOpen[s.sel], camsLabelM: s.camsOpen[s.sel] ? 'Fechar câmeras' : 'Abrir câmeras', toggleInfo: () => this.setState(st => ({ mInfo: !st.mInfo })),
+      supRoles: [['sup', 'Supervisor'], ['op', 'Supervisor + operador']].map(([k, label]) => ({ label, on: s.supRole === k, pick: () => this.setState({ supRole: k }), border: s.supRole === k ? '#287DD2' : '#232B36', bg: s.supRole === k ? 'rgba(40,125,210,.16)' : 'transparent' })),
+      ackLabel: (s.acked || {})[s.sel] ? 'Reconhecido ✓' : 'Reconhecer', doAck: () => { if (!(s.acked || {})[s.sel]) { this.setState(st => ({ acked: { ...(st.acked || {}), [st.sel]: true } })); this.log(s.sel, 'Evento reconhecido pelo supervisor (mobile)', '#8A94A3'); } },
+      assignLabel: (s.assigned || {})[s.sel] ? 'Atribuído a op-lia ✓' : 'Atribuir a operador', doAssign: () => { if (!(s.assigned || {})[s.sel]) { this.setState(st => ({ assigned: { ...(st.assigned || {}), [st.sel]: true } })); this.log(s.sel, 'Atribuído a op-lia pelo supervisor', '#287DD2'); } }, mAssume: assumed ? 'Assumido ✓' : 'Assumir', toggleCams: () => this.act('cams'), openEscalate: () => this.setState({ modal: 'escalar', just: '' }),
+      modal: !!s.modal, md: MD, just: s.just, onJust: ev => this.setState({ just: ev.target.value }), mdOff, mdOp: mdOff ? 0.4 : 1, closeModal: () => this.setState({ modal: null }), confirmModal,
+      classes: ['Confirmado', 'Falso positivo', 'Falha técnica', 'Sem resposta'].map(label => ({ label, on: s.cls === label, pick: () => this.setState({ cls: label }), border: s.cls === label ? '#287DD2' : '#343E4B', bg: s.cls === label ? 'rgba(40,125,210,.16)' : 'transparent' })),
+      pageEyebrow, pageTitle, pageNote, tables, tFilters, diagram, redund,
+      endpoints: [['TIMP PRIMARY · endpoint-1', rs[1], 'IP/Endpoint 1 · heartbeat 30 s\nfila: 0 · retransmissões: 0'], ['TIMP SECONDARY · endpoint-2', rs[2], 'IP/Endpoint 2 · heartbeat 30 s\n' + (s.red === 'failover' ? 'recebendo 412 dispositivos' : 'em espera')]].map(([name, k, d]) => ({ name, s: stLabel[k], c: CH[k][2], fg: CH[k][0] === '#07090C' ? '#FF8A8D' : CH[k][0], shape: CH[k][4], border: k === 'ok' ? '#232B36' : CH[k][2], d: d.replace('\n', ' · ') })),
+      redBtns: Object.keys(RS).map(k => ({ label: RS[k][0], on: s.red === k, pick: () => this.setState({ red: k }), border: s.red === k ? '#287DD2' : '#232B36', bg: s.red === k ? 'rgba(40,125,210,.16)' : 'transparent' })), redNote: rs[3],
+      protoEditSteps: ['Verificar câmeras relacionadas à zona', 'Contato 1: responsável principal', 'Contato 2: responsável secundário', 'Sem resposta → escalonar ao supervisor', 'Serviço de emergência somente com confirmação'].map((t, i) => ({ t, n: String(i + 1) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

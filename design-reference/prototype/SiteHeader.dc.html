@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<header onMouseLeave="{{ closeMenu }}" style="position:relative;background:rgba(7,9,12,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #171D26;font-family:'Archivo',system-ui,sans-serif">
+<div style="max-width:1440px;margin:0 auto;height:{{ headerH }};padding:0 clamp(20px,3.5vw,56px);display:flex;align-items:center;justify-content:space-between;gap:24px">
+<a href="Home.dc.html" aria-label="TIMP Tecnologia — início" style="display:flex;align-items:center;flex:none"><img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP Tecnologia" style="height:{{ logoH }};width:auto;display:block"></a>
+<sc-if value="{{ isD }}" hint-placeholder-val="{{ true }}">
+<nav aria-label="Principal" style="display:flex;align-items:center;gap:26px;height:100%">
+<button type="button" aria-expanded="{{ servOpen }}" onMouseEnter="{{ openServ }}" onClick="{{ toggleServ }}" style="height:100%;background:none;border:0;border-bottom:2px solid {{ servLine }};color:{{ servColor }};font-size:15px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;padding:2px 0 0;font-family:inherit" style-hover="color:#FFFFFF">Serviços <span style="font-size:10px;color:#8A94A3" aria-hidden="true">▾</span></button>
+<button type="button" aria-expanded="{{ soluOpen }}" onMouseEnter="{{ openSolu }}" onClick="{{ toggleSolu }}" style="height:100%;background:none;border:0;border-bottom:2px solid {{ soluLine }};color:{{ soluColor }};font-size:15px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;padding:2px 0 0;font-family:inherit" style-hover="color:#FFFFFF">Soluções <span style="font-size:10px;color:#8A94A3" aria-hidden="true">▾</span></button>
+<sc-for list="{{ topLinks }}" as="l" hint-placeholder-count="5"><a href="{{ l.href }}" onMouseEnter="{{ closeMenu }}" aria-current="{{ l.cur }}" style="font-size:15px;font-weight:500;color:{{ l.color }};text-decoration:none" style-hover="color:#FFFFFF">{{ l.label }}</a></sc-for>
+</nav>
+<div style="display:flex;align-items:center;gap:20px;flex:none">
+<a href="Auth.dc.html" style="font-size:14px;font-weight:600;color:#DCE1E7;display:flex;align-items:center;gap:8px;text-decoration:none" style-hover="color:#FFFFFF"><span style="width:7px;height:7px;border:1.5px solid #8A94A3;border-radius:50%"></span>Área do Cliente</a>
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 18px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:15px;font-weight:600;white-space:nowrap;text-decoration:none;box-shadow:inset 0 1px 0 rgba(140,194,255,.35)" style-hover="background:#2A66BC;color:#FFFFFF">Solicitar um projeto</a>
+</div>
+</sc-if>
+<sc-if value="{{ notD }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:12px">
+<sc-if value="{{ isT }}"><a href="#contato" style="display:inline-flex;align-items:center;height:44px;padding:0 16px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:15px;font-weight:600;white-space:nowrap;text-decoration:none" style-hover="background:#2A66BC;color:#FFFFFF">Solicitar um projeto</a></sc-if>
+<button type="button" aria-expanded="{{ drawer }}" aria-controls="menu-movel" onClick="{{ toggleDrawer }}" style="height:44px;min-width:44px;padding:0 14px;background:#0C1015;border:1px solid #232B36;border-radius:4px;color:#EEF1F4;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;cursor:pointer;font-family:inherit"><span style="display:flex;flex-direction:column;gap:4px" aria-hidden="true"><span style="width:16px;height:1.5px;background:#EEF1F4"></span><span style="width:16px;height:1.5px;background:#EEF1F4"></span></span>{{ drawerLabel }}</button>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ servOpen }}" hint-placeholder-val="{{ false }}">
+<div role="region" aria-label="Serviços" style="position:absolute;top:100%;left:0;right:0;background:#0C1015;border-bottom:1px solid #232B36;box-shadow:0 24px 48px rgba(0,0,0,.55)">
+<div style="max-width:1440px;margin:0 auto;padding:36px clamp(20px,3.5vw,56px) 28px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.25fr);gap:36px">
+<sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:14px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#4C9BEA">{{ g.n }} — {{ g.label }}</span>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ g.links }}" as="l"><a href="{{ l.href }}" style="font-size:15px;color:#DCE1E7;padding:8px 0;border-top:1px solid #171D26;display:flex;justify-content:space-between;gap:8px;text-decoration:none" style-hover="color:#FFFFFF">{{ l.label }}<span style="color:#56616F" aria-hidden="true">→</span></a></sc-for>
+</div>
+</div>
+</sc-for>
+<a href="Monitoramento%2024h.dc.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:24px;padding:22px;background:#000;border:1px solid #232B36;border-radius:8px;color:#EEF1F4;text-decoration:none" style-hover="border-color:#287DD2;color:#EEF1F4">
+<span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#4C9BEA"><span style="position:relative;width:8px;height:8px;display:inline-block">{{ liveDot }}</span>05 — MONITORAMENTO 24H</span>
+<span style="display:flex;flex-direction:column;gap:8px"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.15">Central TIMP de Monitoramento</span><span style="font-size:14px;color:#B6BEC9;line-height:1.5">Eventos verificados por operador e tratados conforme o protocolo de cada unidade.</span></span>
+<span style="font-size:14px;font-weight:600;color:#4C9BEA">Conhecer a Central TIMP →</span>
+</a>
+</div>
+<div style="max-width:1440px;margin:0 auto;padding:16px clamp(20px,3.5vw,56px) 20px;border-top:1px solid #171D26;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap">
+<a href="Home.dc.html#ecossistemas" style="font-size:14px;font-weight:600;color:#DCE1E7;text-decoration:none" style-hover="color:#FFFFFF">Todos os serviços →</a>
+<span style="font-size:14px;color:#8A94A3">Não sabe por onde começar? <a href="#contato" onClick="{{ closeMenu }}" style="color:#4C9BEA;font-weight:600;text-decoration:none">Solicitar diagnóstico</a></span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ soluOpen }}" hint-placeholder-val="{{ false }}">
+<div role="region" aria-label="Soluções" style="position:absolute;top:100%;left:0;right:0;background:#0C1015;border-bottom:1px solid #232B36;box-shadow:0 24px 48px rgba(0,0,0,.55)">
+<div style="max-width:1440px;margin:0 auto;padding:36px clamp(20px,3.5vw,56px);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:48px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#4C9BEA">SOLUÇÕES POR SEGMENTO</span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:32px">
+<sc-for list="{{ segments }}" as="s" hint-placeholder-count="6"><a href="{{ s.href }}" style="display:flex;flex-direction:column;gap:4px;padding:12px 0;border-top:1px solid #171D26;color:#EEF1F4;text-decoration:none" style-hover="color:#FFFFFF"><span style="font-size:15px;font-weight:600">{{ s.name }}</span><span style="font-size:13px;color:#8A94A3;line-height:1.45">{{ s.desc }}</span></a></sc-for>
+</div>
+</div>
+<a href="Construtoras%20e%20Engenharia.dc.html" style="display:flex;flex-direction:column;justify-content:space-between;gap:28px;padding:28px;background:#0B1E3D;border:1px solid #11305E;border-radius:8px;color:#EEF1F4;text-decoration:none" style-hover="border-color:#287DD2;color:#EEF1F4">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#8CC2FF">CONSTRUTORAS E ENGENHARIA</span>
+<span style="font-size:28px;font-weight:700;letter-spacing:-.025em;line-height:1.1">Tecnologia começa ainda no projeto da obra.</span>
+<span style="font-size:14px;font-weight:600;color:#8CC2FF">Conhecer solução para construtoras →</span>
+</a>
+</div>
+</div>
+</sc-if>
+</header>
+
+<sc-if value="{{ drawer }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeDrawer }}" style="position:fixed;left:0;right:0;bottom:0;top:{{ headerH }};background:rgba(0,0,0,.6);z-index:55"></div>
+<div id="menu-movel" role="dialog" aria-label="Menu" style="position:fixed;top:{{ headerH }};right:0;bottom:0;width:{{ drawerW }};background:#07090C;border-left:1px solid #171D26;z-index:58;overflow-y:auto;display:flex;flex-direction:column;font-family:'Archivo',system-ui,sans-serif">
+<sc-if value="{{ subNone }}" hint-placeholder-val="{{ true }}">
+<nav aria-label="Menu principal" style="display:flex;flex-direction:column;padding:8px 20px">
+<button type="button" onClick="{{ openSubServ }}" style="display:flex;justify-content:space-between;align-items:center;min-height:60px;background:none;border:0;border-bottom:1px solid #171D26;color:#EEF1F4;font-size:20px;font-weight:600;text-align:left;cursor:pointer;padding:0;font-family:inherit">Serviços<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8A94A3">17 ›</span></button>
+<button type="button" onClick="{{ openSubSolu }}" style="display:flex;justify-content:space-between;align-items:center;min-height:60px;background:none;border:0;border-bottom:1px solid #171D26;color:#EEF1F4;font-size:20px;font-weight:600;text-align:left;cursor:pointer;padding:0;font-family:inherit">Soluções<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8A94A3">7 ›</span></button>
+<a href="Monitoramento%2024h.dc.html" style="display:flex;justify-content:space-between;align-items:center;min-height:60px;border-bottom:1px solid #171D26;color:#EEF1F4;font-size:20px;font-weight:600;text-decoration:none">Monitoramento 24h<span style="position:relative;width:8px;height:8px;display:inline-block">{{ liveDot }}</span></a>
+<sc-for list="{{ drawerLinks }}" as="l" hint-placeholder-count="5"><a href="{{ l.href }}" onClick="{{ closeDrawer }}" style="display:flex;align-items:center;min-height:52px;border-bottom:1px solid #171D26;color:#B6BEC9;font-size:17px;font-weight:500;text-decoration:none">{{ l.label }}</a></sc-for>
+</nav>
+<div style="margin-top:auto;padding:24px 20px 28px;display:flex;flex-direction:column;gap:12px;border-top:1px solid #171D26">
+<a href="#contato" onClick="{{ closeDrawer }}" style="display:flex;align-items:center;justify-content:center;height:52px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;text-decoration:none">Solicitar um projeto</a>
+<a href="{{ wa }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;text-decoration:none"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>WhatsApp (21) 98331-8387</a>
+<a href="Auth.dc.html" style="display:flex;align-items:center;justify-content:center;height:48px;color:#DCE1E7;font-size:15px;font-weight:600;text-decoration:none">Área do Cliente</a>
+</div>
+</sc-if>
+<sc-if value="{{ subServ }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;padding:8px 20px 32px">
+<button type="button" onClick="{{ backSub }}" style="display:flex;align-items:center;gap:8px;min-height:52px;background:none;border:0;border-bottom:1px solid #171D26;color:#4C9BEA;font-size:15px;font-weight:600;cursor:pointer;padding:0;text-align:left;font-family:inherit">‹ Menu</button>
+<span style="font-size:28px;font-weight:700;letter-spacing:-.02em;padding:20px 0 4px;color:#EEF1F4">Serviços</span>
+<sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;padding-top:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#4C9BEA;padding-bottom:6px">{{ g.n }} — {{ g.label }}</span>
+<sc-for list="{{ g.links }}" as="l"><a href="{{ l.href }}" onClick="{{ closeDrawer }}" style="display:flex;align-items:center;justify-content:space-between;min-height:48px;border-bottom:1px solid #171D26;color:#EEF1F4;font-size:16px;text-decoration:none">{{ l.label }}<span style="color:#56616F" aria-hidden="true">›</span></a></sc-for>
+</div>
+</sc-for>
+<a href="Monitoramento%2024h.dc.html" style="display:flex;flex-direction:column;gap:6px;margin-top:24px;padding:18px;background:#000;border:1px solid #232B36;border-radius:8px;color:#EEF1F4;text-decoration:none"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#4C9BEA">05 — MONITORAMENTO 24H</span><span style="font-size:17px;font-weight:600">Central TIMP de Monitoramento ›</span></a>
+</div>
+</sc-if>
+<sc-if value="{{ subSolu }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;padding:8px 20px 32px">
+<button type="button" onClick="{{ backSub }}" style="display:flex;align-items:center;gap:8px;min-height:52px;background:none;border:0;border-bottom:1px solid #171D26;color:#4C9BEA;font-size:15px;font-weight:600;cursor:pointer;padding:0;text-align:left;font-family:inherit">‹ Menu</button>
+<span style="font-size:28px;font-weight:700;letter-spacing:-.02em;padding:20px 0 12px;color:#EEF1F4">Soluções</span>
+<sc-for list="{{ segments }}" as="s" hint-placeholder-count="7"><a href="{{ s.href }}" onClick="{{ closeDrawer }}" style="display:flex;flex-direction:column;gap:4px;padding:14px 0;border-bottom:1px solid #171D26;color:#EEF1F4;text-decoration:none"><span style="font-size:17px;font-weight:600">{{ s.name }}</span><span style="font-size:14px;color:#8A94A3;line-height:1.45">{{ s.desc }}</span></a></sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;76px&quot;},&quot;current&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;servicos&quot;,&quot;solucoes&quot;,&quot;conhecimento&quot;,&quot;empresa&quot;,&quot;projetos&quot;,&quot;contato&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;waText&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Olá, TIMP. Vim pelo site e quero falar sobre um projeto.&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const SV = s => 'Pagina%20de%20Servico.dc.html?s=' + s;
+const SM = 'Monitoramento%2024h.dc.html', SE = 'Seguranca%20Eletronica.dc.html', SL = 'Instalacao%20Starlink.dc.html', CE = 'Construtoras%20e%20Engenharia.dc.html';
+const GROUPS = [
+  { n: '01', label: 'INFRAESTRUTURA', links: [['Cabeamento Estruturado', SV('cabeamento')], ['Infraestrutura de Redes', '#'], ['Wi-Fi Empresarial', SV('wifi')], ['Fibra Óptica', '#'], ['Instalação de Starlink', SL]] },
+  { n: '02', label: 'SEGURANÇA ELETRÔNICA', links: [['CFTV e Câmeras de Segurança', SV('cftv')], ['Segurança Eletrônica', SE], ['Alarmes', SE + '#alarmes'], ['Controle de Acesso', SV('acesso')], ['Fechaduras Eletrônicas', '#']] },
+  { n: '03', label: 'TI CORPORATIVA', links: [['Suporte de TI para Empresas', '#'], ['Consultoria em TI', '#'], ['Servidores, Cloud e Virtualização', '#'], ['Segurança da Informação', '#']] },
+  { n: '04', label: 'AUTOMAÇÃO & COMUNICAÇÃO', links: [['Automação Predial', '#'], ['Telefonia IP e PABX', '#']] }
+];
+const SEGMENTS = [
+  { name: 'Construtoras e Engenharia', desc: 'Infraestrutura tecnológica planejada desde o projeto da obra.', href: CE },
+  { name: 'Empresas e Escritórios', desc: 'Rede, Wi-Fi, suporte de TI e controle de acesso para o dia a dia.', href: '#' },
+  { name: 'Condomínios', desc: 'CFTV, controle de acesso, fechaduras e monitoramento das áreas comuns.', href: '#' },
+  { name: 'Clínicas', desc: 'Rede estável, sistemas disponíveis e segurança no ambiente de atendimento.', href: '#' },
+  { name: 'Comércio e Restaurantes', desc: 'Câmeras, alarme, Wi-Fi e rede para a operação e o caixa.', href: '#' },
+  { name: 'Indústrias e Galpões', desc: 'Fibra, Wi-Fi de grande área, CFTV perimetral e sensores.', href: '#' },
+  { name: 'Empresas com Múltiplas Unidades', desc: 'Padrão técnico único e gestão centralizada entre unidades.', href: '#' }
+];
+const TOP = [['Equipamentos', '#', 'equip'], ['Projetos', 'Home.dc.html#projetos', 'projetos'], ['Conhecimento', 'Conhecimento.dc.html', 'conhecimento'], ['Empresa', 'Home.dc.html#empresa', 'empresa'], ['Contato', '#contato', 'contato']];
+class Component extends DCLogic {
+  state = { vw: typeof window !== 'undefined' ? window.innerWidth : 1440, menu: null, drawer: false, sub: null };
+  componentDidMount() {
+    this.onR = () => this.setState(st => ({ vw: window.innerWidth, drawer: window.innerWidth >= 1280 ? false : st.drawer }));
+    this.onK = e => { if (e.key === 'Escape') this.setState({ menu: null, drawer: false, sub: null }); };
+    window.addEventListener('resize', this.onR); window.addEventListener('keydown', this.onK); this.onR();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); window.removeEventListener('keydown', this.onK); document.body.style.overflow = ''; }
+  componentDidUpdate() { document.body.style.overflow = this.state.drawer ? 'hidden' : ''; }
+  renderVals() {
+    const s = this.state, vw = s.vw, isM = vw < 768, isT = vw >= 768 && vw < 1280, isD = vw >= 1280;
+    const set = o => () => this.setState(o);
+    const h = React.createElement, cur = this.props.current || '';
+    const liveDot = [h('span', { key: 'a', style: { position: 'absolute', inset: 0, borderRadius: '50%', background: '#2FBF71' } }), h('span', { key: 'b', style: { position: 'absolute', inset: 0, borderRadius: '50%', background: '#2FBF71', animation: 'timpPulse 2s ease-out infinite' } })];
+    return {
+      isD, isT, notD: !isD, headerH: isD ? '76px' : '64px', logoH: isD ? '40px' : '32px', liveDot,
+      servOpen: s.menu === 'serv', soluOpen: s.menu === 'solu',
+      servLine: s.menu === 'serv' || cur === 'servicos' ? '#287DD2' : 'transparent', soluLine: s.menu === 'solu' || cur === 'solucoes' ? '#287DD2' : 'transparent',
+      servColor: s.menu === 'serv' || cur === 'servicos' ? '#FFFFFF' : '#B6BEC9', soluColor: s.menu === 'solu' || cur === 'solucoes' ? '#FFFFFF' : '#B6BEC9',
+      openServ: set({ menu: 'serv' }), openSolu: set({ menu: 'solu' }), closeMenu: set({ menu: null }),
+      toggleServ: () => this.setState(st => ({ menu: st.menu === 'serv' ? null : 'serv' })), toggleSolu: () => this.setState(st => ({ menu: st.menu === 'solu' ? null : 'solu' })),
+      topLinks: TOP.map(([label, href, k]) => ({ label, href, cur: k === cur ? 'page' : undefined, color: k === cur ? '#FFFFFF' : '#B6BEC9' })),
+      navGroups: GROUPS.map(g => ({ ...g, links: g.links.map(([label, href]) => ({ label, href })) })), segments: SEGMENTS,
+      drawer: s.drawer, drawerLabel: s.drawer ? 'Fechar' : 'Menu', drawerW: isM ? '100%' : '440px',
+      toggleDrawer: () => this.setState(st => ({ drawer: !st.drawer, sub: null })), closeDrawer: set({ drawer: false, sub: null }),
+      subNone: !s.sub, subServ: s.sub === 'serv', subSolu: s.sub === 'solu', openSubServ: set({ sub: 'serv' }), openSubSolu: set({ sub: 'solu' }), backSub: set({ sub: null }),
+      drawerLinks: [['Equipamentos e tecnologia', '#'], ['Projetos', 'Home.dc.html#projetos'], ['Conhecimento', 'Conhecimento.dc.html'], ['Empresa', 'Home.dc.html#empresa'], ['Contato', '#contato']].map(([label, href]) => ({ label, href })),
+      wa: 'https://wa.me/5521983318387?text=' + encodeURIComponent(this.props.waText || 'Olá, TIMP. Vim pelo site e quero falar sobre um projeto.')
+    };
+  }
+}
+</script>
+</body>
+</html>

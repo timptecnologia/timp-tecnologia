@@ -1,0 +1,73 @@
+/*
+ * Motion TIMP — design-reference/docs/motion-spec.md
+ * Só transform / opacity / stroke-dashoffset / cor. Scroll nativo.
+ * Tudo é progressive enhancement: o conteúdo existe sem JS e sem animação.
+ */
+
+@keyframes timp-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes timp-overlay-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px)) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Pulso "ao vivo" (2s) */
+@keyframes timp-pulse-live {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes timp-skeleton {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/*
+ * prefers-reduced-motion desliga animações e transições decorativas.
+ * Sticky e troca de etapa por scroll permanecem (não são decorativos).
+ * html[data-motion="off"] permite forçar o modo estático (QA / preferência futura).
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html[data-motion="off"] *,
+html[data-motion="off"] ::before,
+html[data-motion="off"] ::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}

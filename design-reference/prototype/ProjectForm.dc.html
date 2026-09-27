@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="background:#07090C;border:1px solid #11305E;border-radius:8px;padding:clamp(20px,3vw,36px);font-family:'Archivo',system-ui,sans-serif;color:#EEF1F4">
+<sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+<form onSubmit="{{ submit }}" novalidate="" style="display:flex;flex-direction:column;gap:18px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:18px">
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Nome *</span><input type="text" autocomplete="name" value="{{ f.nome }}" onChange="{{ on.nome }}" aria-invalid="{{ inv.nome }}" style="height:52px;border:1px solid {{ fb.nome }};border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><sc-if value="{{ er.nome }}"><span style="font-size:13px;color:#FF8A8D">{{ er.nome }}</span></sc-if></label>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Empresa</span><input type="text" autocomplete="organization" value="{{ f.empresa }}" onChange="{{ on.empresa }}" style="height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"></label>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">E-mail *</span><input type="email" autocomplete="email" value="{{ f.email }}" onChange="{{ on.email }}" aria-invalid="{{ inv.email }}" style="height:52px;border:1px solid {{ fb.email }};border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><sc-if value="{{ er.email }}"><span style="font-size:13px;color:#FF8A8D">{{ er.email }}</span></sc-if></label>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">WhatsApp *</span><input type="tel" autocomplete="tel" inputmode="tel" placeholder="(21) 90000-0000" value="{{ f.whats }}" onChange="{{ on.whats }}" aria-invalid="{{ inv.whats }}" style="height:52px;border:1px solid {{ fb.whats }};border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><sc-if value="{{ er.whats }}"><span style="font-size:13px;color:#FF8A8D">{{ er.whats }}</span></sc-if></label>
+</div>
+<div style="display:grid;grid-template-columns:minmax(96px,.4fr) minmax(0,1fr);gap:18px">
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Estado *</span>
+<select value="{{ f.uf }}" onChange="{{ on.uf }}" autocomplete="address-level1" style="height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 10px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option><option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option><option value="MA">MA</option><option value="MT">MT</option><option value="MS">MS</option><option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option><option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option><option value="RJ">RJ</option><option value="RN">RN</option><option value="RS">RS</option><option value="RO">RO</option><option value="RR">RR</option><option value="SC">SC</option><option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option></select>
+</label>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Cidade *</span><input type="text" autocomplete="address-level2" value="{{ f.cidade }}" onChange="{{ on.cidade }}" aria-invalid="{{ inv.cidade }}" placeholder="Rio de Janeiro" style="height:52px;border:1px solid {{ fb.cidade }};border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 14px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><sc-if value="{{ er.cidade }}"><span style="font-size:13px;color:#FF8A8D">{{ er.cidade }}</span></sc-if></label>
+</div>
+<sc-if value="{{ outRJ }}" hint-placeholder-val="{{ false }}">
+<div role="note" style="display:flex;gap:12px;padding:14px 16px;border:1px solid #287DD2;background:rgba(40,125,210,.1);border-radius:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8CC2FF;padding-top:2px">i</span><span style="font-size:14px;line-height:1.55;color:#DCE1E7">Projetos fora do Rio de Janeiro são avaliados conforme porte, escopo e viabilidade logística.</span></div>
+</sc-if>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:18px">
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Tipo de projeto *</span>
+<select value="{{ f.tipo }}" onChange="{{ on.tipo }}" aria-invalid="{{ inv.tipo }}" style="height:52px;border:1px solid {{ fb.tipo }};border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 10px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><option value="">Selecione</option><option value="Empresa">Empresa</option><option value="Construtora / obra">Construtora / obra</option><option value="Condomínio / empreendimento">Condomínio / empreendimento</option><option value="Múltiplas unidades">Múltiplas unidades</option><option value="Outro">Outro</option></select>
+<sc-if value="{{ er.tipo }}"><span style="font-size:13px;color:#FF8A8D">{{ er.tipo }}</span></sc-if></label>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Porte aproximado</span>
+<select value="{{ f.porte }}" onChange="{{ on.porte }}" style="height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 10px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><option value="">Selecione</option><option value="Pequeno">Pequeno</option><option value="Médio">Médio</option><option value="Grande">Grande</option><option value="Projeto especial">Projeto especial</option></select></label>
+</div>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Solução de interesse</span>
+<select value="{{ f.solucao }}" onChange="{{ on.solucao }}" style="height:52px;border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:0 10px;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"><option value="">Selecione</option><option value="Infraestrutura & Conectividade">Infraestrutura &amp; Conectividade</option><option value="Instalação de Starlink">Instalação de Starlink</option><option value="Segurança Eletrônica">Segurança Eletrônica</option><option value="TI Corporativa">TI Corporativa</option><option value="Automação & Comunicação">Automação &amp; Comunicação</option><option value="Monitoramento 24h">Monitoramento 24h</option><option value="Ainda não sei">Ainda não sei — preciso de um diagnóstico</option></select></label>
+<label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;font-weight:600;color:#DCE1E7">Descrição</span><textarea rows="4" value="{{ f.msg }}" onChange="{{ on.msg }}" placeholder="{{ msgPh }}" style="border:1px solid #343E4B;border-radius:4px;background:#0C1015;color:#EEF1F4;font-size:16px;padding:12px 14px;resize:vertical;line-height:1.5;outline:none;font-family:inherit" style-focus="border-color:#4C9BEA;box-shadow:0 0 0 3px rgba(76,155,234,.25)"></textarea></label>
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;padding-top:4px">
+<button type="submit" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;background:#2359A5;color:#FFFFFF;border:0;border-radius:4px;font-size:16px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;box-shadow:inset 0 1px 0 rgba(140,194,255,.35)" style-hover="background:#2A66BC">{{ submitLabel }} <span aria-hidden="true">→</span></button>
+<a href="{{ wa }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:#DCE1E7;text-decoration:none" style-hover="color:#FFFFFF"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>Prefiro o WhatsApp</a>
+</div>
+<span style="font-size:13px;color:#8A94A3;line-height:1.5">* Campos obrigatórios. Seus dados são usados apenas para o retorno desta solicitação.</span>
+</form>
+</sc-if>
+<sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display:flex;flex-direction:column;gap:16px;padding:12px 0">
+<span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:#5FD49A"><span style="width:10px;height:10px;border-radius:50%;background:#2FBF71"></span>SOLICITAÇÃO REGISTRADA</span>
+<span style="font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.2">Obrigado, {{ f.nome }}.</span>
+<span style="font-size:16px;line-height:1.6;color:#B6BEC9">A equipe comercial da TIMP vai entrar em contato pelo WhatsApp {{ f.whats }} ou pelo e-mail {{ f.email }}.</span>
+<sc-if value="{{ outRJ }}"><span style="font-size:15px;line-height:1.6;color:#8CC2FF">Projeto em {{ f.cidade }}/{{ f.uf }}: a avaliação considera porte, escopo e viabilidade logística.</span></sc-if>
+<sc-if value="{{ annotations }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#E8A33D">PROTÓTIPO · NENHUM DADO FOI ENVIADO</span></sc-if>
+<button type="button" onClick="{{ reset }}" style="align-self:flex-start;height:44px;padding:0 16px;background:none;border:1px solid #343E4B;border-radius:4px;color:#EEF1F4;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Enviar outra solicitação</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;640px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;submitLabel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Solicitar um projeto&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;defaultTipo&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;Empresa&quot;,&quot;Construtora / obra&quot;,&quot;Condomínio / empreendimento&quot;,&quot;Múltiplas unidades&quot;,&quot;Outro&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;defaultPorte&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;Pequeno&quot;,&quot;Médio&quot;,&quot;Grande&quot;,&quot;Projeto especial&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;defaultSolucao&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;placeholder&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Tipo de imóvel, número de unidades, prazo da obra…&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;waText&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Olá, TIMP. Vim pelo site e quero falar sobre um projeto.&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  blank = () => ({ nome: '', empresa: '', email: '', whats: '', uf: 'RJ', cidade: '', tipo: this.props.defaultTipo || '', porte: this.props.defaultPorte || '', solucao: this.props.defaultSolucao || '', msg: '' });
+  state = { f: this.blank(), er: {}, sent: false };
+  componentDidUpdate(prev) {
+    if (prev.defaultPorte !== this.props.defaultPorte && this.props.defaultPorte) this.setState(st => ({ f: { ...st.f, porte: this.props.defaultPorte } }));
+  }
+  renderVals() {
+    const { f, er } = this.state;
+    const on = {};
+    Object.keys(f).forEach(k => { on[k] = e => { const v = e.target.value; this.setState(st => ({ f: { ...st.f, [k]: v }, er: { ...st.er, [k]: null } })); }; });
+    const fb = {}, inv = {};
+    ['nome', 'email', 'whats', 'cidade', 'tipo'].forEach(k => { fb[k] = er[k] ? '#E5484D' : '#343E4B'; inv[k] = !!er[k]; });
+    const submit = e => {
+      e.preventDefault(); const x = {};
+      if (!f.nome.trim()) x.nome = 'Informe seu nome.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) x.email = 'Informe um e-mail válido, como nome@empresa.com.br.';
+      if (f.whats.replace(/\D/g, '').length < 10) x.whats = 'Informe o número completo com DDD.';
+      if (!f.cidade.trim()) x.cidade = 'Informe a cidade do projeto.';
+      if (!f.tipo) x.tipo = 'Selecione o tipo de projeto.';
+      this.setState(Object.keys(x).length ? { er: x } : { er: {}, sent: true });
+    };
+    return {
+      f, er, on, fb, inv, submit, sent: this.state.sent, notSent: !this.state.sent, outRJ: f.uf !== 'RJ',
+      reset: () => this.setState({ sent: false, f: this.blank(), er: {} }),
+      submitLabel: this.props.submitLabel || 'Solicitar um projeto',
+      msgPh: this.props.placeholder || 'Tipo de imóvel, número de unidades, prazo da obra…',
+      annotations: this.props.annotations ?? false,
+      wa: 'https://wa.me/5521983318387?text=' + encodeURIComponent(this.props.waText || 'Olá, TIMP. Vim pelo site e quero falar sobre um projeto.')
+    };
+  }
+}
+</script>
+</body>
+</html>

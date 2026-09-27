@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Portal do Cliente | TIMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#EEF1F4;color:#07090C;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#2359A5;text-decoration:none}
+a:hover{color:#11305E}
+:focus-visible{outline:2px solid #2359A5;outline-offset:2px}
+input,button,select,textarea{font-family:inherit}
+@keyframes timpShimmer{0%{opacity:.55}50%{opacity:1}100%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex">
+
+<sc-if value="{{ showSide }}" hint-placeholder-val="{{ true }}">
+<aside style="position:sticky;top:0;height:100vh;flex:none;width:{{ sideW }};background:#07090C;color:#EEF1F4;display:flex;flex-direction:column;border-right:1px solid #171D26">
+<div style="padding:20px {{ sidePad }};display:flex;flex-direction:column;gap:14px;border-bottom:1px solid #171D26">
+<img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP" style="height:30px;width:auto;align-self:flex-start">
+<sc-if value="{{ isD }}"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#56616F">PORTAL DO CLIENTE</span><span style="font-size:14px;font-weight:600">Empresa Alfa Comércio</span></span></sc-if>
+</div>
+<nav aria-label="Portal" style="flex:1;overflow-y:auto;padding:10px 8px;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="12"><button type="button" onClick="{{ n.go }}" aria-current="{{ n.cur }}" title="{{ n.label }}" style="display:flex;align-items:center;gap:12px;min-height:40px;padding:0 12px;border:0;border-radius:4px;background:{{ n.bg }};color:{{ n.color }};font-size:14px;font-weight:{{ n.fw }};text-align:left;cursor:pointer;flex-direction:{{ n.dir }};justify-content:{{ n.jc }}" style-hover="background:#11161D;color:#FFFFFF"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;min-width:22px;text-align:center;color:{{ n.codeColor }}">{{ n.code }}</span><span style="font-size:{{ n.fs }}">{{ n.label }}</span><sc-if value="{{ n.badge }}"><span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;background:#2359A5;color:#FFFFFF;border-radius:10px;padding:1px 7px">{{ n.badge }}</span></sc-if></button></sc-for>
+</nav>
+<div style="padding:14px {{ sidePad }};border-top:1px solid #171D26;display:flex;align-items:center;gap:10px">
+<span style="width:32px;height:32px;border-radius:50%;background:#11305E;color:#8CC2FF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none">AL</span>
+<sc-if value="{{ isD }}"><span style="display:flex;flex-direction:column;min-width:0"><span style="font-size:13px;font-weight:600">Aline Souza</span><span style="font-size:12px;color:#8A94A3">Cliente Admin</span></span></sc-if>
+</div>
+</aside>
+</sc-if>
+
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<header style="position:sticky;top:0;z-index:20;background:rgba(238,241,244,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid #DCE1E7">
+<div style="max-width:1180px;margin:0 auto;padding:0 clamp(16px,3vw,32px);height:60px;display:flex;align-items:center;gap:12px">
+<sc-if value="{{ showMLogo }}"><img src="assets/brand/timp-logo-light-bg.png" alt="TIMP" style="height:26px;width:auto"></sc-if>
+<sc-if value="{{ canBack }}"><button type="button" onClick="{{ back }}" style="height:40px;padding:0 10px 0 4px;border:0;background:none;color:#2359A5;font-size:15px;font-weight:600;cursor:pointer">‹ {{ backLabel }}</button></sc-if>
+<label style="margin-left:auto;display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#56616F;display:{{ unitLabelDisp }}">Unidade</span><select value="{{ unitFilter }}" onChange="{{ onUnit }}" style="height:40px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;color:#07090C;font-size:14px;padding:0 8px;max-width:{{ selMax }}"><option value="all">Todas as unidades</option><option value="Centro">Unidade Centro</option><option value="Barra">Unidade Barra</option><option value="Tijuca">Unidade Tijuca</option></select></label>
+<button type="button" onClick="{{ goNovo }}" style="height:40px;padding:0 14px;border:0;border-radius:4px;background:#2359A5;color:#FFFFFF;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">{{ novoLabel }}</button>
+</div>
+</header>
+
+<main style="flex:1;width:100%;max-width:1180px;margin:0 auto;padding:clamp(16px,3vw,32px) clamp(16px,3vw,32px) {{ mainPadB }};display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:8px 16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#2359A5">{{ eyebrow }}</span><h1 style="margin:0;font-size:clamp(24px,3vw,32px);letter-spacing:-.025em;font-weight:700;line-height:1.1">{{ title }}</h1></div>
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#9A6212;border:1px dashed #E8A33D;border-radius:3px;padding:4px 8px">DADOS FICTÍCIOS · DEMONSTRAÇÃO</span>
+</div>
+
+<sc-if value="{{ stateOn }}" hint-placeholder-val="{{ false }}">
+<section role="{{ stRole }}" style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:40px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+<sc-if value="{{ stLoading }}"><div style="width:100%;display:flex;flex-direction:column;gap:12px"><sc-for list="{{ skel }}" as="k"><span style="height:{{ k }};border-radius:4px;background:#DCE1E7;animation:timpShimmer 1.4s ease-in-out infinite"></span></sc-for></div></sc-if>
+<sc-if value="{{ stNotLoading }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:{{ st.fg }};border:1px solid {{ st.c }};background:{{ st.bg }};border-radius:3px;padding:5px 9px">{{ st.tag }}</span><span style="font-size:20px;font-weight:700">{{ st.t }}</span><span style="font-size:15px;line-height:1.55;color:#343E4B;max-width:32em">{{ st.d }}</span><sc-if value="{{ st.cta }}"><button type="button" onClick="{{ clearState }}" style="height:44px;padding:0 18px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;color:#07090C;font-size:14px;font-weight:600;cursor:pointer">{{ st.cta }}</button></sc-if></sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.dashboard }}" hint-placeholder-val="{{ true }}">
+<section aria-label="Situação geral" style="background:#07090C;color:#EEF1F4;border-radius:8px;padding:clamp(18px,3vw,28px);display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px"><span style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">COMO ESTÁ MINHA OPERAÇÃO</span><span style="font-size:clamp(20px,2.6vw,26px);font-weight:700;letter-spacing:-.02em;line-height:1.2">2 unidades normais · 1 com atenção</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A94A3;align-self:flex-start">ATUALIZADO 09:41</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:1px;background:#232B36;border:1px solid #232B36;border-radius:6px;overflow:hidden">
+<sc-for list="{{ unitsView }}" as="u" hint-placeholder-count="3"><button type="button" onClick="{{ u.open }}" style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;background:#0C1015;border:0;color:#EEF1F4;text-align:left;cursor:pointer" style-hover="background:#11161D"><span style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:15px;font-weight:600">{{ u.name }}</span><span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:{{ u.sFg }}"><span style="width:8px;height:8px;border-radius:{{ u.sShape }};background:{{ u.sC }}"></span>{{ u.sLabel }}</span></span><span style="font-size:13px;color:#8A94A3">{{ u.note }}</span></button></sc-for>
+</div>
+</section>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px">
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid #EEF1F4"><h2 style="margin:0;font-size:17px;font-weight:700">Chamados abertos <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#56616F">({{ openCount }})</span></h2><button type="button" onClick="{{ goChamados }}" style="background:none;border:0;color:#2359A5;font-size:14px;font-weight:600;cursor:pointer">Ver todos</button></div>
+<sc-for list="{{ openTickets }}" as="t" hint-placeholder-count="2"><button type="button" onClick="{{ t.open }}" style="display:flex;flex-direction:column;gap:6px;padding:14px 18px;border:0;border-bottom:1px solid #EEF1F4;background:none;text-align:left;cursor:pointer;color:#07090C" style-hover="background:#F6F8FA"><span style="display:flex;justify-content:space-between;gap:10px"><span style="font-size:15px;font-weight:600;line-height:1.35">{{ t.title }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#56616F">#{{ t.id }}</span></span><span style="display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:13px;color:#56616F"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.05em;color:{{ t.sFg }};background:{{ t.sBg }};border-radius:3px;padding:3px 7px">{{ t.status }}</span>{{ t.unit }} · {{ t.when }}</span></button></sc-for>
+</section>
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;display:flex;flex-direction:column">
+<div style="padding:16px 18px;border-bottom:1px solid #EEF1F4"><h2 style="margin:0;font-size:17px;font-weight:700">Precisa de atenção</h2></div>
+<button type="button" onClick="{{ goEquip }}" style="display:flex;gap:12px;padding:14px 18px;border:0;border-bottom:1px solid #EEF1F4;background:none;text-align:left;cursor:pointer;color:#07090C" style-hover="background:#F6F8FA"><span style="width:10px;height:10px;border-radius:2px;background:#E8A33D;margin-top:5px;flex:none"></span><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:600">NVR da Unidade Tijuca sem comunicação</span><span style="font-size:13px;color:#56616F">Desde 06:12 · chamado técnico #1044 aberto pela TIMP</span></span></button>
+<button type="button" onClick="{{ goMonit }}" style="display:flex;gap:12px;padding:14px 18px;border:0;border-bottom:1px solid #EEF1F4;background:none;text-align:left;cursor:pointer;color:#07090C" style-hover="background:#F6F8FA"><span style="width:10px;height:10px;border-radius:50%;background:#287DD2;margin-top:5px;flex:none"></span><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:600">Última ocorrência: Unidade Barra, 02:14</span><span style="font-size:13px;color:#56616F">Abertura fora do horário · encerrada, falso positivo</span></span></button>
+<button type="button" onClick="{{ goDocs }}" style="display:flex;gap:12px;padding:14px 18px;border:0;background:none;text-align:left;cursor:pointer;color:#07090C" style-hover="background:#F6F8FA"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #2359A5;margin-top:5px;flex:none"></span><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:600">Novo relatório mensal disponível</span><span style="font-size:13px;color:#56616F">Relatório de monitoramento · agosto</span></span></button>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.unidades }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<input type="search" placeholder="Buscar unidade por nome ou endereço" style="height:48px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;font-size:16px;padding:0 14px;max-width:480px">
+<div style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px">
+<sc-for list="{{ unitsView }}" as="u" hint-placeholder-count="3"><button type="button" onClick="{{ u.open }}" style="width:100%;display:grid;grid-template-columns:{{ unitRowCols }};gap:8px 20px;align-items:center;padding:16px 18px;border:0;border-bottom:1px solid #EEF1F4;background:none;text-align:left;cursor:pointer;color:#07090C" style-hover="background:#F6F8FA"><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:600">{{ u.name }}</span><span style="font-size:13px;color:#56616F">{{ u.addr }}</span></span><span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;color:{{ u.sFgL }}"><span style="width:8px;height:8px;border-radius:{{ u.sShape }};background:{{ u.sC }}"></span>{{ u.sLabel }}</span><span style="font-size:13px;color:#56616F">{{ u.counts }}</span><span style="color:#2359A5;justify-self:end" aria-hidden="true">›</span></button></sc-for>
+</div>
+<span style="font-size:13px;color:#56616F">Empresas com muitas unidades: busca, filtro por status e paginação de 25 por página.</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.unidade }}" hint-placeholder-val="{{ false }}">
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:16px">
+<sc-for list="{{ unitSystems }}" as="y" hint-placeholder-count="4"><span style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#56616F">{{ y.k }}</span><span style="display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:600"><span style="width:9px;height:9px;border-radius:{{ y.shape }};background:{{ y.c }}"></span>{{ y.v }}</span></span></sc-for>
+</section>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:16px;font-weight:700">Dados da unidade</h2><dl style="margin:0;display:flex;flex-direction:column;gap:8px;font-size:14px"><sc-for list="{{ unitInfo }}" as="i"><div style="display:grid;grid-template-columns:110px 1fr;gap:10px"><dt style="color:#56616F">{{ i.k }}</dt><dd style="margin:0">{{ i.v }}</dd></div></sc-for></dl></section>
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:16px;font-weight:700">Contatos de emergência</h2><sc-for list="{{ unitContacts }}" as="c"><div style="display:flex;gap:12px;align-items:baseline;padding:8px 0;border-top:1px solid #EEF1F4"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#2359A5">{{ c.n }}</span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ c.name }}</span><span style="font-size:13px;color:#56616F">{{ c.role }} · {{ c.tel }}</span></span></div></sc-for><span style="font-size:13px;color:#56616F">Alterações nos contatos são revisadas pela TIMP antes de entrar no protocolo.</span></section>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.chamados }}" hint-placeholder-val="{{ false }}">
+<div role="group" aria-label="Filtrar chamados" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px"><sc-for list="{{ tFilters }}" as="f" hint-placeholder-count="4"><button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" style="flex:none;height:40px;padding:0 14px;border-radius:4px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.color }};font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">{{ f.label }}</button></sc-for></div>
+<div style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px">
+<sc-for list="{{ ticketsView }}" as="t" hint-placeholder-count="4"><button type="button" onClick="{{ t.open }}" style="width:100%;display:grid;grid-template-columns:{{ tRowCols }};gap:6px 16px;align-items:center;padding:14px 18px;border:0;border-bottom:1px solid #EEF1F4;background:none;text-align:left;cursor:pointer;color:#07090C" style-hover="background:#F6F8FA"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#56616F">#{{ t.id }}</span><span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:15px;font-weight:600;line-height:1.35">{{ t.title }}</span><span style="font-size:13px;color:#56616F">{{ t.unit }} · aberto por {{ t.by }} · {{ t.when }}</span></span><span style="justify-self:start;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.05em;color:{{ t.sFg }};background:{{ t.sBg }};border-radius:3px;padding:3px 7px;white-space:nowrap">{{ t.status }}</span></button></sc-for>
+<sc-if value="{{ noTickets }}"><div style="padding:32px 18px;text-align:center;font-size:15px;color:#56616F">Nenhum chamado neste filtro.</div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.chamado }}" hint-placeholder-val="{{ false }}">
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;color:{{ tk.sFg }};background:{{ tk.sBg }};border-radius:3px;padding:4px 8px">{{ tk.status }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#56616F">#{{ tk.id }} · SLA de atendimento: {{ tk.sla }}</span></div>
+<ol aria-label="Progresso" style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px"><sc-for list="{{ tkProgress }}" as="p"><li title="{{ p.t }}" style="height:4px;border-radius:2px;background:{{ p.c }}"></li></sc-for></ol>
+<dl style="margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px 20px"><sc-for list="{{ tkMeta }}" as="m"><div style="display:flex;flex-direction:column;gap:3px"><dt style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#56616F">{{ m.k }}</dt><dd style="margin:0;font-size:14px;font-weight:500">{{ m.v }}</dd></div></sc-for></dl>
+</section>
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:4px">
+<h2 style="margin:0 0 8px;font-size:16px;font-weight:700">Histórico</h2>
+<sc-for list="{{ tkTimeline }}" as="e" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:14px minmax(0,1fr);gap:12px;padding:8px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid {{ e.c }};margin-top:5px"></span><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;line-height:1.5"><strong style="font-weight:600">{{ e.who }}</strong> {{ e.what }}</span><sc-if value="{{ e.body }}"><span style="font-size:14px;line-height:1.55;color:#232B36;background:#F6F8FA;border:1px solid #EEF1F4;border-radius:4px;padding:10px 12px">{{ e.body }}</span></sc-if><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#56616F">{{ e.t }}</span></span></div></sc-for>
+<form onSubmit="{{ addComment }}" style="display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid #EEF1F4"><label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:600">Adicionar comentário</span><textarea rows="3" value="{{ comment }}" onChange="{{ onComment }}" placeholder="Escreva uma atualização para a equipe técnica" style="border:1px solid #B6BEC9;border-radius:4px;font-size:16px;padding:10px 12px;resize:vertical"></textarea></label><div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between"><button type="button" style="height:44px;padding:0 14px;border:1px dashed #8A94A3;border-radius:4px;background:#FFFFFF;color:#343E4B;font-size:14px;font-weight:600;cursor:pointer">+ Anexar foto ou arquivo</button><button type="submit" style="height:44px;padding:0 18px;border:0;border-radius:4px;background:#2359A5;color:#FFFFFF;font-size:14px;font-weight:600;cursor:pointer">Enviar comentário</button></div></form>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.novo }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ novoOk }}"><section role="status" style="background:#FFFFFF;border:1px solid #2FBF71;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#1E7A48">CHAMADO CRIADO · #1045</span><span style="font-size:20px;font-weight:700">Recebemos seu chamado.</span><span style="font-size:15px;line-height:1.55;color:#343E4B">A equipe TIMP fará a triagem e você acompanhará cada atualização aqui e por e-mail.</span><div style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" onClick="{{ openNew }}" style="height:44px;padding:0 16px;border:0;border-radius:4px;background:#2359A5;color:#FFFFFF;font-size:14px;font-weight:600;cursor:pointer">Ver chamado</button><button type="button" onClick="{{ resetNovo }}" style="height:44px;padding:0 16px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;color:#07090C;font-size:14px;font-weight:600;cursor:pointer">Abrir outro</button></div></section></sc-if>
+<sc-if value="{{ novoForm }}">
+<form onSubmit="{{ submitNovo }}" novalidate="" style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:clamp(18px,3vw,28px);display:flex;flex-direction:column;gap:18px;max-width:760px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:600">Unidade *</span><select value="{{ nv.unit }}" onChange="{{ nvOn.unit }}" style="height:48px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;font-size:16px;padding:0 10px"><option value="Centro">Unidade Centro</option><option value="Barra">Unidade Barra</option><option value="Tijuca">Unidade Tijuca</option></select></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:600">Categoria *</span><select value="{{ nv.cat }}" onChange="{{ nvOn.cat }}" style="height:48px;border:1px solid {{ nvB.cat }};border-radius:4px;background:#FFFFFF;font-size:16px;padding:0 10px"><option value="">Selecione</option><option value="Câmeras / CFTV">Câmeras / CFTV</option><option value="Alarme">Alarme</option><option value="Controle de acesso">Controle de acesso</option><option value="Rede / Internet">Rede / Internet</option><option value="Wi-Fi">Wi-Fi</option><option value="Computadores / Suporte">Computadores / Suporte</option><option value="Outro">Outro</option></select><sc-if value="{{ nvE.cat }}"><span style="font-size:13px;color:#B42318">{{ nvE.cat }}</span></sc-if></label>
+</div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:600">Equipamento relacionado</span><select value="{{ nv.asset }}" onChange="{{ nvOn.asset }}" style="height:48px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;font-size:16px;padding:0 10px"><option value="">Não sei / nenhum</option><option value="CAM-04 · Câmera · Estoque">CAM-04 · Câmera · Estoque</option><option value="SW-01 · Switch · Rack">SW-01 · Switch · Rack</option><option value="AP-02 · Access Point · Salão">AP-02 · Access Point · Salão</option><option value="AMT-01 · Central de alarme">AMT-01 · Central de alarme</option></select></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:600">Resumo do problema *</span><input type="text" value="{{ nv.title }}" onChange="{{ nvOn.title }}" placeholder="Ex.: Câmera do estoque sem imagem" style="height:48px;border:1px solid {{ nvB.title }};border-radius:4px;font-size:16px;padding:0 12px"><sc-if value="{{ nvE.title }}"><span style="font-size:13px;color:#B42318">{{ nvE.title }}</span></sc-if></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:600">Descrição</span><textarea rows="4" value="{{ nv.desc }}" onChange="{{ nvOn.desc }}" placeholder="O que aconteceu, desde quando, o que já foi tentado" style="border:1px solid #B6BEC9;border-radius:4px;font-size:16px;padding:10px 12px;resize:vertical"></textarea></label>
+<fieldset style="margin:0;padding:0;border:0;display:flex;flex-direction:column;gap:8px"><legend style="font-size:14px;font-weight:600;padding:0 0 8px">Impacto na operação</legend><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px"><sc-for list="{{ prios }}" as="p" hint-placeholder-count="4"><button type="button" onClick="{{ p.pick }}" aria-pressed="{{ p.on }}" style="display:flex;flex-direction:column;gap:3px;min-height:64px;padding:10px 12px;border:1px solid {{ p.border }};background:{{ p.bg }};border-radius:4px;text-align:left;cursor:pointer;color:#07090C"><span style="font-size:15px;font-weight:600">{{ p.t }}</span><span style="font-size:12px;color:#56616F;line-height:1.35">{{ p.d }}</span></button></sc-for></div></fieldset>
+<button type="button" style="height:64px;border:1px dashed #8A94A3;border-radius:4px;background:#F6F8FA;color:#343E4B;font-size:14px;font-weight:600;cursor:pointer">+ Anexar fotos ou vídeos (opcional)</button>
+<button type="submit" style="height:52px;border:0;border-radius:4px;background:#2359A5;color:#FFFFFF;font-size:16px;font-weight:600;cursor:pointer">Abrir chamado</button>
+</form>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ show.equipamentos }}" hint-placeholder-val="{{ false }}">
+<div style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px">
+<sc-for list="{{ assetsView }}" as="a" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:{{ aRowCols }};gap:4px 16px;align-items:center;padding:13px 18px;border-bottom:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500">{{ a.id }}</span><span style="font-size:13px;color:#56616F">{{ a.type }}</span></span><span style="font-size:14px">{{ a.loc }}</span><span style="font-size:13px;color:#56616F">{{ a.maint }}</span><span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500"><span style="width:8px;height:8px;border-radius:{{ a.shape }};background:{{ a.c }}"></span>{{ a.status }}</span></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.monitoramento }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
+<sc-for list="{{ monUnits }}" as="u" hint-placeholder-count="3"><section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:12px"><span style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:16px;font-weight:700">UNIDADE {{ u.upper }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#56616F">{{ u.last }}</span></span><dl style="margin:0;display:grid;grid-template-columns:1fr 1fr;gap:10px"><sc-for list="{{ u.sys }}" as="y"><div style="display:flex;flex-direction:column;gap:3px"><dt style="font-size:12px;color:#56616F">{{ y.k }}</dt><dd style="margin:0;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600"><span style="width:8px;height:8px;border-radius:{{ y.shape }};background:{{ y.c }}"></span>{{ y.v }}</dd></div></sc-for></dl></section></sc-for>
+</div>
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px">
+<div style="padding:16px 18px;border-bottom:1px solid #EEF1F4;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0;font-size:17px;font-weight:700">Ocorrências recentes</h2><span style="font-size:13px;color:#56616F">Últimos 30 dias</span></div>
+<sc-for list="{{ occView }}" as="o" hint-placeholder-count="4"><div style="border-bottom:1px solid #EEF1F4"><button type="button" onClick="{{ o.toggle }}" aria-expanded="{{ o.open }}" style="width:100%;display:grid;grid-template-columns:{{ oRowCols }};gap:4px 16px;align-items:center;padding:13px 18px;border:0;background:none;text-align:left;cursor:pointer;color:#07090C"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#56616F">{{ o.when }}</span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ o.t }}</span><span style="font-size:13px;color:#56616F">Unidade {{ o.unit }} · {{ o.loc }}</span></span><span style="font-size:13px;font-weight:500">{{ o.result }}</span></button><sc-if value="{{ o.open }}"><div style="padding:0 18px 16px;display:flex;flex-direction:column;gap:6px"><sc-for list="{{ o.tl }}" as="e"><div style="display:grid;grid-template-columns:64px 1fr;gap:10px;font-size:14px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#56616F">{{ e.t }}</span><span>{{ e.w }}</span></div></sc-for></div></sc-if></div></sc-for>
+</section>
+</sc-if>
+
+<sc-if value="{{ show.lista }}" hint-placeholder-val="{{ false }}">
+<div style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px">
+<sc-for list="{{ listRows }}" as="r" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:600">{{ r.t }}</span><span style="font-size:13px;color:#56616F">{{ r.d }}</span></span><span style="font-size:13px;font-weight:600;color:{{ r.c }}">{{ r.a }}</span></div></sc-for>
+</div>
+<sc-if value="{{ listNote }}"><span style="font-size:13px;color:#56616F">{{ listNote }}</span></sc-if>
+</sc-if>
+
+<sc-if value="{{ show.perfil }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px">
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:16px;font-weight:700">Segurança da conta</h2>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Verificação em duas etapas</span><span style="font-size:13px;color:#56616F">Obrigatória para Cliente Admin</span></span><span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#1E7A48"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>Ativa</span></div><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Passkey · MacBook de Aline</span><span style="font-size:13px;color:#56616F">Principal · último uso hoje 09:02</span></span><button type="button" style="height:40px;padding:0 12px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;font-size:13px;font-weight:600;cursor:pointer;color:#B42318">Remover</button></div><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Aplicativo autenticador (TOTP)</span><span style="font-size:13px;color:#56616F">Reserva · último uso 12 set</span></span><button type="button" style="height:40px;padding:0 12px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;font-size:13px;font-weight:600;cursor:pointer;color:#B42318">Remover</button></div><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Códigos de recuperação</span><span style="font-size:13px;color:#56616F">8 de 10 disponíveis</span></span><button type="button" style="height:40px;padding:0 12px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;font-size:13px;font-weight:600;cursor:pointer;color:#07090C">Gerar novos</button></div><button type="button" style="height:44px;border:1px dashed #8A94A3;border-radius:4px;background:#F6F8FA;color:#07090C;font-size:14px;font-weight:600;cursor:pointer">+ Adicionar método</button><span style="font-size:12px;color:#56616F;line-height:1.5">Remover método, gerar códigos ou trocar a senha pede confirmação com passkey ou código e gera evento de segurança.</span>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Senha</span><span style="font-size:13px;color:#56616F">Alterada há 42 dias</span></span><button type="button" style="height:40px;padding:0 12px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;font-size:14px;font-weight:600;cursor:pointer">Trocar senha</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">Perfil de acesso</span><span style="font-size:13px;color:#56616F">Cliente Admin · Empresa Alfa</span></span></div>
+</section>
+<section style="background:#FFFFFF;border:1px solid #DCE1E7;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:6px"><h2 style="margin:0 0 6px;font-size:16px;font-weight:700">Sessões ativas</h2>
+<sc-for list="{{ sessions }}" as="x" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEF1F4"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ x.dev }}</span><span style="font-size:13px;color:#56616F">{{ x.meta }}</span></span><sc-if value="{{ x.cur }}"><span style="font-size:12px;font-weight:600;color:#2359A5">Esta sessão</span></sc-if><sc-if value="{{ x.other }}"><button type="button" onClick="{{ x.end }}" style="height:40px;padding:0 12px;border:1px solid #B6BEC9;border-radius:4px;background:#FFFFFF;font-size:13px;font-weight:600;cursor:pointer;color:#B42318">Encerrar</button></sc-if></div></sc-for>
+<h3 style="margin:14px 0 4px;font-size:14px;font-weight:700">Eventos de segurança</h3>
+<sc-for list="{{ secEvents }}" as="e"><div style="display:grid;grid-template-columns:96px 1fr;gap:10px;font-size:13px;padding:4px 0"><span style="font-family:'JetBrains Mono',monospace;color:#56616F">{{ e.t }}</span><span>{{ e.w }}</span></div></sc-for>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ screenNav }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:12px;border:1px dashed #E8A33D;border-radius:6px;background:#FFFBF2"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#9A6212;padding-right:4px">PROTÓTIPO · ESTADO DA TELA</span><sc-for list="{{ stateBtns }}" as="b" hint-placeholder-count="6"><button type="button" onClick="{{ b.pick }}" style="height:30px;padding:0 10px;border-radius:3px;border:1px solid {{ b.border }};background:{{ b.bg }};color:#07090C;font-size:12px;font-weight:600;cursor:pointer">{{ b.label }}</button></sc-for></div>
+</sc-if>
+</main>
+
+<sc-if value="{{ isM }}" hint-placeholder-val="{{ false }}">
+<nav aria-label="Navegação principal" style="position:fixed;left:0;right:0;bottom:0;z-index:30;background:#FFFFFF;border-top:1px solid #DCE1E7;display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom)">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5"><button type="button" onClick="{{ t.go }}" aria-current="{{ t.cur }}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:62px;border:0;background:none;color:{{ t.color }};font-size:11px;font-weight:600;cursor:pointer"><span style="font-family:'JetBrains Mono',monospace;font-size:{{ t.codeSize }};line-height:1;color:{{ t.codeColor }};width:{{ t.dot }};height:{{ t.dot }};display:flex;align-items:center;justify-content:center;border-radius:50%;background:{{ t.dotBg }}">{{ t.code }}</span>{{ t.label }}</button></sc-for>
+</nav>
+<sc-if value="{{ moreOpen }}"><div onClick="{{ closeMore }}" style="position:fixed;inset:0;background:rgba(7,9,12,.45);z-index:35"></div><div role="dialog" aria-label="Mais opções" style="position:fixed;left:0;right:0;bottom:0;z-index:36;background:#FFFFFF;border-radius:12px 12px 0 0;padding:10px 16px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column"><span style="width:40px;height:4px;border-radius:2px;background:#DCE1E7;align-self:center;margin-bottom:10px"></span><sc-for list="{{ moreItems }}" as="n"><button type="button" onClick="{{ n.go }}" style="display:flex;align-items:center;gap:14px;min-height:52px;border:0;border-bottom:1px solid #EEF1F4;background:none;color:#07090C;font-size:16px;font-weight:600;text-align:left;cursor:pointer"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#2359A5;min-width:26px">{{ n.code }}</span>{{ n.label }}</button></sc-for></div></sc-if>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;screenNav&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Protótipo&quot;}}">
+const NAV = [['dashboard', 'Dashboard', 'DB'], ['empresa', 'Empresa', 'EM'], ['unidades', 'Unidades', 'UN'], ['chamados', 'Chamados', 'CH'], ['novo', 'Novo chamado', '+'], ['equipamentos', 'Equipamentos', 'EQ'], ['monitoramento', 'Monitoramento', '24'], ['ocorrencias', 'Ocorrências', 'OC'], ['relatorios', 'Relatórios', 'RL'], ['documentos', 'Documentos', 'DC'], ['usuarios', 'Usuários', 'US'], ['perfil', 'Perfil', 'PF']];
+const UNITS = [
+  { name: 'Unidade Centro', key: 'Centro', addr: 'Av. Rio Branco, 000 · Centro, Rio de Janeiro', s: 'ok', note: 'Todos os sistemas online', counts: '14 equipamentos · 1 chamado' },
+  { name: 'Unidade Barra', key: 'Barra', addr: 'Av. das Américas, 000 · Barra da Tijuca', s: 'ok', note: 'Ocorrência encerrada às 02:14', counts: '22 equipamentos · 1 chamado' },
+  { name: 'Unidade Tijuca', key: 'Tijuca', addr: 'Rua Conde de Bonfim, 000 · Tijuca', s: 'warn', note: 'NVR sem comunicação desde 06:12', counts: '11 equipamentos · 1 chamado' }
+];
+const ST = { ok: ['NORMAL', '#2FBF71', '#5FD49A', '#1E7A48', '50%'], warn: ['ATENÇÃO', '#E8A33D', '#F2C27A', '#9A6212', '2px'], off: ['OFFLINE', '#E5484D', '#FF8A8D', '#B42318', '2px'] };
+const TS = { 'NOVO': ['#11305E', '#DCEBFF'], 'TRIAGEM': ['#11305E', '#DCEBFF'], 'EM ATENDIMENTO': ['#FFFFFF', '#2359A5'], 'AGUARDANDO CLIENTE': ['#6B4308', '#FCEBD0'], 'RESOLVIDO': ['#14532D', '#D6F5E3'], 'ENCERRADO': ['#343E4B', '#EEF1F4'] };
+const TICKETS = [
+  { id: 1044, title: 'NVR da Unidade Tijuca sem comunicação', unit: 'Tijuca', by: 'TIMP (automático)', when: 'hoje, 06:20', status: 'TRIAGEM', open: true },
+  { id: 1042, title: 'Câmera CAM-04 do estoque sem imagem', unit: 'Barra', by: 'Aline Souza', when: 'ontem, 16:05', status: 'EM ATENDIMENTO', open: true },
+  { id: 1039, title: 'Novo ponto de rede na sala 2', unit: 'Centro', by: 'Thiago Lima', when: '22 set', status: 'AGUARDANDO CLIENTE', open: true },
+  { id: 1031, title: 'Wi-Fi instável no salão', unit: 'Barra', by: 'Aline Souza', when: '15 set', status: 'RESOLVIDO', open: false },
+  { id: 1024, title: 'Troca de bateria do controle XAC', unit: 'Centro', by: 'Thiago Lima', when: '02 set', status: 'ENCERRADO', open: false }
+];
+const LIFE = ['NOVO', 'TRIAGEM', 'ATRIBUÍDO', 'EM ATENDIMENTO', 'AGUARDANDO CLIENTE', 'AGUARDANDO TERCEIRO', 'RESOLVIDO', 'ENCERRADO'];
+const ASSETS = [
+  ['CAM-04', 'Câmera IP', 'Barra · Estoque', 'Manut. 12 ago', 'Com chamado', 'warn'], ['CAM-07', 'Câmera IP', 'Barra · Entrada lateral', 'Manut. 12 ago', 'Online', 'ok'], ['NVR-01', 'NVR', 'Tijuca · Rack', 'Manut. 30 jul', 'Sem comunicação', 'off'],
+  ['AMT-01', 'Central de alarme', 'Barra · Recepção', 'Manut. 12 ago', 'Online', 'ok'], ['SW-01', 'Switch PoE', 'Centro · Rack', 'Manut. 05 ago', 'Online', 'ok'], ['AP-02', 'Access Point', 'Barra · Salão', 'Manut. 15 set', 'Online', 'ok'], ['LNK-01', 'Starlink (contingência)', 'Tijuca · Cobertura', 'Instalado 10 jun', 'Em espera', 'ok']
+];
+const OCC = [
+  { when: 'Hoje 02:14', t: 'Abertura fora do horário', unit: 'Barra', loc: 'Entrada lateral · Zona 03', result: 'Encerrada · falso positivo', tl: [['02:14', 'Evento recebido pela Central TIMP'], ['02:15', 'Câmeras verificadas pelo operador'], ['02:16', 'Contato com Aline Souza (responsável principal)'], ['02:30', 'Encerrada: acesso de funcionário autorizado']] },
+  { when: '21 set 23:48', t: 'Sensor disparado', unit: 'Centro', loc: 'Estoque · Zona 05', result: 'Encerrada · falha técnica', tl: [['23:48', 'Evento recebido'], ['23:49', 'Verificação por câmeras: sem movimento'], ['23:55', 'Chamado técnico aberto para o sensor']] },
+  { when: '18 set 19:12', t: 'Falha de energia', unit: 'Tijuca', loc: 'Central de alarme', result: 'Encerrada · normalizado', tl: [['19:12', 'Evento recebido'], ['19:40', 'Energia restabelecida']] }
+];
+const STATES = { normal: null, loading: {}, vazio: { tag: 'VAZIO', c: '#B6BEC9', fg: '#343E4B', bg: '#F6F8FA', t: 'Nada por aqui ainda', d: 'Quando houver registros nesta área, eles aparecerão aqui.', cta: 'Voltar' }, erro: { tag: 'ERRO', c: '#E5484D', fg: '#B42318', bg: '#FDECEC', t: 'Não foi possível carregar', d: 'Houve uma falha ao buscar os dados. Seus registros estão preservados.', cta: 'Tentar novamente' }, offline: { tag: 'SEM CONEXÃO', c: '#8A94A3', fg: '#343E4B', bg: '#EEF1F4', t: 'Você está offline', d: 'Mostrando os últimos dados salvos. Novas ações ficam pendentes até a conexão voltar.', cta: 'Tentar reconectar' }, permissao: { tag: 'SEM PERMISSÃO', c: '#E8A33D', fg: '#9A6212', bg: '#FCEBD0', t: 'Você não tem acesso a esta área', d: 'Peça ao administrador da sua empresa para liberar este módulo no seu perfil.', cta: 'Voltar ao dashboard' } };
+class Component extends DCLogic {
+  state = { vw: typeof window !== 'undefined' ? window.innerWidth : 1440, scr: 'dashboard', hist: [], unit: 'Barra', tkId: 1042, tf: 'abertos', uf: 'all', occOpen: 0, more: false, st: 'normal', comment: '', extra: [], nv: { unit: 'Barra', cat: '', asset: '', title: '', desc: '', prio: 'normal' }, nvE: {}, novoOk: false, ended: [] };
+  componentDidMount() { this.onR = () => this.setState({ vw: window.innerWidth }); window.addEventListener('resize', this.onR); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); }
+  go = (scr, extra) => () => this.setState(st => ({ scr, hist: [...st.hist, st.scr], more: false, st: 'normal', ...(extra || {}) }));
+  renderVals() {
+    const s = this.state, vw = s.vw, isM = vw < 768, isT = vw >= 768 && vw < 1280, isD = vw >= 1280;
+    const ufOk = u => s.uf === 'all' || u === s.uf;
+    const tMap = t => ({ ...t, sFg: TS[t.status][0], sBg: TS[t.status][1], unit: 'Unidade ' + t.unit, open: this.go('chamado', { tkId: t.id }) });
+    const allT = [...(s.extra.length ? [{ id: 1045, title: s.nv.title, unit: s.nv.unit, by: 'Aline Souza', when: 'agora', status: 'NOVO', open: true }] : []), ...TICKETS];
+    const tFiltered = allT.filter(t => ufOk(t.unit) && (s.tf === 'todos' || (s.tf === 'abertos' ? t.open : !t.open)));
+    const tk = allT.find(t => t.id === s.tkId) || TICKETS[1];
+    const u = UNITS.find(x => x.key === s.unit) || UNITS[1];
+    const titles = { dashboard: ['VISÃO GERAL', 'Olá, Aline'], empresa: ['EMPRESA', 'Empresa Alfa Comércio Ltda.'], unidades: ['UNIDADES', 'Unidades'], unidade: ['UNIDADE', u.name], chamados: ['HELP DESK', 'Chamados'], chamado: ['CHAMADO #' + tk.id, tk.title], novo: ['HELP DESK', 'Novo chamado'], equipamentos: ['INVENTÁRIO', 'Equipamentos'], monitoramento: ['MONITORAMENTO 24H', 'Monitoramento'], ocorrencias: ['MONITORAMENTO 24H', 'Monitoramento'], relatorios: ['RELATÓRIOS', 'Relatórios'], documentos: ['DOCUMENTOS', 'Documentos'], usuarios: ['USUÁRIOS DA EMPRESA', 'Usuários'], perfil: ['PERFIL', 'Aline Souza'] };
+    const scr = s.scr === 'ocorrencias' ? 'monitoramento' : s.scr;
+    const listScreens = { empresa: [[['Razão social', 'Empresa Alfa Comércio Ltda. · CNPJ 11.111.111/0001-11', 'Ativa', '#1E7A48'], ['Contrato', 'Suporte + Monitoramento 24h · renovação em mar/2027', 'Vigente', '#1E7A48'], ['Unidades', '3 unidades cadastradas', 'Ver', '#2359A5'], ['Gestor TIMP', 'Equipe de contas · comercial@timp.com.br', '', '#2359A5']], ''],
+      relatorios: [[['Monitoramento · agosto 2026', 'Ocorrências, tempos de resposta e classificações', 'Baixar PDF', '#2359A5'], ['Chamados · agosto 2026', 'Chamados abertos, resolvidos e tempo médio', 'Baixar PDF', '#2359A5'], ['Inventário de equipamentos', 'Atualizado em 15 set', 'Baixar XLSX', '#2359A5']], 'Relatórios gerados pela TIMP. Não há edição pelo cliente.'],
+      documentos: [[['Contrato de prestação de serviços', 'PDF · assinado em mar/2025', 'Abrir', '#2359A5'], ['Protocolo de monitoramento · Unidade Barra', 'PDF · versão 3 · 02 set', 'Abrir', '#2359A5'], ['Projeto de CFTV · Unidade Centro', 'PDF · as built', 'Abrir', '#2359A5'], ['Relatório mensal · agosto', 'Novo', 'Abrir', '#2359A5']], ''],
+      usuarios: [[['Aline Souza', 'Cliente Admin · aline@empresaalfa.com.br · MFA ativo', 'Você', '#343E4B'], ['Thiago Lima', 'Cliente Usuário · Unidade Centro · último acesso ontem', 'Editar', '#2359A5'], ['Marina Costa', 'Cliente Usuário · aguardando aprovação (Cliente Admin ou TIMP)', 'Aprovar', '#9A6212']], 'Cliente Admin aprova usuários comuns. Promoção a Cliente Admin é feita somente pela TIMP. Toda aprovação gera auditoria.'] };
+    const show = {}; ['dashboard', 'unidades', 'unidade', 'chamados', 'chamado', 'novo', 'equipamentos', 'monitoramento', 'perfil'].forEach(k => show[k] = scr === k && s.st === 'normal'); show.lista = !!listScreens[scr] && s.st === 'normal';
+    const stObj = STATES[s.st];
+    const tl = [{ who: 'Aline Souza', what: 'abriu o chamado', t: 'ontem 16:05', c: '#2359A5', body: 'A câmera do estoque está sem imagem desde a manhã.' }, { who: 'TIMP', what: 'fez a triagem · prioridade Normal', t: 'ontem 16:20', c: '#8A94A3' }, { who: 'Técnico Rafael', what: 'assumiu o chamado', t: 'ontem 16:32', c: '#2359A5' }, { who: 'Técnico Rafael', what: 'comentou', t: 'hoje 09:10', c: '#2359A5', body: 'Visita agendada para hoje às 14h. Vamos verificar o cabo e a porta PoE do switch.' }, ...s.extra.map(b => ({ who: 'Aline Souza', what: 'comentou', t: 'agora', c: '#2359A5', body: b }))];
+    const nvOn = {}; Object.keys(s.nv).forEach(k => nvOn[k] = e => { const v = e.target.value; this.setState(st => ({ nv: { ...st.nv, [k]: v }, nvE: { ...st.nvE, [k]: null } })); });
+    const sysSt = (v, k) => ({ k, v, c: v === 'Online' || v === 'Ativo' ? '#2FBF71' : v === 'Sem comunicação' ? '#E8A33D' : '#8A94A3', shape: v === 'Online' || v === 'Ativo' ? '50%' : '2px' });
+    const tabs = [['dashboard', 'Início', 'DB'], ['chamados', 'Chamados', 'CH'], ['novo', 'Novo', '+'], ['monitoramento', '24h', '24'], ['more', 'Mais', '···']];
+    return {
+      isM, isD, showSide: !isM, sideW: isD ? '248px' : '84px', sidePad: isD ? '18px' : '12px', screenNav: this.props.screenNav ?? true,
+      nav: NAV.map(([k, label, code]) => { const on = scr === k || (k === 'unidades' && scr === 'unidade') || (k === 'chamados' && scr === 'chamado'); return { label: isD ? label : label.split(' ')[0], code, go: this.go(k), cur: on ? 'page' : undefined, bg: on ? '#11305E' : 'transparent', color: on ? '#FFFFFF' : '#B6BEC9', codeColor: on ? '#8CC2FF' : '#56616F', fw: on ? 600 : 500, dir: isD ? 'row' : 'column', jc: isD ? 'flex-start' : 'center', fs: isD ? '14px' : '10px', badge: k === 'chamados' && isD ? '3' : '' }; }),
+      eyebrow: titles[s.scr][0], title: titles[s.scr][1], canBack: ['unidade', 'chamado'].includes(scr), backLabel: isM ? 'Voltar' : scr === 'unidade' ? 'Unidades' : 'Chamados', showMLogo: isM && !['unidade', 'chamado'].includes(scr), selMax: isM ? '130px' : '170px', back: this.go(scr === 'unidade' ? 'unidades' : 'chamados'),
+      unitFilter: s.uf, onUnit: e => this.setState({ uf: e.target.value }), unitLabelDisp: isM ? 'none' : 'inline', goNovo: this.go('novo', { novoOk: false }), novoLabel: isM ? '+ Chamado' : '+ Novo chamado', mainPadB: isM ? '96px' : '48px',
+      show, stateOn: s.st !== 'normal', stLoading: s.st === 'loading', stNotLoading: s.st !== 'loading', st: stObj || {}, stRole: s.st === 'erro' ? 'alert' : 'status', skel: ['28px', '64px', '64px', '64px'], clearState: () => this.setState({ st: 'normal', scr: s.st === 'permissao' ? 'dashboard' : s.scr }),
+      stateBtns: [['normal', 'Normal'], ['loading', 'Carregando'], ['vazio', 'Vazio'], ['erro', 'Erro'], ['offline', 'Offline'], ['permissao', 'Sem permissão']].map(([k, label]) => ({ label, pick: () => this.setState({ st: k }), border: s.st === k ? '#E8A33D' : '#DCE1E7', bg: s.st === k ? '#FCEBD0' : '#FFFFFF' })),
+      unitsView: UNITS.filter(x => ufOk(x.key)).map(x => ({ ...x, sLabel: ST[x.s][0], sC: ST[x.s][1], sFg: ST[x.s][2], sFgL: ST[x.s][3], sShape: ST[x.s][4], open: this.go('unidade', { unit: x.key }) })),
+      unitRowCols: isM ? 'minmax(0,1fr) auto' : 'minmax(0,2fr) 120px minmax(0,1fr) 16px',
+      openCount: allT.filter(t => t.open && ufOk(t.unit)).length, openTickets: allT.filter(t => t.open && ufOk(t.unit)).slice(0, 3).map(tMap),
+      goChamados: this.go('chamados'), goEquip: this.go('equipamentos'), goMonit: this.go('monitoramento'), goDocs: this.go('documentos'),
+      unitSystems: [sysSt('Ativo', 'MONITORAMENTO'), sysSt('Online', 'ALARME'), sysSt(u.s === 'warn' ? 'Sem comunicação' : 'Online', 'CFTV'), sysSt('Online', 'CONTROLE DE ACESSO')],
+      unitInfo: [['Endereço', u.addr], ['Contrato', 'Suporte + Monitoramento 24h'], ['Horário', '08h–19h, seg a sáb'], ['Equipamentos', u.counts.split(' · ')[0]], ['Protocolo', 'Versão 3 · atualizado 02 set']].map(([k, v]) => ({ k, v })),
+      unitContacts: [['1', 'Aline Souza', 'Responsável principal', '(21) 9 0000-0001'], ['2', 'Thiago Lima', 'Responsável secundário', '(21) 9 0000-0002']].map(([n, name, role, tel]) => ({ n, name, role, tel })),
+      tFilters: [['abertos', 'Abertos'], ['fechados', 'Resolvidos e encerrados'], ['todos', 'Todos']].map(([k, label]) => ({ label, on: s.tf === k, pick: () => this.setState({ tf: k }), border: s.tf === k ? '#07090C' : '#B6BEC9', bg: s.tf === k ? '#07090C' : '#FFFFFF', color: s.tf === k ? '#FFFFFF' : '#07090C' })),
+      ticketsView: tFiltered.map(tMap), noTickets: tFiltered.length === 0, tRowCols: isM ? '56px minmax(0,1fr)' : '64px minmax(0,1fr) auto',
+      tk: { ...tMap(tk), sla: tk.status === 'EM ATENDIMENTO' ? 'dentro do prazo · resolução até hoje 18h' : 'em análise' },
+      tkProgress: LIFE.map((t, i) => ({ t, c: i <= LIFE.indexOf(tk.status === 'TRIAGEM' ? 'TRIAGEM' : tk.status) ? '#2359A5' : '#DCE1E7' })),
+      tkMeta: [['EMPRESA', 'Empresa Alfa'], ['UNIDADE', 'Unidade ' + tk.unit], ['ABERTO POR', tk.by], ['EQUIPAMENTO', 'CAM-04 · Câmera IP'], ['CATEGORIA', 'Câmeras / CFTV'], ['PRIORIDADE', 'Normal'], ['TÉCNICO', 'Técnico Rafael'], ['ABERTO EM', tk.when]].map(([k, v]) => ({ k, v })),
+      tkTimeline: tl, comment: s.comment, onComment: e => this.setState({ comment: e.target.value }), addComment: e => { e.preventDefault(); if (s.comment.trim()) this.setState(st => ({ extra: [...st.extra, st.comment], comment: '' })); },
+      nv: s.nv, nvOn, nvE: s.nvE, nvB: { cat: s.nvE.cat ? '#B42318' : '#B6BEC9', title: s.nvE.title ? '#B42318' : '#B6BEC9' },
+      prios: [['baixa', 'Baixo', 'Pode esperar'], ['normal', 'Normal', 'Atrapalha, mas funciona'], ['alta', 'Alto', 'Afeta parte da operação'], ['urgente', 'Crítico', 'Operação parada ou risco à segurança']].map(([k, t, d]) => ({ t, d, on: s.nv.prio === k, pick: () => this.setState(st => ({ nv: { ...st.nv, prio: k } })), border: s.nv.prio === k ? '#2359A5' : '#DCE1E7', bg: s.nv.prio === k ? '#EEF4FC' : '#FFFFFF' })),
+      novoOk: s.novoOk, novoForm: !s.novoOk,
+      submitNovo: e => { e.preventDefault(); const x = {}; if (!s.nv.cat) x.cat = 'Selecione a categoria.'; if (!s.nv.title.trim()) x.title = 'Descreva o problema em poucas palavras.'; if (Object.keys(x).length) return this.setState({ nvE: x }); this.setState({ novoOk: true, extra: [] }); },
+      openNew: this.go('chamado', { tkId: 1045 }), resetNovo: () => this.setState({ novoOk: false, nv: { unit: 'Barra', cat: '', asset: '', title: '', desc: '', prio: 'normal' } }),
+      assetsView: ASSETS.filter(a => ufOk(a[2].split(' · ')[0])).map(([id, type, loc, maint, status, k]) => ({ id, type, loc, maint, status, c: ST[k][1], shape: ST[k][4] })), aRowCols: isM ? 'minmax(0,1fr) auto' : 'minmax(0,1fr) minmax(0,1.2fr) 120px 150px',
+      monUnits: UNITS.filter(x => ufOk(x.key)).map(x => ({ upper: x.key.toUpperCase(), last: 'última comunicação 09:40', sys: [sysSt('Ativo', 'Monitoramento'), sysSt('Online', 'Alarme'), sysSt(x.s === 'warn' ? 'Sem comunicação' : 'Online', 'CFTV'), sysSt('Online', 'Controle de acesso')] })),
+      occView: OCC.filter(o => ufOk(o.unit)).map((o, i) => ({ ...o, open: s.occOpen === i, toggle: () => this.setState(st => ({ occOpen: st.occOpen === i ? -1 : i })), tl: o.tl.map(([t, w]) => ({ t, w })) })), oRowCols: isM ? 'minmax(0,1fr)' : '110px minmax(0,1fr) 200px',
+      listRows: (listScreens[scr] || [[]])[0].map(([t, d, a, c]) => ({ t, d, a, c })), listNote: (listScreens[scr] || [[], ''])[1],
+      sessions: [['Chrome · Windows', 'Rio de Janeiro · agora', true], ['App iPhone', 'Rio de Janeiro · há 2 h', false], ['Safari · MacBook', 'Niterói · há 5 dias', false]].filter((x, i) => !s.ended.includes(i)).map(([dev, meta, cur], i) => ({ dev, meta, cur, other: !cur, end: () => this.setState(st => ({ ended: [...st.ended, i] })) })),
+      secEvents: [['hoje 09:02', 'Login com verificação em duas etapas'], ['20 set 18:40', 'Senha alterada'], ['12 set 08:15', 'Novo dispositivo: App iPhone']].map(([t, w]) => ({ t, w })),
+      tabs: tabs.map(([k, label, code]) => { const on = k === 'more' ? s.more : scr === k || (k === 'chamados' && scr === 'chamado'); const plus = k === 'novo'; return { label, code, go: k === 'more' ? () => this.setState(st => ({ more: !st.more })) : this.go(k), cur: on ? 'page' : undefined, color: plus ? '#FFFFFF' : on ? '#2359A5' : '#56616F', dot: plus ? '30px' : 'auto', dotBg: plus ? '#2359A5' : 'transparent', codeSize: plus ? '16px' : '11px', codeColor: plus ? '#FFFFFF' : (on ? '#2359A5' : '#56616F') }; }).map(t => ({ ...t, color: t.dotBg === '#2359A5' ? '#2359A5' : t.color })),
+      moreOpen: s.more, closeMore: () => this.setState({ more: false }), moreItems: NAV.filter(([k]) => !['dashboard', 'chamados', 'novo', 'monitoramento'].includes(k)).map(([k, label, code]) => ({ label, code, go: this.go(k) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

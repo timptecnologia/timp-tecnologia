@@ -1,0 +1,47 @@
+# --- dependencies ---
+node_modules/
+.pnp
+.pnp.*
+
+# --- build / output ---
+.next/
+out/
+build/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- env & secrets (NEVER commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials*.json
+service-account*.json
+
+# --- supabase local state ---
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+
+# --- vercel ---
+.vercel
+
+# --- logs / temp ---
+npm-debug.log*
+*.log
+tmp/
+temp/
+.cache/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

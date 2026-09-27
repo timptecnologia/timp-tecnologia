@@ -1,0 +1,6 @@
+#!/bin/sh
+# TIMP — pre-commit: bloqueia segredos e alterações em design-reference/.
+# Ativado por: git config core.hooksPath .githooks (ver README).
+set -e
+node scripts/secret-scan.mjs
+node scripts/check-design-reference.mjs

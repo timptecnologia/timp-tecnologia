@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<footer style="background:#000;border-top:1px solid #171D26;font-family:'Archivo',system-ui,sans-serif;color:#EEF1F4">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,6vw,88px) clamp(20px,5vw,64px) 32px;display:flex;flex-direction:column;gap:40px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:{{ colGap }}">
+<div style="display:flex;flex-direction:column;gap:18px;padding-bottom:{{ brandPadB }};grid-column:span {{ footSpan }}">
+<img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP Tecnologia" style="height:48px;width:auto;align-self:flex-start">
+<p style="margin:0;font-size:15px;line-height:1.6;color:#8A94A3;max-width:24em">Infraestrutura, conectividade, segurança, automação e suporte tecnológico. Rio de Janeiro/RJ, desde 2016.</p>
+</div>
+<sc-for list="{{ footCols }}" as="c" hint-placeholder-count="4">
+<nav aria-label="{{ c.t }}" style="display:flex;flex-direction:column;gap:{{ navGap }};border-top:{{ accBorder }}">
+<sc-if value="{{ notM }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#56616F">{{ c.t }}</span></sc-if>
+<sc-if value="{{ isM }}"><button type="button" aria-expanded="{{ c.open }}" aria-controls="{{ c.id }}" onClick="{{ c.toggle }}" style="display:flex;justify-content:space-between;align-items:center;width:100%;min-height:52px;padding:0;background:none;border:0;color:#DCE1E7;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;cursor:pointer" style-focus="outline:2px solid #4C9BEA;outline-offset:2px">{{ c.t }}<span aria-hidden="true" style="font-size:16px;color:#4C9BEA">{{ c.sign }}</span></button></sc-if>
+<sc-if value="{{ c.show }}"><div id="{{ c.id }}" style="display:flex;flex-direction:column;gap:{{ linkGap }};padding-bottom:{{ accPadB }}"><sc-for list="{{ c.links }}" as="l"><a href="{{ l.href }}" style="font-size:15px;color:#B6BEC9;padding:{{ linkPad }};text-decoration:none" style-hover="color:#FFFFFF">{{ l.label }}</a></sc-for></div></sc-if>
+</nav>
+</sc-for>
+</div>
+<nav aria-label="Atendimento" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,{{ contactMin }}),1fr));border-top:1px solid #171D26;border-bottom:1px solid #171D26">
+<sc-for list="{{ contacts }}" as="k" hint-placeholder-count="5"><a href="{{ k.href }}" target="{{ k.target }}" rel="noopener" style="display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:76px;padding:14px 20px 14px 0;color:#EEF1F4;text-decoration:none;transition:color 150ms" style-hover="color:#8CC2FF"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#56616F">{{ k.k }}</span><span style="font-size:15px;font-weight:600;white-space:nowrap">{{ k.v }}</span></a></sc-for>
+</nav>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px 32px;font-size:13px;color:#8A94A3;line-height:1.5">
+<span>© 2016–2026 TIMP Tecnologia · Rio de Janeiro/RJ</span>
+<span>Atendimento em todo o estado do Rio de Janeiro. Projetos personalizados em todo o Brasil.</span>
+</div>
+<p style="margin:0;text-align:center;font-size:13px;color:#8A94A3"><a href="https://kinaucompany.com.br/" target="_blank" rel="noopener" style="color:#B6BEC9;text-decoration:none;border-radius:2px;transition:color 150ms,opacity 150ms" style-hover="color:#FFFFFF;text-decoration:none" style-focus="outline:2px solid #4C9BEA;outline-offset:3px;color:#FFFFFF">Criação de Site Profissional</a> por Kinau Company</p>
+<sc-if value="{{ isM }}"><div style="height:64px"></div></sc-if>
+</div>
+</footer>
+<sc-if value="{{ stickyAllowed }}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="{{ stickyHidden }}" style="position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(7,9,12,.96);border-top:1px solid #232B36;padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;font-family:'Archivo',system-ui,sans-serif;transform:{{ stickyT }};opacity:{{ stickyO }};pointer-events:{{ stickyPE }};transition:transform 280ms cubic-bezier(.2,0,0,1),opacity 200ms">
+<a href="{{ ctaHref }}" tabindex="{{ stickyTab }}" style="flex:1;display:flex;align-items:center;justify-content:center;height:48px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap">{{ ctaLabel }}</a>
+<a href="{{ wa }}" tabindex="{{ stickyTab }}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp" style="flex:none;display:flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 14px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:14px;font-weight:600;text-decoration:none"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>WhatsApp</a>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;520px&quot;},&quot;ctaLabel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Solicitar um projeto&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;ctaHref&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#contato&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;waText&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Olá, TIMP. Vim pelo site e quero falar sobre um projeto.&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;stickyCta&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const SV = s => 'Pagina%20de%20Servico.dc.html?s=' + s;
+const SM = 'Monitoramento%2024h.dc.html', SE = 'Seguranca%20Eletronica.dc.html', SL = 'Instalacao%20Starlink.dc.html', CE = 'Construtoras%20e%20Engenharia.dc.html';
+class Component extends DCLogic {
+  state = { vw: typeof window !== 'undefined' ? window.innerWidth : 1440, heroVis: true, finalVis: false, acc: null };
+  componentDidMount() {
+    this.onR = () => this.setState({ vw: window.innerWidth });
+    window.addEventListener('resize', this.onR);
+    const attach = () => {
+      const hero = document.querySelector('[data-hero-cta]'), fin = document.querySelector('[data-final-cta]');
+      if (!hero && !fin) return false;
+      this.io = new IntersectionObserver(es => es.forEach(e => {
+        if (e.target === hero) this.setState({ heroVis: e.isIntersecting || e.boundingClientRect.top > 0 });
+        if (e.target === fin) this.setState({ finalVis: e.isIntersecting });
+      }), { threshold: 0 });
+      if (hero) this.io.observe(hero); else this.setState({ heroVis: false });
+      if (fin) this.io.observe(fin);
+      return true;
+    };
+    if (!attach()) this.t = setTimeout(attach, 600);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); this.io && this.io.disconnect(); clearTimeout(this.t); }
+  renderVals() {
+    const s = this.state, isM = s.vw < 768;
+    const show = isM && !s.heroVis && !s.finalVis;
+    const footCols = [
+      { t: 'SERVIÇOS', links: [['Cabeamento Estruturado', SV('cabeamento')], ['CFTV e Câmeras', SV('cftv')], ['Controle de Acesso', SV('acesso')], ['Wi-Fi Empresarial', SV('wifi')], ['Instalação de Starlink', SL], ['Monitoramento 24h', SM], ['Todos os serviços', 'Home.dc.html#ecossistemas']] },
+      { t: 'SOLUÇÕES', links: [['Construtoras e Engenharia', CE], ['Empresas e Escritórios', '#'], ['Condomínios', '#'], ['Clínicas', '#'], ['Comércio e Restaurantes', '#'], ['Indústrias e Galpões', '#'], ['Empresas com Múltiplas Unidades', '#']] },
+      { t: 'TIMP', links: [['Empresa', 'Home.dc.html#empresa'], ['Equipamentos e tecnologia', '#'], ['Projetos', 'Home.dc.html#projetos'], ['Clientes e parceiros', '#'], ['Conhecimento', 'Conhecimento.dc.html'], ['Contato', '#contato']] },
+    ].map((c, i) => ({ t: c.t, id: 'foot-acc-' + i, open: this.state.acc === i, show: !isM || this.state.acc === i, sign: this.state.acc === i ? '−' : '+', toggle: () => this.setState(st => ({ acc: st.acc === i ? null : i })), links: c.links.map(([label, href]) => ({ label, href })) }));
+    const contacts = [['WHATSAPP', '(21) 98331-8387', 'https://wa.me/5521983318387', '_blank'], ['E-MAIL', 'comercial@timp.com.br', 'mailto:comercial@timp.com.br', '_self'], ['INSTAGRAM', '@timp.br', 'https://instagram.com/timp.br', '_blank'], ['FACEBOOK', '@timp.br', 'https://facebook.com/timp.br', '_blank'], ['CLIENTES', 'Área do Cliente →', 'Auth.dc.html', '_self']].map(([k, v, href, target]) => ({ k, v, href, target }));
+    return {
+      footCols, contacts, notM: !isM, colGap: isM ? '0 32px' : '40px 32px', brandPadB: isM ? '28px' : '0', navGap: isM ? '0' : '12px', accBorder: isM ? '1px solid #171D26' : '0', linkGap: isM ? '0' : '12px', linkPad: isM ? '10px 0' : '2px 0', accPadB: isM ? '8px' : '0', contactMin: s.vw < 768 ? '150px' : '180px', footSpan: s.vw >= 1280 ? 2 : 1, isM,
+      stickyAllowed: isM && (this.props.stickyCta ?? true),
+      stickyT: show ? 'translateY(0)' : 'translateY(110%)', stickyO: show ? 1 : 0, stickyPE: show ? 'auto' : 'none', stickyHidden: !show, stickyTab: show ? 0 : -1,
+      ctaLabel: this.props.ctaLabel || 'Solicitar um projeto', ctaHref: this.props.ctaHref || '#contato',
+      wa: 'https://wa.me/5521983318387?text=' + encodeURIComponent(this.props.waText || 'Olá, TIMP. Vim pelo site e quero falar sobre um projeto.')
+    };
+  }
+}
+</script>
+</body>
+</html>

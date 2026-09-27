@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Serviços | TIMP Tecnologia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07090C;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+*{box-sizing:border-box}
+a{color:#4C9BEA;text-decoration:none}
+a:hover{color:#8CC2FF}
+:focus-visible{outline:2px solid #4C9BEA;outline-offset:2px}
+[id]{scroll-margin-top:80px}
+summary::-webkit-details-marker{display:none}
+@keyframes timpPulse{0%{transform:scale(1);opacity:.6}70%{transform:scale(2.8);opacity:0}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</helmet>
+<dc-import name="SiteHeader" current="servicos" wa-text="{{ sv.wa }}" style="position:sticky;top:0;z-index:60;display:block" hint-size="100%,76px"></dc-import>
+<main>
+<section data-screen-label="Serviço · Hero" style="max-width:1440px;margin:0 auto;padding:clamp(28px,4vw,48px) clamp(20px,5vw,64px) clamp(56px,7vw,104px);display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+<nav aria-label="Breadcrumb" style="display:flex;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8A94A3"><a href="Home.dc.html" style="color:#8A94A3" style-hover="color:#FFFFFF">Início</a><span aria-hidden="true">/</span><a href="Home.dc.html#ecossistemas" style="color:#8A94A3" style-hover="color:#FFFFFF">Serviços</a><span aria-hidden="true">/</span><span aria-current="page" style="color:#DCE1E7">{{ sv.name }}</span></nav>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:clamp(36px,5vw,80px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:28px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">{{ sv.eyebrow }}</span>
+<h1 style="margin:0;font-size:clamp(38px,4.8vw,72px);line-height:1;letter-spacing:-.04em;font-weight:700;text-wrap:balance">{{ sv.h1 }}</h1>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid #232B36">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">EM RESUMO</span>
+<p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.6;color:#DCE1E7;max-width:36em;text-wrap:pretty">{{ sv.answer }}</p>
+</div>
+<div data-hero-cta="" style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(140,194,255,.35)" style-hover="background:#2A66BC;color:#FFFFFF">{{ sv.cta }} <span aria-hidden="true">→</span></a>
+<a href="{{ waLink }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 20px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="border-color:#8A94A3;color:#FFFFFF"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>WhatsApp</a>
+</div>
+<span style="font-size:14px;color:#8A94A3">Atendimento em todo o estado do Rio de Janeiro.</span>
+</div>
+<figure aria-label="{{ sv.flowTitle }}" style="margin:0;background:#000;border:1px solid #171D26;border-radius:8px;padding:clamp(18px,2.6vw,32px);display:flex;flex-direction:column;gap:20px;background-image:linear-gradient(rgba(35,43,54,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.35) 1px,transparent 1px);background-size:32px 32px">
+<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">{{ sv.flowTitle }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#56616F">TIMP · DIAGRAMA</span></div>
+<ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;align-items:stretch">
+<sc-for list="{{ flow }}" as="n" hint-placeholder-count="5">
+<li style="display:flex;flex-direction:column;align-items:flex-start">
+<sc-if value="{{ n.notFirst }}"><span aria-hidden="true" style="display:flex;flex-direction:column;align-items:center;width:44px;padding:2px 0"><span style="width:1px;height:18px;background:#287DD2"></span><span style="width:0;height:0;border-top:5px solid #287DD2;border-left:4px solid transparent;border-right:4px solid transparent"></span></span></sc-if>
+<span style="display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px;border:1px solid {{ n.border }};background:{{ n.bg }};border-radius:4px">
+<span style="flex:none;width:18px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#4C9BEA">{{ n.id }}</span>
+<span style="font-size:16px;font-weight:600;color:#EEF1F4">{{ n.label }}</span>
+<span style="margin-left:auto;font-size:13px;color:#8A94A3;text-align:right">{{ n.note }}</span>
+</span>
+</li>
+</sc-for>
+</ol>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:4px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#56616F">{{ sv.endLabel }}</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ sv.endpoints }}" as="e" hint-placeholder-count="4"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#B6BEC9;border:1px dashed #343E4B;border-radius:4px;padding:6px 10px;white-space:nowrap">{{ e }}</span></sc-for></div>
+</div>
+</figure>
+</div>
+</section>
+
+<section data-screen-label="Serviço · Escopo" style="border-top:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+<div style="display:flex;flex-direction:column;gap:18px;max-width:760px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">01 — O QUE A TIMP FAZ</span>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700;text-wrap:balance">{{ sv.scopeTitle }}</h2>
+</div>
+<ul style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 32px">
+<sc-for list="{{ scope }}" as="x" hint-placeholder-count="6"><li style="display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;padding:20px 0;border-top:1px solid #232B36"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4C9BEA;padding-top:4px">{{ x.n }}</span><span style="font-size:18px;font-weight:600;line-height:1.35;color:#EEF1F4">{{ x.t }}</span></li></sc-for>
+</ul>
+</div>
+</section>
+
+<section data-screen-label="Serviço · Projeto" style="background:#0C1015;border-top:1px solid #171D26;border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,88px)">
+<div style="display:flex;flex-direction:column;gap:22px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">02 — O QUE DEFINE O PROJETO</span>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700">Cada ambiente pede um projeto próprio.</h2>
+<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column">
+<sc-for list="{{ sv.factors }}" as="x" hint-placeholder-count="5"><li style="display:flex;gap:14px;align-items:baseline;padding:14px 0;border-bottom:1px solid #171D26;font-size:17px;color:#DCE1E7"><span style="width:6px;height:6px;background:#287DD2;flex:none;transform:translateY(-3px)"></span>{{ x }}</li></sc-for>
+</ul>
+</div>
+<div style="display:flex;flex-direction:column;gap:22px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">03 — COMO FUNCIONA A CONTRATAÇÃO</span>
+<ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border-left:1px solid #343E4B;margin-left:5px">
+<sc-for list="{{ steps }}" as="p" hint-placeholder-count="6"><li style="position:relative;display:flex;flex-direction:column;gap:4px;padding:0 0 22px 24px"><span aria-hidden="true" style="position:absolute;left:-6px;top:5px;width:11px;height:11px;border-radius:50%;background:#0C1015;border:2px solid {{ p.dot }}"></span><span style="font-size:17px;font-weight:600;color:#EEF1F4">{{ p.t }}</span><span style="font-size:15px;line-height:1.5;color:#8A94A3">{{ p.d }}</span></li></sc-for>
+</ol>
+</div>
+</div>
+</section>
+
+<section data-screen-label="Serviço · Relacionados" style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(40px,5vw,88px)">
+<div style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">04 — FUNCIONA EM CONJUNTO COM</span>
+<h2 style="margin:0;font-size:clamp(26px,2.6vw,38px);line-height:1.1;letter-spacing:-.025em;font-weight:700">Serviços relacionados</h2>
+<nav aria-label="Serviços relacionados" style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ related }}" as="r" hint-placeholder-count="5"><a href="{{ r.href }}" style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid #171D26;color:#EEF1F4" style-hover="color:#FFFFFF"><span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:600">{{ r.name }}</span><span style="font-size:14px;color:#8A94A3;line-height:1.45">{{ r.why }}</span></span><span style="color:#4C9BEA" aria-hidden="true">→</span></a></sc-for>
+</nav>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">05 — ONDE SE APLICA</span>
+<h2 style="margin:0;font-size:clamp(26px,2.6vw,38px);line-height:1.1;letter-spacing:-.025em;font-weight:700">Segmentos atendidos</h2>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<sc-for list="{{ segs }}" as="g" hint-placeholder-count="4"><a href="{{ g.href }}" style="display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 16px;border:1px solid #343E4B;border-radius:4px;color:#DCE1E7;font-size:15px;font-weight:600" style-hover="border-color:#287DD2;color:#FFFFFF">{{ g.name }} <span style="color:#4C9BEA" aria-hidden="true">→</span></a></sc-for>
+</div>
+</div>
+</section>
+
+<section id="faq" data-screen-label="Serviço · FAQ" style="border-top:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,88px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">06 — PERGUNTAS FREQUENTES</span>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700">Dúvidas sobre {{ sv.short }}</h2>
+</div>
+<div style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ sv.faq }}" as="q" hint-placeholder-count="3">
+<details style="border-bottom:1px solid #232B36">
+<summary style="list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:16px 0;cursor:pointer;font-size:18px;font-weight:600;color:#EEF1F4">{{ q.q }}<span style="font-family:'JetBrains Mono',monospace;color:#4C9BEA;font-size:18px" aria-hidden="true">+</span></summary>
+<p style="margin:0;padding:0 0 22px;font-size:16px;line-height:1.65;color:#B6BEC9;max-width:40em">{{ q.a }}</p>
+</details>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section data-screen-label="Serviço · Conteúdo relacionado" style="background:#FFFFFF;color:#07090C">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,104px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px">
+<div style="display:flex;flex-direction:column;gap:16px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#2359A5">CONHECIMENTO TIMP</span><h2 style="margin:0;font-size:clamp(26px,2.6vw,38px);line-height:1.1;letter-spacing:-.025em;font-weight:700">Para aprofundar</h2></div>
+<a href="Conhecimento.dc.html" style="font-size:16px;font-weight:600;color:#2359A5">Ver todos os conteúdos →</a>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));column-gap:32px;border-top:1px solid #DCE1E7">
+<sc-for list="{{ sv.articles }}" as="m" hint-placeholder-count="4"><a href="Artigo.dc.html" style="display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:72px;border-bottom:1px solid #DCE1E7;color:#07090C;font-size:17px;font-weight:600;line-height:1.3" style-hover="color:#2359A5"><span style="padding:14px 0">{{ m }}</span><span style="color:#2359A5" aria-hidden="true">→</span></a></sc-for>
+</div>
+</div>
+</section>
+
+<section id="contato" data-final-cta="" data-screen-label="Serviço · CTA" style="background:#0B1E3D">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,88px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:24px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8CC2FF">{{ sv.ctaUpper }}</span>
+<h2 style="margin:0;font-size:clamp(32px,4vw,58px);line-height:1.02;letter-spacing:-.035em;font-weight:700;text-wrap:balance">{{ sv.ctaHead }}</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#DCE1E7;max-width:30em">Descreva o ambiente e o objetivo. A equipe comercial retorna com o próximo passo: visita técnica, diagnóstico ou proposta.</p>
+<a href="{{ waLink }}" target="_blank" rel="noopener" style="align-self:flex-start;display:inline-flex;align-items:center;gap:10px;font-size:17px;font-weight:600;color:#FFFFFF" style-hover="color:#8CC2FF"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>(21) 98331-8387</a>
+</div>
+<dc-import name="ProjectForm" submit-label="{{ sv.cta }}" default-solucao="{{ sv.solucao }}" wa-text="{{ sv.wa }}" annotations="{{ annotations }}" hint-size="100%,900px"></dc-import>
+</div>
+</section>
+
+<sc-if value="{{ annotations }}" hint-placeholder-val="{{ false }}">
+<aside aria-label="Anotações de SEO" style="max-width:1440px;margin:0 auto;padding:40px clamp(20px,5vw,64px)">
+<div style="border:1px dashed #E8A33D;border-radius:8px;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;font-size:13px;line-height:1.6;color:#B6BEC9">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#E8A33D">SEO · TITLE / META</span><span>{{ seo.title }}</span><span>{{ seo.meta }}</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#E8A33D">CANONICAL / BREADCRUMB</span><span style="font-family:'JetBrains Mono',monospace">{{ seo.url }}</span><span>Início › Serviços › {{ sv.name }}</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#E8A33D">SCHEMA</span><span>Service · BreadcrumbList · FAQPage (FAQ visível na página) · Organization / LocalBusiness no site</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#E8A33D">TEMPLATE</span><span>Blocos fixos: hero + resumo, diagrama próprio, escopo, fatores, contratação, relacionados, segmentos, FAQ, conteúdo, CTA específico. O diagrama muda por serviço.</span></div>
+</div>
+</aside>
+</sc-if>
+</main>
+<dc-import name="SiteFooter" cta-label="{{ sv.cta }}" wa-text="{{ sv.wa }}" hint-size="100%,520px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;service&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cabeamento&quot;,&quot;cftv&quot;,&quot;wifi&quot;,&quot;acesso&quot;],&quot;default&quot;:&quot;cabeamento&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Protótipo&quot;}}">
+const SV = s => 'Pagina%20de%20Servico.dc.html?s=' + s;
+const SM = 'Monitoramento%2024h.dc.html', SE = 'Seguranca%20Eletronica.dc.html', SL = 'Instalacao%20Starlink.dc.html', CE = 'Construtoras%20e%20Engenharia.dc.html';
+const R = {
+  cab: ['Cabeamento Estruturado', 'A base física que conecta todos os sistemas.', SV('cabeamento')],
+  redes: ['Infraestrutura de Redes', 'Switches, firewall e segmentação da rede.', '#'],
+  wifi: ['Wi-Fi Empresarial', 'Cobertura sem fio planejada sobre o cabeamento.', SV('wifi')],
+  fibra: ['Fibra Óptica', 'Interligação entre andares, blocos e prédios.', '#'],
+  cftv: ['CFTV e Câmeras', 'Câmeras IP alimentadas pela rede (PoE).', SV('cftv')],
+  acesso: ['Controle de Acesso', 'Leitores e controladoras conectados à rede.', SV('acesso')],
+  fech: ['Fechaduras Eletrônicas', 'Abertura controlada e registrada por porta.', '#'],
+  alarme: ['Alarmes', 'Sensores e central integrados à verificação por vídeo.', SE + '#alarmes'],
+  seg: ['Segurança Eletrônica', 'Visão integrada de câmeras, alarmes, acesso e fechaduras.', SE],
+  mon: ['Monitoramento 24h', 'Eventos acompanhados pela Central TIMP.', SM],
+  tel: ['Telefonia IP e PABX', 'Voz sobre a mesma infraestrutura de rede.', '#'],
+  star: ['Instalação de Starlink', 'Conectividade via satélite, principal ou contingência.', SL],
+  sup: ['Suporte de TI para Empresas', 'Atendimento contínuo depois da entrega.', '#']
+};
+const G = { emp: ['Empresas e Escritórios', '#'], cons: ['Construtoras e Engenharia', CE], cli: ['Clínicas', '#'], multi: ['Múltiplas unidades', '#'], cond: ['Condomínios', '#'], com: ['Comércio e Restaurantes', '#'], ind: ['Indústrias e Galpões', '#'] };
+const S = {
+  cabeamento: { name: 'Cabeamento Estruturado', short: 'cabeamento estruturado', eyebrow: 'INFRAESTRUTURA & CONECTIVIDADE', slug: 'cabeamento-estruturado', solucao: 'Infraestrutura & Conectividade',
+    h1: 'Cabeamento estruturado para empresas no Rio de Janeiro',
+    answer: 'Cabeamento estruturado é a infraestrutura física padronizada que conecta computadores, access points, câmeras, telefones e controles de acesso à rede. A TIMP projeta, instala, identifica e organiza essa infraestrutura para que a rede cresça sem improviso.',
+    cta: 'Solicitar projeto de cabeamento', ctaHead: 'Planeje o cabeamento antes do próximo ponto improvisado.', wa: 'Olá, TIMP. Vim pela página de Cabeamento Estruturado e quero um projeto.',
+    flowTitle: 'COMO O CABEAMENTO DISTRIBUI A REDE', endLabel: 'PONTOS ATENDIDOS', hl: 2,
+    flow: [['Internet', 'link da operadora'], ['Firewall', 'proteção e regras'], ['Switch', 'distribuição e PoE'], ['Patch Panel', 'organização no rack'], ['Cabeamento', 'Cat6 / Cat6A']],
+    endpoints: ['Usuários', 'Access Points', 'CFTV', 'Telefonia', 'Controle de acesso'],
+    scopeTitle: 'Do levantamento dos pontos à entrega organizada.',
+    scope: ['Levantamento e projeto de pontos de rede', 'Rack, patch panels e organização de cabos', 'Passagem e identificação dos cabos', 'Pontos para access points, câmeras e telefonia', 'Fibra óptica entre andares ou prédios', 'Testes e documentação na entrega'],
+    factors: ['Quantidade e posição dos pontos', 'Categoria do cabo (Cat6 ou Cat6A)', 'Rotas e infraestrutura disponível', 'Sala técnica ou rack', 'Crescimento previsto da operação'],
+    faq: [
+      { q: 'Qual a diferença entre Cat6 e Cat6A?', a: 'O Cat6A suporta 10 Gbps em até 100 metros e tem melhor proteção contra interferência. O Cat6 atende 10 Gbps apenas em trechos curtos. A escolha depende do uso previsto e do orçamento do projeto.' },
+      { q: 'Dá para fazer cabeamento em um escritório em funcionamento?', a: 'Sim. A instalação é planejada por etapas e horários para reduzir a interferência na rotina da equipe.' },
+      { q: 'O mesmo cabeamento atende câmeras e telefonia?', a: 'Sim. Câmeras IP, telefones IP e access points usam a mesma infraestrutura, inclusive com alimentação PoE pelo switch.' }
+    ],
+    related: ['redes', 'wifi', 'fibra', 'cftv', 'acesso', 'tel'], segs: ['emp', 'cons', 'cli', 'multi'],
+    articles: ['O que é cabeamento estruturado e como funciona?', 'Cat6 ou Cat6A?', 'Como planejar pontos de rede?', 'Cabeamento estruturado em obras'] },
+  cftv: { name: 'CFTV e Câmeras de Segurança', short: 'CFTV e câmeras', eyebrow: 'SEGURANÇA ELETRÔNICA', slug: 'cftv-cameras-de-seguranca', solucao: 'Segurança Eletrônica',
+    h1: 'CFTV e câmeras de segurança para empresas no Rio de Janeiro',
+    answer: 'CFTV é o sistema de câmeras que captura, grava e permite visualizar as imagens de um ambiente. A TIMP projeta o posicionamento das câmeras, a rede que as alimenta e a gravação, e pode integrar o sistema ao alarme e ao monitoramento 24h.',
+    cta: 'Solicitar projeto de CFTV', ctaHead: 'Câmeras posicionadas onde a operação precisa enxergar.', wa: 'Olá, TIMP. Vim pela página de CFTV e quero um projeto de câmeras.',
+    flowTitle: 'DA CÂMERA À VISUALIZAÇÃO', endLabel: 'DESTINOS DA IMAGEM', hl: 2,
+    flow: [['Câmera', 'IP'], ['PoE / Rede', 'energia e dados no mesmo cabo'], ['NVR', 'gravação'], ['Visualização', 'local e remota'], ['Monitoramento', 'Central TIMP, quando contratado']],
+    endpoints: ['Gravação local', 'Acesso remoto seguro', 'Central TIMP'],
+    scopeTitle: 'Projeto de câmeras, rede e gravação como um sistema.',
+    scope: ['Estudo de pontos e ângulos de cobertura', 'Câmeras IP e infraestrutura PoE', 'NVR e dimensionamento da gravação', 'Visualização local e remota', 'Integração com alarme e controle de acesso', 'Manutenção preventiva'],
+    factors: ['Áreas críticas e ângulos necessários', 'Iluminação e ambiente externo', 'Tempo de gravação desejado', 'Capacidade da rede existente', 'Integração com monitoramento'],
+    faq: [
+      { q: 'CFTV IP ou analógico?', a: 'Câmeras IP oferecem maior resolução, usam a rede de dados e facilitam integração e expansão. Sistemas analógicos existentes podem ser aproveitados em alguns casos; a avaliação indica o melhor caminho.' },
+      { q: 'Quanto tempo de gravação é possível?', a: 'Depende do número de câmeras, da resolução e da capacidade de armazenamento do NVR. O tempo é definido no projeto.' },
+      { q: 'As câmeras podem ser vistas pelo celular?', a: 'Sim, com acesso remoto configurado de forma segura, sem expor as senhas das câmeras na internet.' }
+    ],
+    related: ['seg', 'alarme', 'acesso', 'mon', 'redes'], segs: ['emp', 'cond', 'com', 'ind'],
+    articles: ['Instalação de câmeras em empresas', 'CFTV IP ou analógico?', 'Integração CFTV + alarme', 'Como funciona uma Central de Monitoramento 24h?'] },
+  wifi: { name: 'Wi-Fi Empresarial', short: 'Wi-Fi empresarial', eyebrow: 'INFRAESTRUTURA & CONECTIVIDADE', slug: 'wi-fi-empresarial', solucao: 'Infraestrutura & Conectividade',
+    h1: 'Wi-Fi empresarial com cobertura planejada',
+    answer: 'Wi-Fi empresarial é uma rede sem fio projetada para a área, o número de usuários e os sistemas do ambiente. A TIMP estuda a cobertura, posiciona os access points e configura a rede para uso corporativo, com gerenciamento centralizado.',
+    cta: 'Solicitar projeto de Wi-Fi', ctaHead: 'Cobertura planejada para quem usa a rede todos os dias.', wa: 'Olá, TIMP. Vim pela página de Wi-Fi Empresarial e quero um projeto.',
+    flowTitle: 'DO AMBIENTE AO GERENCIAMENTO', endLabel: 'REDES SEPARADAS', hl: 2,
+    flow: [['Ambiente', 'área e materiais'], ['Estudo de cobertura', 'medição e simulação'], ['Access Points', 'posicionamento'], ['Rede', 'cabeamento e PoE'], ['Capacidade', 'usuários simultâneos'], ['Gerenciamento', 'centralizado']],
+    endpoints: ['Colaboradores', 'Visitantes', 'Dispositivos e sistemas'],
+    scopeTitle: 'Cobertura, capacidade e segurança da rede sem fio.',
+    scope: ['Estudo de cobertura do ambiente', 'Posicionamento de access points', 'Cabeamento e PoE para os APs', 'Redes separadas para equipe e visitantes', 'Gerenciamento centralizado', 'Ajustes após medição'],
+    factors: ['Área e materiais do ambiente', 'Número de usuários simultâneos', 'Aplicações utilizadas', 'Interferências no local', 'Segurança e segmentação'],
+    faq: [
+      { q: 'Por que um roteador comum não resolve?', a: 'Roteadores domésticos não são projetados para muitos usuários nem para áreas grandes. Access points corporativos distribuem a carga e permitem gerenciamento centralizado.' },
+      { q: 'Visitantes podem usar a mesma rede?', a: 'O recomendado é uma rede separada para visitantes, isolada dos sistemas da empresa.' },
+      { q: 'O Wi-Fi funciona em galpões e áreas externas?', a: 'Sim, com access points adequados ao ambiente e um estudo de cobertura específico.' }
+    ],
+    related: ['cab', 'redes', 'fibra', 'star', 'sup'], segs: ['emp', 'cli', 'com', 'ind'],
+    articles: ['Wi-Fi empresarial', 'Como planejar pontos de rede?', 'Starlink como internet de backup para empresas', 'O que é cabeamento estruturado e como funciona?'] },
+  acesso: { name: 'Controle de Acesso', short: 'controle de acesso', eyebrow: 'SEGURANÇA ELETRÔNICA', slug: 'controle-de-acesso', solucao: 'Segurança Eletrônica',
+    h1: 'Controle de acesso para empresas e condomínios',
+    answer: 'Controle de acesso é o sistema que identifica pessoas, autoriza a entrada conforme regras e registra cada passagem. A TIMP projeta e instala leitores, reconhecimento facial, fechaduras e controladoras, integrados à rede e ao CFTV.',
+    cta: 'Solicitar projeto de controle de acesso', ctaHead: 'Quem entra, quando e por qual porta, registrado.', wa: 'Olá, TIMP. Vim pela página de Controle de Acesso e quero um projeto.',
+    flowTitle: 'DA IDENTIFICAÇÃO AO REGISTRO', endLabel: 'FORMAS DE IDENTIFICAÇÃO', hl: 2,
+    flow: [['Pessoa', 'colaborador, morador, visitante'], ['Identificação', 'leitor ou facial'], ['Autorização', 'regras por perfil e horário'], ['Porta', 'fechadura ou catraca'], ['Registro', 'histórico de passagens']],
+    endpoints: ['Cartão / tag', 'Senha', 'Biometria', 'Reconhecimento facial'],
+    scopeTitle: 'Acessos definidos por regra, não por chave.',
+    scope: ['Mapeamento de portas e fluxos', 'Leitores e reconhecimento facial', 'Fechaduras eletrônicas e controladoras', 'Regras por horário e perfil', 'Relatórios de acesso', 'Integração com CFTV e alarme'],
+    factors: ['Número de portas e acessos', 'Perfis de usuários', 'Regras de horário', 'Tipo de porta e fechadura', 'Integração com a portaria'],
+    faq: [
+      { q: 'Reconhecimento facial substitui o cartão?', a: 'Pode substituir ou complementar. A escolha depende do fluxo de pessoas, do ambiente e do nível de segurança desejado.' },
+      { q: 'É possível limitar o acesso por horário?', a: 'Sim. Regras por perfil e horário são configuradas na controladora ou no software de gestão.' },
+      { q: 'Funciona em condomínios?', a: 'Sim, em portarias, áreas comuns e garagens.' }
+    ],
+    related: ['seg', 'fech', 'cftv', 'alarme', 'mon'], segs: ['emp', 'cond', 'cli', 'multi'],
+    articles: ['Controle de acesso para empresas', 'Controle facial', 'Fechaduras eletrônicas', 'Controle de acesso para condomínios'] }
+};
+const STEPS = [['Levantamento', 'Visita técnica e entendimento da operação.'], ['Projeto', 'Pontos, equipamentos e rotas definidos.'], ['Proposta', 'Escopo, prazos e investimento.'], ['Instalação', 'Execução por etapas, com o mínimo de interferência.'], ['Testes e entrega', 'Sistema validado e documentado.'], ['Suporte', 'Manutenção e evolução do ambiente.']];
+class Component extends DCLogic {
+  urlS = (() => { try { return new URLSearchParams(location.search).get('s'); } catch (e) { return null; } })();
+  componentDidMount() { const k = S[this.urlS] ? this.urlS : (S[this.props.service] ? this.props.service : 'cabeamento'); document.title = S[k].name + ' no Rio de Janeiro | TIMP Tecnologia'; }
+  renderVals() {
+    const key = S[this.urlS] ? this.urlS : (S[this.props.service] ? this.props.service : 'cabeamento');
+    const sv = { ...S[key], ctaUpper: S[key].cta.toUpperCase() };
+    return {
+      sv, annotations: this.props.annotations ?? false,
+      waLink: 'https://wa.me/5521983318387?text=' + encodeURIComponent(sv.wa),
+      flow: sv.flow.map(([label, note], i) => ({ label, note, id: String(i + 1).padStart(2, '0'), notFirst: i > 0, border: i === sv.hl ? '#287DD2' : '#232B36', bg: i === sv.hl ? 'rgba(17,48,94,.35)' : '#07090C' })),
+      scope: sv.scope.map((t, i) => ({ t, n: String(i + 1).padStart(2, '0') })),
+      steps: STEPS.map(([t, d], i) => ({ t, d, dot: i === 0 ? '#287DD2' : '#56616F' })),
+      related: sv.related.map(k => ({ name: R[k][0], why: R[k][1], href: R[k][2] })),
+      segs: sv.segs.map(k => ({ name: G[k][0], href: G[k][1] })),
+      seo: { title: sv.name + ' no Rio de Janeiro | TIMP Tecnologia', meta: sv.answer.split('. ')[0] + '.', url: 'timp.com.br/servicos/' + sv.slug + '/' }
+    };
+  }
+}
+</script>
+</body>
+</html>

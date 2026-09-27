@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>TIMP — Rodada 3 · Produto interno</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>html,body{margin:0;background:#07090C;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif}*{box-sizing:border-box}a{color:#4C9BEA;text-decoration:none}a:hover{color:#8CC2FF}</style>
+</helmet>
+<div style="max-width:1200px;margin:0 auto;padding:clamp(32px,6vw,80px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:48px">
+<header style="display:flex;flex-direction:column;gap:16px">
+<img src="assets/brand/timp-logo-dark-bg.png" alt="TIMP Tecnologia" style="height:44px;width:auto;align-self:flex-start">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8A94A3">RODADA 3 · PRODUTO INTERNO · PARA VALIDAÇÃO</span>
+<h1 style="margin:0;font-size:clamp(36px,5vw,60px);line-height:1;letter-spacing:-.04em;font-weight:700">Um ecossistema, quatro densidades.</h1>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#B6BEC9;max-width:44em">Protótipos navegáveis com dados fictícios. Redimensione a janela para ver as versões desktop, tablet e mobile. Cada tela tem um seletor de estados (carregando, vazio, erro, sem permissão…) no modo protótipo.</p>
+</header>
+<nav style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ products }}" as="p" hint-placeholder-count="5">
+<a href="{{ p.href }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 32px;padding:24px 0;border-bottom:1px solid #171D26;color:#EEF1F4" style-hover="background:#0C1015;color:#FFFFFF">
+<span style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#4C9BEA">{{ p.n }} · {{ p.mode }}</span><span style="font-size:24px;font-weight:700;letter-spacing:-.02em">{{ p.t }} →</span><span style="font-size:14px;line-height:1.55;color:#8A94A3">{{ p.feel }}</span></span>
+<span style="display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.55;color:#B6BEC9"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#56616F">TELAS E FLUXOS</span>{{ p.screens }}</span>
+</a>
+</sc-for>
+</nav>
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:32px">
+<sc-for list="{{ notes }}" as="g" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:{{ g.c }}">{{ g.t }}</span><ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border-top:1px solid #232B36"><sc-for list="{{ g.items }}" as="i"><li style="padding:10px 0;border-bottom:1px solid #171D26;font-size:14px;line-height:1.55;color:#DCE1E7">{{ i }}</li></sc-for></ul></div></sc-for>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      products: [
+        ['Auth.dc.html', 'Autenticação e cadastro via CNPJ', 'MOBILE-FIRST', 'Direto, com poucas decisões por tela.', 'Login (e-mail + senha) · Criar conta: CNPJ → habilitado ou não → dados pessoais → confirmação de e-mail → aprovação → primeiro acesso com MFA · Esqueci / redefinir senha · Conta bloqueada · Sessão expirada · Loading e erro de login.'],
+        ['Portal%20do%20Cliente.dc.html', 'Portal do Cliente', 'MOBILE-FIRST · TEMA CLARO', 'Controle para quem não é técnico. Tab bar no mobile, rail no tablet, sidebar no desktop.', 'Dashboard (como está minha operação?) · Empresa · Unidades → detalhe com sistemas e contatos · Chamados → detalhe com progresso, timeline e comentário · Novo chamado com impacto e equipamento · Equipamentos · Monitoramento e ocorrências (versão simplificada) · Relatórios · Documentos · Usuários · Perfil com MFA, sessões e eventos de segurança.'],
+        ['Admin%20TIMP.dc.html', 'Admin TIMP', 'DESKTOP-FIRST · ALTA DENSIDADE', 'Eficiência. Tabelas legíveis, filtros e painéis laterais.', 'Visão geral · Empresas → detalhe (unidades, usuários, contrato, saúde) · Unidades · Contratos com saúde · Rentabilidade (custo, margem, horas por categoria e técnico) · Help Desk: fila, filtros, detalhe, assumir, atribuir técnico, status, nota interna × resposta, timeline · Técnicos · Ativos → detalhe · Usuários e perfis (roles) · Relatórios · Configurações. Estados incluindo confirmação de exclusão.'],
+        ['Central%20de%20Monitoramento.dc.html', 'Central TIMP de Monitoramento', 'DESKTOP-FIRST · OPERAÇÃO CRÍTICA', 'Fila e evento na mesma tela; atalhos de teclado; mobile vira supervisão.', 'Eventos ao vivo com fila, SLA para assumir e detalhe integrado (câmeras da zona via Video Gateway, protocolo vivo, contatos com registro de resultado, timeline auditada) · Assumir → verificar → contatos → escalonar / serviço de emergência (validação, justificativa, permissão) → classificar → encerrar · Evento recorrente → chamado técnico · Ocorrências · Protocolos (ver + editar com versão) · Integrações vendor-agnostic · Saúde com redundância Primary/Secondary (normal, degradado, failover, offline) · Auditoria com filtros · Clientes, unidades, dispositivos, câmeras, contatos, acionamentos, relatórios.'],
+        ['CMS.dc.html', 'CMS · SEO/GEO · Biblioteca de mídia', 'DESKTOP-FIRST', 'Método editorial TIMP sem editar HTML.', 'Lista de artigos com status (rascunho, agendado, publicado, atualizado) e nota SEO · Editor em blocos (16 tipos) com mover/remover, preview e publicação · Painel SEO/GEO: keyword, intenção, cluster, página apoiada, title, description, slug, canonical, OG, checklist de 11 itens, prévia na busca e alerta de canibalização · Links internos: saída, entrada e “conteúdos que podem linkar para este” · Autoria e revisão · Biblioteca: categorias, busca, metadados, alt obrigatório, inserir no artigo.']
+      ].map(([href, t, mode, feel, screens], i) => ({ href, t, mode, feel, screens, n: String(i + 1).padStart(2, '0') })),
+      notes: [
+        { t: 'DECISÕES', c: '#4C9BEA', items: ['Portal em tema claro: diferencia o produto do cliente e melhora a leitura em ambientes externos; mesma tipografia, tokens e status.', 'Admin e Central em fundo escuro com densidade compacta (linhas 32–40 px); Central usa preto puro e mono para dados.', 'Status sempre com forma + cor + texto. Crítico usa texto escuro sobre vermelho (contraste 5,1:1).', 'Nenhum evento desaparece: encerrar exige classificação e justificativa; tudo entra na auditoria.', 'Sem acionamento externo automático. Serviço de emergência só após verificação, com validação e permissão.', 'Fabricante aparece apenas em Integrações e ativos; a operação trabalha com o evento normalizado.'] },
+        { t: 'RESPONSIVIDADE', c: '#4C9BEA', items: ['Portal: tab bar + sheet “Mais” no mobile, rail no tablet, sidebar no desktop.', 'Admin: tabelas viram linhas empilhadas com rótulos no mobile; sidebar vira rail no tablet.', 'Central: 1440 com fila + detalhe em duas colunas; ≥ 1680 amplia a fila; tablet com rail e detalhe em uma coluna; mobile em modo supervisão com ações limitadas.', 'CMS: painel SEO lateral no desktop; abaixo do editor em telas menores.'] },
+        { t: 'PENDÊNCIAS TÉCNICAS', c: '#E8A33D', items: ['Modelo de dados e permissões por role (RLS) para empresa, unidade e usuário.', 'Especificação do receptor de eventos e do primeiro adapter (Intelbras) no Monitoring Gateway.', 'Video Gateway: protocolo por modelo de câmera/NVR (ONVIF, RTSP ou API), latência e retenção.', 'Regras de SLA por contrato e prioridade; calendário e feriados.', 'Premissas de custo interno para rentabilidade (hora técnica, deslocamento).'] },
+        { t: 'DECISÕES AINDA NECESSÁRIAS', c: '#E8A33D', items: ['Quem aprova novos usuários do cliente: Cliente Admin, TIMP ou ambos.', 'MFA obrigatório para Cliente Admin?', 'Quais ações o supervisor pode executar pelo mobile.', 'Métodos de MFA aceitos (app autenticador, SMS/WhatsApp).', 'Nome real do revisor técnico e política de atualização de artigos.'] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

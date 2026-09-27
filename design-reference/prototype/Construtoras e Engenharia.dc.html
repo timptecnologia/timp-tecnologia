@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Infraestrutura tecnológica para construtoras | TIMP Tecnologia</title>
+<meta name="description" content="Tecnologia começa ainda no projeto da obra. Cabeamento, fibra, Wi-Fi, segurança eletrônica, automação, sala técnica e carregadores EV planejados com a construtora.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07090C;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+*{box-sizing:border-box}
+a{color:#4C9BEA;text-decoration:none}
+a:hover{color:#8CC2FF}
+:focus-visible{outline:2px solid #4C9BEA;outline-offset:2px}
+[id]{scroll-margin-top:80px}
+summary::-webkit-details-marker{display:none}
+@keyframes timpPulse{0%{transform:scale(1);opacity:.6}70%{transform:scale(2.8);opacity:0}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</helmet>
+<dc-import name="SiteHeader" current="solucoes" wa-text="Olá, TIMP. Sou de uma construtora e quero falar sobre a infraestrutura de uma obra." style="position:sticky;top:0;z-index:60;display:block" hint-size="100%,76px"></dc-import>
+<main>
+<section data-screen-label="Construtoras · Hero" style="max-width:1440px;margin:0 auto;padding:clamp(28px,4vw,48px) clamp(20px,5vw,64px) clamp(56px,7vw,104px);display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+<nav aria-label="Breadcrumb" style="display:flex;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8A94A3"><a href="Home.dc.html" style="color:#8A94A3">Início</a><span aria-hidden="true">/</span><a href="Home.dc.html#segmentos" style="color:#8A94A3">Soluções</a><span aria-hidden="true">/</span><span aria-current="page" style="color:#DCE1E7">Construtoras e Engenharia</span></nav>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:clamp(36px,5vw,72px);align-items:center">
+<div style="display:flex;flex-direction:column;gap:28px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">SOLUÇÕES · CONSTRUTORAS E ENGENHARIA</span>
+<h1 style="margin:0;font-size:clamp(40px,5.4vw,84px);line-height:.98;letter-spacing:-.045em;font-weight:700;text-wrap:balance">Tecnologia começa ainda no projeto da obra.</h1>
+<p style="margin:0;max-width:32em;font-size:clamp(17px,1.4vw,20px);line-height:1.6;color:#B6BEC9;text-wrap:pretty">Infraestrutura tecnológica planejada junto com o projeto: cabeamento, fibra, Wi-Fi, segurança eletrônica, automação, telefonia, sala técnica e preparação para carregadores de veículos elétricos.</p>
+<div data-hero-cta="" style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#contato" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;background:#2359A5;color:#FFFFFF;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(140,194,255,.35)" style-hover="background:#2A66BC;color:#FFFFFF">Solicitar avaliação do projeto <span aria-hidden="true">→</span></a>
+<a href="{{ wa }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 20px;border:1px solid #343E4B;color:#EEF1F4;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="border-color:#8A94A3;color:#FFFFFF"><span style="width:8px;height:8px;border-radius:50%;background:#2FBF71"></span>Falar sobre uma obra</a>
+</div>
+</div>
+<figure aria-label="Corte esquemático: sistemas de tecnologia por pavimento" style="margin:0;display:flex;flex-direction:column;gap:14px">
+<div role="group" aria-label="Filtrar camadas" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
+<sc-for list="{{ layers }}" as="l" hint-placeholder-count="5"><button type="button" aria-pressed="{{ l.active }}" onClick="{{ l.pick }}" style="flex:none;height:40px;padding:0 14px;border-radius:4px;border:1px solid {{ l.border }};background:{{ l.bg }};color:{{ l.color }};font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit">{{ l.label }}</button></sc-for>
+</div>
+<div style="position:relative;background:#000;border:1px solid #171D26;border-radius:8px;padding:18px 18px 18px 52px;background-image:linear-gradient(rgba(35,43,54,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(35,43,54,.3) 1px,transparent 1px);background-size:24px 24px">
+<span aria-hidden="true" style="position:absolute;left:26px;top:26px;bottom:34px;width:2px;background:#287DD2;opacity:{{ riserOp }}"></span>
+<div style="display:flex;flex-direction:column;border-top:2px solid #343E4B">
+<sc-for list="{{ floors }}" as="f" hint-placeholder-count="5">
+<div style="position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid #232B36;background:{{ f.bg }}">
+<span aria-hidden="true" style="position:absolute;left:-30px;top:24px;width:10px;height:10px;border-radius:50%;background:#000;border:2px solid #287DD2;opacity:{{ riserOp }}"></span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:#EEF1F4;border:1px solid #343E4B;border-radius:3px;height:28px;display:flex;align-items:center;justify-content:center">{{ f.lvl }}</span>
+<div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+<span style="font-size:13px;color:#8A94A3">{{ f.name }}</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ f.sys }}" as="s"><span style="font-size:13px;font-weight:500;color:{{ s.color }};border:1px solid {{ s.border }};background:{{ s.bg }};border-radius:3px;padding:5px 9px;white-space:nowrap;transition:opacity 200ms,border-color 200ms;opacity:{{ s.op }}">{{ s.t }}</span></sc-for></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+<figcaption style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#56616F"><span>CORTE ESQUEMÁTICO · PRUMADA DE FIBRA E CABEAMENTO</span><span>DIAGRAMA CONCEITUAL · TIMP</span></figcaption>
+</figure>
+</div>
+</section>
+
+<section data-screen-label="Construtoras · Para quem" style="border-top:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:20px 64px;align-items:end">
+<div style="display:flex;flex-direction:column;gap:18px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">01 — QUEM TRABALHA COM A TIMP NA OBRA</span><h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700;text-wrap:balance">Um interlocutor técnico para cada etapa.</h2></div>
+<p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:32em">A TIMP entra no projeto como responsável pelas disciplinas de tecnologia e conversa com quem decide, projeta e executa.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:0 28px">
+<sc-for list="{{ roles }}" as="r" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:10px;padding:22px 0;border-top:2px solid {{ r.line }}"><span style="font-size:22px;font-weight:700;letter-spacing:-.015em">{{ r.t }}</span><span style="font-size:15px;line-height:1.55;color:#8A94A3">{{ r.d }}</span></div></sc-for>
+</div>
+</div>
+</section>
+
+<section data-screen-label="Construtoras · Por que no projeto" style="background:#0C1015;border-top:1px solid #171D26;border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,88px)">
+<div style="display:flex;flex-direction:column;gap:22px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">02 — POR QUE NO PROJETO</span>
+<h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700;text-wrap:balance">O que é previsto no projeto não precisa ser adaptado na entrega.</h2>
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:8px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">O QUE SE EVITA</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ avoid }}" as="a" hint-placeholder-count="4"><span style="font-size:14px;color:#DCE1E7;border:1px dashed #56616F;border-radius:4px;padding:8px 12px">{{ a }}</span></sc-for></div>
+</div>
+</div>
+<ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ reasons }}" as="r" hint-placeholder-count="4"><li style="display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;padding:22px 0;border-bottom:1px solid #232B36"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4C9BEA;padding-top:5px">{{ r.n }}</span><span style="display:flex;flex-direction:column;gap:6px"><span style="font-size:19px;font-weight:600">{{ r.t }}</span><span style="font-size:15px;line-height:1.55;color:#8A94A3">{{ r.d }}</span></span></li></sc-for>
+</ol>
+</div>
+</section>
+
+<section data-screen-label="Construtoras · Camadas" style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)">
+<div style="display:flex;flex-direction:column;gap:18px;max-width:760px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">03 — CAMADAS DA EDIFICAÇÃO</span><h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700">Doze sistemas, uma infraestrutura.</h2></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:0 32px">
+<sc-for list="{{ obraLayers }}" as="l" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;padding:20px 0;border-top:1px solid #232B36"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4C9BEA;padding-top:4px">{{ l.n }}</span><span style="display:flex;flex-direction:column;gap:6px"><a href="{{ l.href }}" style="font-size:18px;font-weight:600;color:#EEF1F4" style-hover="color:#8CC2FF">{{ l.t }}</a><span style="font-size:14px;line-height:1.5;color:#8A94A3">{{ l.d }}</span></span></div></sc-for>
+</div>
+</section>
+
+<section data-screen-label="Construtoras · Fluxo" style="background:#0B1E3D">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:clamp(32px,4vw,56px)">
+<div style="display:flex;flex-direction:column;gap:18px;max-width:760px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8CC2FF">04 — DA PLANTA À OPERAÇÃO</span><h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700">Nove etapas, do planejamento à manutenção.</h2></div>
+<ol style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:0 28px">
+<sc-for list="{{ obraSteps }}" as="s" hint-placeholder-count="9"><li style="display:flex;flex-direction:column;gap:8px;padding:20px 0 26px;border-top:1px solid rgba(140,194,255,.35)"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8CC2FF">{{ s.n }} · {{ s.phase }}</span><span style="font-size:20px;font-weight:700;color:#FFFFFF">{{ s.t }}</span><span style="font-size:15px;line-height:1.55;color:#B6BEC9">{{ s.d }}</span></li></sc-for>
+</ol>
+</div>
+</section>
+
+<section data-screen-label="Construtoras · Fora do RJ" style="border-bottom:1px solid #171D26">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px)">
+<div style="border:1px solid #232B36;border-radius:8px;padding:clamp(24px,4vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(28px,4vw,72px);align-items:center;background:#000;background-image:linear-gradient(rgba(23,29,38,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(23,29,38,.6) 1px,transparent 1px);background-size:40px 40px">
+<div style="display:flex;flex-direction:column;gap:20px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">05 — PROJETOS EM OUTRAS REGIÕES</span>
+<h2 style="margin:0;font-size:clamp(28px,3.4vw,50px);line-height:1.04;letter-spacing:-.03em;font-weight:700">Seu projeto está fora do Rio de Janeiro?</h2>
+<p style="margin:0;font-size:17px;line-height:1.6;color:#B6BEC9;max-width:32em">A TIMP avalia projetos de infraestrutura tecnológica de grande porte em outras regiões do Brasil: construtoras, empreendimentos, condomínios de grande escala e operações com várias unidades. Cada caso passa por avaliação técnica e logística.</p>
+<a href="#contato" onClick="{{ presentProject }}" style="align-self:flex-start;display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:#FFFFFF;color:#0B1E3D;border-radius:4px;font-size:16px;font-weight:600;white-space:nowrap" style-hover="background:#DCE1E7;color:#0B1E3D">Apresentar meu projeto à TIMP <span aria-hidden="true">→</span></a>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8A94A3">CRITÉRIOS DA AVALIAÇÃO</span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid #232B36">
+<sc-for list="{{ criteria }}" as="c" hint-placeholder-count="8"><span style="display:flex;gap:10px;align-items:baseline;padding:14px 8px 14px 0;border-bottom:1px solid #171D26;font-size:16px;color:#EEF1F4"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4C9BEA">{{ c.n }}</span>{{ c.t }}</span></sc-for>
+</div>
+<span style="font-size:13px;color:#8A94A3;line-height:1.5">Serviços de pequeno porte são atendidos no estado do Rio de Janeiro.</span>
+</div>
+</div>
+</div>
+</section>
+
+<sc-if value="{{ annotations }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Construtoras · Cases (interno)" style="max-width:1440px;margin:0 auto;padding:clamp(40px,5vw,72px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:16px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#E8A33D;border:1px dashed #E8A33D;border-radius:3px;padding:6px 10px;align-self:flex-start">INTERNO · SEÇÃO DE OBRAS SÓ É PUBLICADA COM CASES REAIS AUTORIZADOS</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px"><sc-for list="{{ caseSlots }}" as="c" hint-placeholder-count="3"><div style="aspect-ratio:4/3;border:1px dashed #343E4B;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:#56616F">{{ c }}</div></sc-for></div>
+</section>
+</sc-if>
+
+<section id="faq" data-screen-label="Construtoras · FAQ">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,88px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:20px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#4C9BEA">06 — PERGUNTAS FREQUENTES</span><h2 style="margin:0;font-size:clamp(28px,3.2vw,46px);line-height:1.06;letter-spacing:-.03em;font-weight:700">Tecnologia na obra</h2></div>
+<div style="display:flex;flex-direction:column;border-top:1px solid #232B36">
+<sc-for list="{{ faq }}" as="q" hint-placeholder-count="4"><details style="border-bottom:1px solid #232B36"><summary style="list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:16px 0;cursor:pointer;font-size:18px;font-weight:600;color:#EEF1F4">{{ q.q }}<span style="font-family:'JetBrains Mono',monospace;color:#4C9BEA;font-size:18px" aria-hidden="true">+</span></summary><p style="margin:0;padding:0 0 22px;font-size:16px;line-height:1.65;color:#B6BEC9;max-width:40em">{{ q.a }}</p></details></sc-for>
+</div>
+</div>
+</section>
+
+<section data-screen-label="Construtoras · Conteúdo" style="background:#FFFFFF;color:#07090C">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,104px) clamp(20px,5vw,64px);display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px"><div style="display:flex;flex-direction:column;gap:16px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#2359A5">TECNOLOGIA PARA OBRAS</span><h2 style="margin:0;font-size:clamp(26px,2.6vw,38px);line-height:1.1;letter-spacing:-.025em;font-weight:700">Para a equipe de projeto</h2></div><a href="Conhecimento.dc.html" style="font-size:16px;font-weight:600;color:#2359A5">Ver todos os conteúdos →</a></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));column-gap:32px;border-top:1px solid #DCE1E7">
+<sc-for list="{{ articles }}" as="m" hint-placeholder-count="4"><a href="Artigo.dc.html" style="display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:72px;border-bottom:1px solid #DCE1E7;color:#07090C;font-size:17px;font-weight:600;line-height:1.3" style-hover="color:#2359A5"><span style="padding:14px 0">{{ m }}</span><span style="color:#2359A5" aria-hidden="true">→</span></a></sc-for>
+</div>
+</div>
+</section>
+
+<section id="contato" data-final-cta="" data-screen-label="Construtoras · CTA" style="background:#0B1E3D">
+<div style="max-width:1440px;margin:0 auto;padding:clamp(56px,7vw,112px) clamp(20px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,88px);align-items:start">
+<div style="display:flex;flex-direction:column;gap:24px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#8CC2FF">APRESENTAR UM PROJETO</span>
+<h2 style="margin:0;font-size:clamp(32px,4vw,58px);line-height:1.02;letter-spacing:-.035em;font-weight:700;text-wrap:balance">Traga a TIMP para a mesa de projeto.</h2>
+<p style="margin:0;font-size:18px;line-height:1.6;color:#DCE1E7;max-width:30em">Informe a cidade, a fase da obra e o porte do empreendimento. Projetos em outros estados são avaliados conforme porte, escopo e viabilidade logística.</p>
+</div>
+<dc-import name="ProjectForm" key="{{ formKey }}" submit-label="Apresentar meu projeto à TIMP" default-tipo="Construtora / obra" default-porte="{{ formPorte }}" placeholder="Tipo de empreendimento, número de pavimentos ou unidades, fase atual da obra…" wa-text="Olá, TIMP. Sou de uma construtora e quero falar sobre a infraestrutura de uma obra." annotations="{{ annotations }}" hint-size="100%,900px"></dc-import>
+</div>
+</section>
+</main>
+<dc-import name="SiteFooter" cta-label="Solicitar avaliação do projeto" wa-text="Olá, TIMP. Sou de uma construtora e quero falar sobre a infraestrutura de uma obra." hint-size="100%,520px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Protótipo&quot;}}">
+const SV = s => 'Pagina%20de%20Servico.dc.html?s=' + s;
+const FLOORS = [
+  { lvl: 'COB', name: 'Cobertura', sys: [['Energia solar', 'energia'], ['Wi-Fi externo', 'rede'], ['CFTV perimetral', 'seg']] },
+  { lvl: '03', name: 'Pavimento tipo · escritórios', sys: [['Pontos de rede', 'rede'], ['Wi-Fi', 'rede'], ['Telefonia IP', 'auto'], ['Controle de acesso', 'seg']] },
+  { lvl: '02', name: 'Pavimento tipo · salas', sys: [['Cabeamento', 'rede'], ['Fechaduras eletrônicas', 'seg'], ['Automação predial', 'auto']] },
+  { lvl: '01', name: 'Térreo · recepção e acessos', sys: [['Reconhecimento facial', 'seg'], ['CFTV', 'seg'], ['Alarmes', 'seg'], ['PABX', 'auto']] },
+  { lvl: 'SS', name: 'Subsolo · garagem e sala técnica', sys: [['Sala técnica', 'rede'], ['Entrada de fibra', 'rede'], ['Carregadores EV', 'energia'], ['Infraestrutura futura', 'energia']] }
+];
+const LAYERS = [['all', 'Todas as camadas'], ['rede', 'Rede e conectividade'], ['seg', 'Segurança'], ['auto', 'Automação e voz'], ['energia', 'Energia']];
+class Component extends DCLogic {
+  state = { layer: 'all', formKey: 0, formPorte: '' };
+  renderVals() {
+    const s = this.state, pad = i => String(i + 1).padStart(2, '0');
+    return {
+      annotations: this.props.annotations ?? false,
+      wa: 'https://wa.me/5521983318387?text=' + encodeURIComponent('Olá, TIMP. Sou de uma construtora e quero falar sobre a infraestrutura de uma obra.'),
+      layers: LAYERS.map(([k, label]) => ({ label, active: s.layer === k, pick: () => this.setState({ layer: k }), border: s.layer === k ? '#287DD2' : '#232B36', bg: s.layer === k ? 'rgba(40,125,210,.16)' : '#0C1015', color: s.layer === k ? '#FFFFFF' : '#B6BEC9' })),
+      floors: FLOORS.map(f => ({ ...f, bg: f.lvl === 'SS' ? 'rgba(12,16,21,.9)' : 'transparent', sys: f.sys.map(([t, l]) => { const on = s.layer === 'all' || s.layer === l, hl = s.layer !== 'all' && on; return { t, op: on ? 1 : 0.28, border: hl ? '#287DD2' : '#343E4B', bg: hl ? 'rgba(40,125,210,.16)' : '#07090C', color: on ? '#EEF1F4' : '#8A94A3' }; }) })),
+      riserOp: s.layer === 'all' || s.layer === 'rede' ? 1 : 0.35,
+      roles: [
+        ['Construtoras', 'Escopo de tecnologia definido junto com o orçamento e o cronograma da obra.'],
+        ['Engenheiros', 'Compatibilização de rotas, prumadas, cargas e sala técnica com as demais disciplinas.'],
+        ['Arquitetos', 'Posição de pontos, câmeras, leitores e equipamentos resolvida com o layout.'],
+        ['Gestores de obra', 'Etapas de instalação encaixadas no cronograma de execução.']
+      ].map(([t, d], i) => ({ t, d, line: i === 0 ? '#287DD2' : '#343E4B' })),
+      avoid: ['Quebra de alvenaria após o acabamento', 'Cabos aparentes e canaletas improvisadas', 'Sala técnica subdimensionada', 'Retrabalho depois da entrega'],
+      reasons: [
+        ['Rotas e prumadas reservadas', 'Eletrodutos, eletrocalhas e shafts previstos para dados, fibra e segurança.'],
+        ['Sala técnica no lugar certo', 'Espaço, ventilação e energia dimensionados para racks e equipamentos.'],
+        ['Sistemas integrados desde o início', 'CFTV, controle de acesso, alarme e automação apoiados na mesma rede.'],
+        ['Preparação para o futuro', 'Infraestrutura seca para carregadores EV, expansão de pontos e novos sistemas.']
+      ].map(([t, d], i) => ({ t, d, n: pad(i) })),
+      obraLayers: [
+        ['Cabeamento', 'Pontos de rede em todos os ambientes previstos.', SV('cabeamento')], ['Fibra', 'Backbone entre pavimentos e entrada da operadora.', '#'],
+        ['Wi-Fi', 'Cobertura planejada para áreas comuns e privativas.', SV('wifi')], ['CFTV', 'Câmeras em acessos, garagem e perímetro.', SV('cftv')],
+        ['Alarmes', 'Sensores e central preparados para monitoramento.', 'Monitoramento%2024h.dc.html'], ['Controle de acesso', 'Leitores, facial e catracas nos acessos.', SV('acesso')],
+        ['Fechaduras', 'Fechaduras eletrônicas por unidade ou sala.', '#'], ['Automação', 'Iluminação, climatização e sistemas prediais integrados.', '#'],
+        ['Sala técnica', 'Racks, energia, climatização e organização.', '#'], ['Telefonia', 'Telefonia IP e PABX sobre a rede.', '#'],
+        ['Carregadores EV', 'Pontos e infraestrutura para veículos elétricos.', '#'], ['Infraestrutura futura', 'Reserva de rotas e capacidade para expansão.', '#']
+      ].map(([t, d, href], i) => ({ t, d, href, n: pad(i) })),
+      obraSteps: [
+        ['Planejamento', 'Levantamento do empreendimento e dos sistemas desejados.', 'PROJETO'], ['Projeto', 'Projeto das disciplinas de tecnologia e compatibilização.', 'PROJETO'],
+        ['Infraestrutura', 'Rotas, eletrodutos e prumadas executados na obra.', 'OBRA'], ['Instalação', 'Cabos, equipamentos e racks instalados.', 'OBRA'],
+        ['Configuração', 'Rede, câmeras, acessos e sistemas configurados.', 'OBRA'], ['Testes', 'Validação de cada sistema antes da entrega.', 'ENTREGA'],
+        ['Entrega', 'Ambiente entregue com documentação.', 'ENTREGA'], ['Operação', 'Sistemas em uso pelo cliente final.', 'OPERAÇÃO'],
+        ['Manutenção', 'Manutenção preventiva, corretiva e monitoramento.', 'OPERAÇÃO']
+      ].map(([t, d, phase], i) => ({ t, d, phase, n: pad(i) })),
+      criteria: ['Porte', 'Escopo', 'Equipe', 'Deslocamento', 'Logística', 'Hospedagem', 'Cronograma', 'Viabilidade econômica'].map((t, i) => ({ t, n: pad(i) })),
+      caseSlots: ['OBRA REAL · FOTO', 'OBRA REAL · FOTO', 'OBRA REAL · FOTO'],
+      faq: [
+        { q: 'Em que fase a TIMP deve entrar na obra?', a: 'O ideal é na fase de projeto, antes da execução das rotas e da alvenaria. A TIMP também atua em obras em andamento, com avaliação do que ainda pode ser previsto.' },
+        { q: 'A TIMP compatibiliza com os projetos de elétrica e arquitetura?', a: 'Sim. As disciplinas de tecnologia são desenvolvidas em conjunto com as equipes de engenharia e arquitetura do empreendimento.' },
+        { q: 'Vocês atendem obras fora do Rio de Janeiro?', a: 'Projetos de grande porte em outras regiões do Brasil são avaliados caso a caso, considerando porte, escopo, equipe, logística e cronograma.' },
+        { q: 'A infraestrutura para carregadores de veículos elétricos entra no projeto?', a: 'Sim. Pontos, rotas e reserva de carga podem ser previstos no projeto, mesmo que os carregadores sejam instalados depois.' }
+      ],
+      articles: ['Infraestrutura tecnológica para construtoras', 'Sala técnica em obras', 'Cabeamento estruturado em obras', 'Como planejar pontos de rede?'],
+      formKey: 'f' + s.formKey, formPorte: s.formPorte,
+      presentProject: () => this.setState(st => ({ formKey: st.formKey + 1, formPorte: 'Projeto especial' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

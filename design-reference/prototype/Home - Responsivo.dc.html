@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>TIMP — Home · Desktop, Tablet e Mobile</title>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>html,body{margin:0;background:#1B2029;color:#EEF1F4;font-family:'Archivo',system-ui,sans-serif}*{box-sizing:border-box}a{color:#8CC2FF}a:hover{color:#FFFFFF}</style>
+</helmet>
+<section style="padding:64px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:980px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.08em;color:#8CC2FF">HOME DEFINITIVA · RODADA FINAL</span>
+<h1 style="margin:0;font-size:48px;letter-spacing:-.03em;line-height:1.05">Mesma Home, três composições.</h1>
+<p style="margin:0;font-size:20px;line-height:1.5;color:#B6BEC9">Cada frame é a Home real, navegável, renderizada na largura do dispositivo. Role dentro dos frames; menus, abas, filtros, demonstração da Central e formulário funcionam.</p>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:120px">
+<sc-for list="{{ options }}" as="o" hint-placeholder-count="2">
+<div id="{{ o.id }}" style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;align-items:center;gap:16px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500;background:#287DD2;color:#07090C;border-radius:4px;padding:6px 12px">{{ o.id }}</span>
+<span style="font-size:30px;font-weight:700;letter-spacing:-.02em">{{ o.title }}</span>
+<span style="font-size:18px;color:#8A94A3">{{ o.note }}</span>
+</div>
+<div style="display:flex;gap:48px;align-items:flex-start">
+<sc-for list="{{ o.frames }}" as="f">
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:14px;color:#B6BEC9"><span>{{ f.label }}</span><span>{{ f.w }} × {{ f.h }}</span></span>
+<iframe src="{{ f.src }}" title="{{ f.label }}" loading="lazy" style="width:{{ f.wpx }};height:{{ f.hpx }};border:1px solid #343E4B;border-radius:{{ f.r }};background:#07090C;display:block"></iframe>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const frames = hero => [
+      { label: 'DESKTOP', w: 1440, h: 1000, r: '8px' },
+      { label: 'TABLET', w: 834, h: 1112, r: '18px' },
+      { label: 'MOBILE', w: 390, h: 844, r: '28px' }
+    ].map(f => ({ ...f, wpx: f.w + 'px', hpx: f.h + 'px', src: 'Home.dc.html?hero=' + hero }));
+    const still = () => frames('rj45').map(f => ({ ...f, src: f.src + '&motion=off' }));
+    return {
+      options: [
+        { id: '2a', title: 'Home definitiva', note: 'Hero RJ45 · Starlink em 3 estados · Infraestrutura em profundidade', frames: frames('rj45') },
+        { id: '2b', title: 'Movimento reduzido', note: 'Mesmo conteúdo com prefers-reduced-motion / ?motion=off', frames: still() },
+        { id: '1a', title: 'Sistema vivo (histórico)', note: 'Diagrama da operação conectada: no local → infraestrutura → Central', frames: frames('sistema') },
+        { id: '1b', title: 'Edificação em camadas (histórico)', note: 'Corte do edifício com sistemas por pavimento e filtro de camadas', frames: frames('edificacao') }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
