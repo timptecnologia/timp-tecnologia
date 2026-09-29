@@ -17,6 +17,8 @@ export interface PageSeo {
   /** Rotas internas/utilitárias: noindex. */
   noindex?: boolean
   ogImagePath?: string
+  /** Open Graph type (artigos do Blog: "article"). */
+  type?: "website" | "article"
 }
 
 export function seoIssues(seo: Pick<PageSeo, "title" | "description">): string[] {
@@ -38,7 +40,7 @@ export function buildMetadata(seo: PageSeo): Metadata {
     alternates: { canonical },
     robots: seo.noindex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
-      type: "website",
+      type: seo.type ?? "website",
       locale: SITE.locale,
       siteName: SITE.name,
       url: canonical,
@@ -46,6 +48,8 @@ export function buildMetadata(seo: PageSeo): Metadata {
       description: seo.description,
       ...(seo.ogImagePath ? { images: [{ url: absoluteUrl(seo.ogImagePath), width: 1200, height: 630 }] } : {}),
     },
+    // Imagem: a opengraph-image do segmento (app/(public)/opengraph-image.tsx) também serve ao card
+    twitter: { card: "summary_large_image", title: seo.title, description: seo.description },
   }
 }
 

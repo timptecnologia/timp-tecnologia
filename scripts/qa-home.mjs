@@ -85,6 +85,11 @@ await send("Page.enable")
 await send("Runtime.enable")
 await send("Log.enable")
 await send("Network.enable")
+// Escolha de cookies já feita: o banner não cobre elementos fixos nos testes de navegação
+// (o banner em si é testado à parte, com os cookies limpos).
+const CONSENT_SET = () =>
+  send("Network.setCookie", { name: "timp_consent", value: encodeURIComponent(JSON.stringify({ v: 1, allowed: [], at: "2026-09-29T00:00:00.000Z" })), url: BASE })
+await CONSENT_SET()
 
 /** Aguarda a página assentar: load + fontes + N quadros sem mudança de layout/scroll. */
 const SETTLE = `new Promise((resolve) => {
@@ -178,7 +183,61 @@ const DEEP_ANCHORS = [
   ["/servicos/", "cabeamento-estruturado"],
   ["/solucoes/", "condominios"],
 ]
-const PAGES = ["/", "/empresa/", "/servicos/", "/solucoes/", "/contato/", "/blog/"]
+/** Viewports da varredura do site inteiro (capturas só nas marcadas). */
+const SITE_VIEWPORTS = [
+  { tag: "1440x900", w: 1440, h: 900, shots: true },
+  { tag: "1366x768", w: 1366, h: 768 },
+  { tag: "1280x680", w: 1280, h: 680 },
+  { tag: "1112x834", w: 1112, h: 834 },
+  { tag: "1024x768", w: 1024, h: 768 },
+  { tag: "834x1112", w: 834, h: 1112, shots: true },
+  { tag: "430x932", w: 430, h: 932, mobile: true },
+  { tag: "390x844", w: 390, h: 844, mobile: true, shots: true },
+  { tag: "375x667", w: 375, h: 667, mobile: true },
+  { tag: "360x640", w: 360, h: 640, mobile: true },
+  { tag: "924x540", w: 924, h: 540 },
+]
+
+/**
+ * Regra global de layout: seção alta com a faixa direita do contêiner sem nenhum
+ * conteúdo (coluna vazia), e grades com um card órfão na última linha.
+ */
+const LAYOUT_RULES = `(() => {
+  if (innerWidth < 1024) return { emptyRight: [], orphans: [] }
+  const emptyRight = []
+  for (const sec of document.querySelectorAll("main section")) {
+    if (sec.closest("[data-scroll-track]")) continue
+    const box = sec.querySelector(":scope > div") ?? sec
+    const r = box.getBoundingClientRect()
+    if (r.height < 300 || r.width < 700) continue
+    const pad = parseFloat(getComputedStyle(box).paddingLeft) || 0
+    const cut = r.left + pad + (r.width - 2 * pad) * 0.62
+    let hit = false
+    for (const el of sec.querySelectorAll("*")) {
+      const cs = getComputedStyle(el)
+      if (cs.display === "none" || cs.visibility === "hidden") continue
+      const hasText = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())
+      const boxed = parseFloat(cs.borderTopWidth) > 0 || cs.backgroundImage !== "none" || /^(IMG|svg|INPUT|SELECT|TEXTAREA|BUTTON)$/.test(el.tagName)
+      if (!hasText && !boxed) continue
+      if (el.getBoundingClientRect().right > cut + 1) { hit = true; break }
+    }
+    if (!hit) emptyRight.push(sec.id || sec.getAttribute("aria-labelledby") || sec.getAttribute("aria-label") || "?")
+  }
+  const orphans = []
+  for (const g of document.querySelectorAll("main ul, main ol, main div")) {
+    const cs = getComputedStyle(g)
+    if (cs.display !== "grid" || g.children.length < 3) continue
+    const kids = [...g.children].map((c) => c.getBoundingClientRect()).filter((b) => b.width > 0)
+    const rows = new Map()
+    for (const b of kids) rows.set(Math.round(b.top), [...(rows.get(Math.round(b.top)) ?? []), b])
+    const list = [...rows.values()]
+    if (list.length < 2) continue
+    const last = list[list.length - 1], prev = list[list.length - 2]
+    const gw = g.getBoundingClientRect().width
+    if (last.length === 1 && prev.length >= 2 && last[0].width < gw * 0.6) orphans.push(g.getAttribute("aria-label") || g.closest("section")?.getAttribute("aria-labelledby") || "?")
+  }
+  return { emptyRight, orphans }
+})()`
 const MODES = `(() => Object.fromEntries([...document.querySelectorAll("[data-scroll-track]")].map((t) => {
   const f = t.firstElementChild
   return [t.dataset.scrollTrack, { mode: t.dataset.mode ?? "css", position: getComputedStyle(f).position, clipped: getComputedStyle(f).overflow === "hidden" && f.scrollHeight > f.clientHeight + 1 }]
@@ -284,7 +343,6 @@ for (const vp of VIEWPORTS) {
   for (const [name, sel] of [
     ["CTA header", `[...document.querySelectorAll("header a")].find((a) => a.textContent.trim() === "Solicitar um projeto" && a.offsetParent)`],
     ["Hero", `[...document.querySelectorAll("[data-hero-cta] a")].find((a) => a.textContent.includes("Solicitar um projeto"))`],
-    ["CTA final", `[...document.querySelectorAll("[data-final-cta] a")].find((a) => a.textContent.includes("Solicitar um projeto"))`],
   ]) {
     if (name === "CTA header" && vp.w < 768) continue
     await open(url("/"), vp)
@@ -307,14 +365,15 @@ for (const vp of VIEWPORTS) {
     const hidden = await js(`[...document.querySelectorAll("div.fixed")].find((d) => d.querySelector('a[href="/contato/#projeto"]'))?.getAttribute("aria-hidden")`)
     check(`${vp.tag} CTA fixo some no footer`, hidden === "true")
   }
-  // 4. Navegação na mesma página após hidratar: footer → Instalação de Starlink (/#starlink)
+  // 4. Navegação após hidratar, a partir do fim da página: footer → Instalação de Starlink
   await open(url("/"), vp)
   await js(`window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })`)
   await settle()
   if (vp.w < 768) await clickAt(`[...document.querySelectorAll("footer button")].find((b) => b.textContent.includes("SERVIÇOS"))`)
-  const clicked = await clickAndSettle(`[...document.querySelectorAll("footer a")].find((a) => a.getAttribute("href") === "/#starlink")`)
-  const o = await js(OFFSET("starlink"))
-  check(`${vp.tag} footer (hidratado) → /#starlink`, clicked && near(o), `Δ ${o.delta}px`)
+  const clicked = await clickAndSettle(`[...document.querySelectorAll("footer a")].find((a) => a.getAttribute("href") === "/servicos/instalacao-starlink/")`)
+  const at = await path()
+  check(`${vp.tag} footer (hidratado) → Instalação de Starlink`, clicked && at === "/servicos/instalacao-starlink/", at)
+  await open(url("/"), vp)
 
   // Capturas de página inteira por seção relevante
   for (const [id, name] of [
@@ -334,16 +393,13 @@ for (const vp of VIEWPORTS) {
   check(`${vp.tag} sem aviso de hidratação`, hydration.length === 0)
 }
 
-// Páginas-hub: desktop e mobile
+// Site público inteiro: todas as URLs do sitemap em todas as viewports
+const sitemap = await (await fetch(url("/sitemap.xml"))).text()
+const PAGES = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname)
+check("sitemap.xml lista o site público", PAGES.length >= 40, `${PAGES.length} URLs`)
 const internal = new Set()
-for (const vp of [
-  { tag: "1440x900", w: 1440, h: 900 },
-  { tag: "1366x768", w: 1366, h: 768 },
-  { tag: "834x1112", w: 834, h: 1112 },
-  { tag: "390x844", w: 390, h: 844, mobile: true },
-  { tag: "360x640", w: 360, h: 640, mobile: true },
-]) {
-  for (const p of PAGES.slice(1)) {
+for (const vp of SITE_VIEWPORTS) {
+  for (const p of PAGES) {
     events.length = 0
     await open(url(p), vp)
     const info = await js(`({
@@ -351,22 +407,87 @@ for (const vp of [
       hscroll: document.documentElement.scrollWidth > innerWidth,
       links: [...document.querySelectorAll("a[href]")].map((a) => a.getAttribute("href")).filter((h) => h.startsWith("/")),
       header: !!document.querySelector("header"), footer: !!document.querySelector("footer"),
+      unlabeled: [...document.querySelectorAll("button, a[href], input, select, textarea")].filter((el) => {
+        if (el.closest("[aria-hidden=true]") || el.type === "hidden" || el.tabIndex < 0) return false
+        const name = (el.getAttribute("aria-label") || el.textContent || "").trim() || (el.id && document.querySelector('label[for="' + el.id + '"]')?.textContent.trim())
+        return !name
+      }).length,
+      imgNoAlt: [...document.querySelectorAll("img")].filter((i) => !i.hasAttribute("alt")).length,
     })`)
     for (const l of info.links) internal.add(l.split("#")[0])
     const dead = await js(DEAD_SPACE)
-    check(`${vp.tag} ${p}: H1 único, header/footer, sem overflow`, info.h1 === 1 && !info.hscroll && info.header && info.footer, JSON.stringify({ h1: info.h1, hscroll: info.hscroll }))
-    check(`${vp.tag} ${p}: sem espaço morto > 220 px`, (dead[0]?.h ?? 0) <= 220, dead.map((d) => `${d.h}px@${d.in}`).join(" · "))
-    check(`${vp.tag} ${p}: console/CSP/requests limpos`, events.length === 0, events.slice(0, 4).join(" | "))
-    await shot(`page-${p.replaceAll("/", "") || "home"}-${vp.tag}`)
-    await js(`window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })`)
-    await settle()
-    await shot(`page-${p.replaceAll("/", "") || "home"}-${vp.tag}-end`)
+    const layout = await js(LAYOUT_RULES)
+    const tag = `${vp.tag} ${p}`
+    check(`${tag}: H1 único, header/footer, sem overflow`, info.h1 === 1 && !info.hscroll && info.header && info.footer, JSON.stringify({ h1: info.h1, hscroll: info.hscroll }))
+    check(`${tag}: controles com nome acessível e imagens com alt`, info.unlabeled === 0 && info.imgNoAlt === 0, JSON.stringify({ unlabeled: info.unlabeled, imgNoAlt: info.imgNoAlt }))
+    check(`${tag}: sem espaço morto > 220 px`, (dead[0]?.h ?? 0) <= 220, dead.map((d) => `${d.h}px@${d.in}`).join(" · "))
+    check(`${tag}: sem coluna vazia nem card órfão`, layout.emptyRight.length === 0 && layout.orphans.length === 0, JSON.stringify(layout))
+    check(`${tag}: console/CSP/requests/hidratação limpos`, events.length === 0, events.slice(0, 4).join(" | "))
+    if (vp.shots) {
+      const name = p.replaceAll("/", "_").replace(/^_|_$/g, "") || "home"
+      await shot(`site-${name}-${vp.tag}`)
+      await js(`window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" })`)
+      await settle()
+      await shot(`site-${name}-${vp.tag}-end`)
+    }
   }
 }
-// Todo link interno responde 200 (nenhum 404 público)
+// Todo link interno renderizado responde 200 (nenhum 404 público)
 for (const l of internal) {
   const res = await fetch(url(l), { redirect: "manual" })
   check(`HTTP ${l}`, res.status === 200, String(res.status))
+}
+// 404 real e redirects
+{
+  const res = await fetch(url("/pagina-que-nao-existe/"), { redirect: "manual" })
+  check("404: status 404 com a página da Timp", res.status === 404 && (await res.text()).includes("Esta página não foi encontrada."), String(res.status))
+  for (const [from, to] of [
+    ["/orcamento/", "/contato/#projeto"],
+    ["/conhecimento/", "/blog/"],
+    ["/servicos/nao-existe/", null],
+  ]) {
+    const r = await fetch(url(from), { redirect: "manual" })
+    if (to) check(`redirect ${from} → ${to}`, [301, 308].includes(r.status) && r.headers.get("location")?.endsWith(to), `${r.status} ${r.headers.get("location")}`)
+    else check(`${from} → 404 (dynamicParams = false)`, r.status === 404, String(r.status))
+  }
+}
+// Âncora na mesma página após hidratar (índice de /servicos/)
+await open(url("/servicos/"), { w: 1440, h: 900 })
+{
+  const clicked = await clickAndSettle(`document.querySelector('nav[aria-label="Frentes de serviço"] a[href="#monitoramento-24h"]')`)
+  const o = await js(OFFSET("monitoramento-24h"))
+  check("/servicos/ índice (hidratado) → #monitoramento-24h", clicked && near(o), `Δ ${o.delta}px`)
+}
+// Consentimento de cookies: banner, escolha persistida e preferências pelo footer
+await send("Network.clearBrowserCookies")
+await open(url("/empresa/"), { w: 1440, h: 900 })
+{
+  const banner = await js(`!!document.querySelector('[aria-label="Aviso de cookies"]')`)
+  await clickAt(`[...document.querySelectorAll("button")].find((b) => b.textContent.trim() === "Rejeitar não necessários")`)
+  await settle()
+  const cookie = await js("document.cookie")
+  const gone = await js(`!document.querySelector('[aria-label="Aviso de cookies"]')`)
+  await clickAt(`[...document.querySelectorAll("footer button")].find((b) => b.textContent.includes("Preferências de cookies"))`)
+  await settle()
+  const dialog = await js(`!!document.querySelector('[role="dialog"][aria-modal="true"]')`)
+  await send("Input.dispatchKeyEvent", { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 })
+  await settle()
+  const closed = await js(`!document.querySelector('[role="dialog"][aria-modal="true"]')`)
+  check("cookies: banner, escolha persistida, preferências pelo footer e Esc", banner && /timp_consent=/.test(cookie) && gone && dialog && closed, JSON.stringify({ banner, cookie: /timp_consent=/.test(cookie), gone, dialog, closed }))
+}
+await CONSENT_SET()
+// Formulário real (opcional: grava uma solicitação de teste — limpar depois; ver docs)
+if (process.env.QA_FORM === "1") {
+  await open(url("/contato/#projeto"), { w: 1440, h: 900 })
+  const res = await js(`(async () => {
+    const f = document.querySelector("#projeto form")
+    const set = (name, v) => { const el = f.querySelector('[name="' + name + '"]'); const proto = el.tagName === "SELECT" ? HTMLSelectElement.prototype : el.tagName === "TEXTAREA" ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; Object.getOwnPropertyDescriptor(proto, "value").set.call(el, v); el.dispatchEvent(new Event(el.tagName === "SELECT" ? "change" : "input", { bubbles: true })) }
+    set("name", "QA Timp"); set("email", "qa-form@example.test"); set("phone", "(21) 90000-0000"); set("city", "Rio de Janeiro"); set("projectType", "Empresa"); set("message", "Teste automatizado de QA.")
+    f.querySelector('button[type="submit"]').click()
+    for (let i = 0; i < 60; i++) { await new Promise((r) => setTimeout(r, 250)); const s = document.querySelector('#projeto [role="status"], #projeto [role="alert"]'); if (s) return s.textContent }
+    return "sem resposta"
+  })()`)
+  check("formulário real: solicitação gravada e confirmada", /registrada/.test(res) && !/NÃO REGISTRADA/.test(res), res.slice(0, 120))
 }
 
 // Monitoramento: demonstração passiva e automática (só na tela)

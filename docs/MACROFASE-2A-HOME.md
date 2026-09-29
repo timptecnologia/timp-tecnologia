@@ -1,9 +1,9 @@
-# Macrofase 2A — Home Pública Completa · Relatório (em andamento)
+# Macrofase 2A — Home Pública Completa · Relatório
 
 | Campo | Valor |
 |---|---|
 | Data | 2026-09-29 |
-| Estado | Correções pós-auditoria concluídas; **aguardando validação visual manual** antes do commit |
+| Estado | Incorporada à Macrofase 2 completa — fonte de verdade atual: `docs/MACROFASE-2-SITE-PUBLICO.md` (§8 abaixo resume o que mudou na Home) |
 | Referência | `design-reference/` (baseline 2), somente leitura — 145/145 íntegros |
 
 ## 1. Escopo entregue
@@ -112,3 +112,18 @@ Duas imagens fictícias, estilo câmera de segurança (grande-angular, leve ruí
 ### 7.10 QA e gates
 - `npm run qa:home`: 329/329. Cobre âncoras por URL (Home e `/contato/#projeto`, `/servicos/#…`, `/solucoes/#…`), header/menu → páginas, CTAs → formulário, CTA fixo, navegação hidratada, sticky/flat sem corte, espaço morto, páginas-hub (H1, overflow, console/CSP/requests), HTTP 200 em todos os links internos, demonstração passiva, 924×540 manual, reduced motion e sem JS. Viewports: 1440×900, 1366×768, 1280×680, 1112×834, 834×1112, 924×540, 390×844, 375×667 e 360×640.
 - `npm run check`: typecheck, lint, 279 testes, build, check:bundle, audit (0), secret scan, env-leak e design-reference 145/145.
+
+## 8. Macrofase 2 completa — mudanças na Home (2026-09-29)
+
+Detalhes em `docs/MACROFASE-2-SITE-PUBLICO.md`.
+- **Removidos:** o bloco institucional ("Timp Tecnologia" + "Conheça a Timp") e o CTA final grande. Empresa e Contato vivem em páginas próprias.
+- **Ordem:** Hero → Serviços → Soluções → Starlink → Processo (respiro; separa as duas experiências sticky) → Infraestrutura em profundidade → Construtoras → Monitoramento → 1 artigo em destaque (clicável, "Ler artigo" + "Ver todos no Blog") → Footer.
+- **Links:** serviços, segmentos e CTAs das seções apontam para as páginas reais. "Conhecer instalação Starlink", "Conhecer solução para construtoras" e "Conhecer a Central Timp" voltaram, porque as páginas existem.
+- **Demonstração da Central:** as imagens aprovadas `cam-07-entrada-lateral.webp` e `cam-08-corredor-lateral.webp` (1280×720, 16:9) aparecem quando as câmeras são "abertas":
+  - `object-cover` em quadro 16:9: sem distorção e sem CLS, porque o espaço é reservado pelo aspect-ratio;
+  - `next/image` com carregamento lazy e `sizes` por faixa;
+  - as imagens já trazem nome e carimbo de hora; os rótulos do topo somem com a câmera aberta, e o local aparece na base sobre um degradê;
+  - horários da demonstração alinhados ao carimbo (15:42) e evento "Porta aberta sem acesso registrado", coerente com uma imagem diurna;
+  - continua passiva: o único controle é Pausar/Retomar.
+- **Footer:** atendimento + © na mesma linha (desktop), links legais, "Preferências de cookies" e assinatura Kinau centralizada como última informação do site.
+- **Cookies:** banner de consentimento no primeiro acesso, sem afetar o layout (sobreposição fixa).

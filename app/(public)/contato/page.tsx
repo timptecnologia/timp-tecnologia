@@ -1,11 +1,12 @@
 import { ProjectForm } from "@/components/forms/project-form"
 import { S } from "@/components/sections/home/ui"
+import { ContactChannels } from "@/components/sections/pages/links"
 import { PageIntro } from "@/components/sections/pages/page-intro"
-import { FACTS, WA_MESSAGES } from "@/lib/home/content"
+import { FACTS } from "@/lib/home/content"
 import { buildMetadata } from "@/lib/seo/metadata"
 import { PAGE_SEO } from "@/lib/seo/pages"
-import { SITE, whatsappHref } from "@/lib/site/constants"
-import { PROJECT_FORM_ID } from "@/lib/site/routes"
+import { SITE } from "@/lib/site/constants"
+import { PROJECT_FORM_ID, requiredHref } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
 export const metadata = buildMetadata(PAGE_SEO.contato)
@@ -19,66 +20,59 @@ const NEXT_STEPS = [
 ] as const
 
 /**
- * /contato/ — contato e solicitação de projeto (saiu da Home na rodada pós-2A).
- * O formulário fica em #projeto: destino de todos os CTAs "Solicitar um projeto".
- * Entrega: validação no servidor e orientação honesta para WhatsApp/e-mail enquanto o
- * canal definitivo não existe — nunca afirma envio sem persistência/entrega.
+ * /contato/ — contato e solicitação de projeto. O formulário fica em #projeto (destino
+ * de todos os CTAs "Solicitar um projeto") e GRAVA a solicitação no servidor
+ * (public.project_requests); o sucesso só é informado depois da gravação.
  */
 export default function ContatoPage() {
-  const rows = [
-    {
-      k: "WHATSAPP",
-      v: (
-        <a href={whatsappHref(WA_MESSAGES.home)} target="_blank" rel="noopener noreferrer" className="text-[17px] font-semibold text-white no-underline hover:text-blue-300">
-          {SITE.whatsappDisplay}
-        </a>
-      ),
-    },
-    {
-      k: "E-MAIL",
-      v: (
-        <a href={`mailto:${SITE.email}`} className="text-[17px] font-semibold text-white no-underline hover:text-blue-300">
-          {SITE.email}
-        </a>
-      ),
-    },
-    { k: "ATENDIMENTO", v: <span className="block max-w-[26em] text-[16px] leading-normal text-white">{AREA}</span> },
-  ]
   return (
     <>
       <PageIntro
-        name="Contato"
-        path={PAGE_SEO.contato.path}
+        crumbs={[{ name: "Contato", path: PAGE_SEO.contato.path }]}
         eyebrow="CONTATO"
         title="Conte o que sua operação precisa."
-        lead="Descreva o ambiente e o objetivo. A equipe comercial retorna com o próximo passo: visita técnica, diagnóstico ou proposta de projeto."
+        lead="Descreva o ambiente e o objetivo pelo formulário, pelo WhatsApp ou por e-mail. A equipe comercial retorna com o próximo passo: visita técnica, diagnóstico ou proposta de projeto."
+        aside={
+          <div className="flex flex-col gap-3 rounded-md border border-g-800 bg-g-900 p-5">
+            <span className="font-mono text-[11px] tracking-[0.08em] text-g-400">FALE DIRETO</span>
+            <ContactChannels area={AREA} />
+          </div>
+        }
       />
-      <section aria-label="Canais e formulário" data-no-sticky-cta="" className="bg-blue-900">
-        <div className={cn(S.container, S.pad, "grid grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] items-start gap-[clamp(32px,5vw,80px)]")}>
+      <section aria-labelledby="projeto-titulo" data-no-sticky-cta="" className="bg-blue-900">
+        <div className={cn(S.container, S.pad, "grid items-start gap-x-[clamp(32px,5vw,72px)] gap-y-10 desktop:grid-cols-[minmax(0,7fr)_minmax(0,4fr)]")}>
+          <div id={PROJECT_FORM_ID} data-final-cta="" className="flex min-w-0 scroll-mt-[calc(var(--header-height)+16px)] flex-col gap-4">
+            <h2 id="projeto-titulo" className="m-0 text-[clamp(26px,2.6vw,36px)] leading-[1.1] font-bold tracking-[-0.02em] text-white">
+              Solicitar um projeto
+            </h2>
+            <ProjectForm />
+          </div>
           <div className="flex flex-col gap-8">
-            <dl className="m-0 flex flex-col border-t border-blue-300/22">
-              {rows.map((r) => (
-                <div key={r.k} className="flex flex-wrap justify-between gap-4 border-b border-blue-300/14 py-4">
-                  <dt className="pt-1 font-mono text-[11px] tracking-[0.08em] text-blue-300">{r.k}</dt>
-                  <dd className="m-0">{r.v}</dd>
-                </div>
-              ))}
-            </dl>
             <div className="flex flex-col gap-4">
               <h2 className="m-0 font-mono text-[12px] font-normal tracking-[0.1em] text-blue-300">PRÓXIMO PASSO</h2>
-              <ul className="m-0 flex list-none flex-col gap-3 p-0">
-                {NEXT_STEPS.map(([t, d]) => (
-                  <li key={t} className="flex flex-col gap-1">
-                    <span className="text-[17px] font-semibold text-white">{t}</span>
-                    <span className="text-[15px] leading-[1.55] text-g-300">{d}</span>
+              <ol className="m-0 flex list-none flex-col gap-4 p-0">
+                {NEXT_STEPS.map(([t, d], i) => (
+                  <li key={t} className="grid grid-cols-[28px_minmax(0,1fr)] gap-2">
+                    <span className="pt-0.5 font-mono text-[12px] text-blue-300">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="flex flex-col gap-1">
+                      <span className="text-[17px] font-semibold text-white">{t}</span>
+                      <span className="text-[15px] leading-[1.55] text-g-300">{d}</span>
+                    </span>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
-          </div>
-          <div id={PROJECT_FORM_ID} data-final-cta="" className="flex scroll-mt-[calc(var(--header-height)+16px)] flex-col gap-4">
-            <h2 className="m-0 text-[clamp(24px,2.4vw,32px)] leading-[1.15] font-bold tracking-[-0.02em] text-white">Solicitar um projeto</h2>
-            <ProjectForm />
+            <div className="flex flex-col gap-2 rounded-md border border-blue-300/20 p-5">
+              <h2 className="m-0 font-mono text-[12px] font-normal tracking-[0.1em] text-blue-300">SEUS DADOS</h2>
+              <p className="m-0 text-[15px] leading-[1.6] text-g-200">
+                Os dados do formulário são usados somente para responder a esta solicitação de projeto. Não enviamos newsletter nem compartilhamos com terceiros
+                para marketing.{" "}
+                <a href={requiredHref("privacidade")} className="font-semibold text-white underline decoration-white/40 underline-offset-3 hover:decoration-white">
+                  Política de Privacidade
+                </a>
+              </p>
+            </div>
+            <p className="m-0 text-[14px] leading-[1.6] text-g-300">Projetos fora do Rio de Janeiro são avaliados conforme porte, escopo e viabilidade logística.</p>
           </div>
         </div>
       </section>

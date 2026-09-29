@@ -68,7 +68,7 @@ export function MonitoringDemo() {
   }, [playing, visible, step])
 
   const ev = MON_DEMO_STEPS[step]!
-  const timeline = [{ t: "02:14:37", what: "Evento recebido · Zona 03", tone: "crit" as const }, ...MON_DEMO_STEPS.slice(1, step + 1).map((s) => s.add!)]
+  const timeline = [{ t: "15:42:18", what: "Evento recebido · Zona 03", tone: "crit" as const }, ...MON_DEMO_STEPS.slice(1, step + 1).map((s) => s.add!)]
   const camsOpen = step >= 2
   const closed = step === LAST
 
@@ -105,11 +105,11 @@ export function MonitoringDemo() {
               {ev.status}
             </span>
           </span>
-          <span className="font-mono text-[16px] font-medium text-g-100 tabular">02:14:37</span>
+          <span className="font-mono text-[16px] font-medium text-g-100 tabular">15:42:18</span>
         </div>
         <div className="flex flex-col gap-3.5 p-4">
           <div className="flex flex-col gap-1">
-            <span className="text-[19px] font-bold tracking-[-0.01em] text-white">Abertura fora do horário</span>
+            <span className="text-[19px] font-bold tracking-[-0.01em] text-white">Porta aberta sem acesso registrado</span>
             <span className="text-[13px] text-g-400">Empresa X · Unidade Barra · Entrada lateral · Zona 03</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -122,19 +122,29 @@ export function MonitoringDemo() {
                 )}
               >
                 {cam.src && (
+                  // Imagem ilustrativa 16:9 (1280×720) no quadro 16:9: object-cover sem distorção nem corte relevante.
+                  // Carregamento lazy (abaixo da dobra); o quadro com aspect-ratio reserva o espaço (sem CLS).
                   <Image
                     src={cam.src}
                     alt=""
                     fill
-                    sizes="(min-width: 1280px) 260px, 45vw"
+                    sizes="(min-width: 1280px) 320px, (min-width: 768px) 40vw, 46vw"
                     className={cn("object-cover transition-opacity duration-320", camsOpen ? "opacity-100" : "opacity-0")}
                   />
                 )}
-                <span className="relative flex justify-between font-mono text-[10px] text-g-200">
+                {/* A imagem já traz o nome da câmera e o carimbo de hora gravados: rótulos do topo só com a câmera fechada */}
+                <span className={cn("relative flex justify-between font-mono text-[10px] text-g-200", cam.src && camsOpen && "invisible")}>
                   <span>{cam.id}</span>
                   <span>{camsOpen ? "● AO VIVO" : "fechada"}</span>
                 </span>
-                <span className="relative font-mono text-[10px] text-g-300">{cam.place}</span>
+                <span
+                  className={cn(
+                    "relative -mx-2 -mb-2 px-2 pt-4 pb-1.5 font-mono text-[10px]",
+                    cam.src && camsOpen ? "bg-[linear-gradient(to_top,rgb(7_9_12/0.85),transparent)] text-white" : "text-g-300",
+                  )}
+                >
+                  {cam.src && camsOpen ? `● AO VIVO · ${cam.place}` : cam.place}
+                </span>
               </div>
             ))}
           </div>

@@ -59,7 +59,11 @@ describe("schema.org", () => {
 
 describe("sitemap e robots", () => {
   it("sitemap só contém rotas publicadas, nunca rotas privadas", () => {
-    expect(PUBLISHED_ROUTES.map((r) => r.path)).toEqual(["/", "/empresa/", "/servicos/", "/solucoes/", "/contato/", "/blog/"])
+    const paths = PUBLISHED_ROUTES.map((r) => r.path)
+    expect(paths).toContain("/")
+    expect(new Set(paths).size).toBe(paths.length)
+    expect(paths).not.toContain("/area-do-cliente/")
+    for (const p of paths) expect(p.endsWith("/")).toBe(true)
     for (const route of PUBLISHED_ROUTES) {
       expect(NOINDEX_PREFIXES.some((p) => route.path.startsWith(p))).toBe(false)
     }

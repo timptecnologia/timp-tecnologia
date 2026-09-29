@@ -23,6 +23,8 @@ export const RATE_LIMIT_POLICIES = {
   cnpjCheck: { limit: 10, windowMs: 60 * 60_000 },
   mfaVerify: { limit: 5, windowMs: 15 * 60_000 },
   publicForm: { limit: 5, windowMs: 60 * 60_000 },
+  /** Teto global do formulário público (todas as origens somadas): contém spam distribuído. */
+  publicFormGlobal: { limit: 200, windowMs: 60 * 60_000 },
   upload: { limit: 30, windowMs: 60 * 60_000 },
   api: { limit: 120, windowMs: 60_000 },
   expensiveIntegration: { limit: 10, windowMs: 60_000 },
@@ -82,5 +84,8 @@ export function createRateLimiter(store: RateLimitStore, now: () => number = Dat
   }
 }
 
-/** Limiter padrão do processo (memória). Substituir por store compartilhado em produção. */
+/**
+ * Limiter padrão do processo (memória): desenvolvimento, testes e superfícies ainda
+ * internas. Superfícies públicas usam o limiter distribuído (lib/security/shared-rate-limit.ts).
+ */
 export const rateLimiter = createRateLimiter(new MemoryRateLimitStore())

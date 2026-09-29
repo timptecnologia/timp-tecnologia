@@ -158,7 +158,25 @@ begin
       (114, '[+] TIMP Admin promove Cliente Usuário',         'auth', u_timp, 'aal2', 'ok', format('select public.set_membership_role(%L, %L)', m_busr, 'client_admin'), ''),
       -- suspensão imediata (por último: altera estado)
       (120, '[+] TIMP Admin suspende conta',                  'auth', u_timp, 'aal2', 'ok', format('select public.set_profile_status(%L, %L, %L)', u_ausr, 'suspended', 'teste de suspensão'), ''),
-      (121, 'conta suspensa perde acesso imediatamente',      'auth', u_ausr, 'aal1', 'count', 'select 1 from public.units', '0')
+      (121, 'conta suspensa perde acesso imediatamente',      'auth', u_ausr, 'aal1', 'count', 'select 1 from public.units', '0'),
+      -- solicitações de projeto (formulário público) — migration 20260929000100
+      (140, 'anon não grava solicitação direto pela API',      'anon', null, 'aal1', 'denied', format('insert into public.project_requests (name, email, phone, uf, city, project_type) values (%L, %L, %L, %L, %L, %L)', 'Teste RLS', 'rls-lead@example.test', '+5521900000000', 'RJ', 'Rio de Janeiro', 'Empresa'), '42501'),
+      (141, 'cliente autenticado não grava solicitação',       'auth', u_aadm, 'aal2', 'denied', format('insert into public.project_requests (name, email, phone, uf, city, project_type) values (%L, %L, %L, %L, %L, %L)', 'Teste RLS', 'rls-lead@example.test', '+5521900000000', 'RJ', 'Rio de Janeiro', 'Empresa'), '42501'),
+      (142, '[+] servidor (service_role) grava solicitação',   'svc', null, 'aal1', 'ok', format('insert into public.project_requests (name, email, phone, uf, city, project_type) values (%L, %L, %L, %L, %L, %L)', 'Teste RLS', 'rls-lead@example.test', '+5521900000000', 'RJ', 'Rio de Janeiro', 'Empresa'), ''),
+      (143, 'servidor não lê solicitações (só grava)',         'svc', null, 'aal1', 'denied', 'select * from public.project_requests', '42501'),
+      (144, '[+] TIMP Admin com MFA lê a solicitação',         'auth', u_timp, 'aal2', 'count', 'select 1 from public.project_requests where email = ''rls-lead@example.test''', '1'),
+      (145, 'TIMP Admin sem MFA não lê solicitações',          'auth', u_timp, 'aal1', 'count', 'select 1 from public.project_requests', '0'),
+      (146, 'cliente não lê solicitações de ninguém',          'auth', u_aadm, 'aal2', 'count', 'select 1 from public.project_requests', '0'),
+      (147, 'servidor não altera solicitação',                 'svc', null, 'aal1', 'denied', 'update public.project_requests set status = ''spam''', '42501'),
+      (148, 'servidor não apaga solicitação',                  'svc', null, 'aal1', 'denied', 'delete from public.project_requests', '42501'),
+      (149, 'servidor não define status (coluna protegida)',   'svc', null, 'aal1', 'denied', format('insert into public.project_requests (name, email, phone, uf, city, project_type, status) values (%L, %L, %L, %L, %L, %L, %L)', 'Teste RLS', 'rls-lead@example.test', '+5521900000000', 'RJ', 'Rio de Janeiro', 'Empresa', 'closed'), '42501'),
+      (150, 'telefone fora do formato é barrado pelo banco',   'svc', null, 'aal1', 'denied', format('insert into public.project_requests (name, email, phone, uf, city, project_type) values (%L, %L, %L, %L, %L, %L)', 'Teste RLS', 'rls-lead2@example.test', '21999999999', 'RJ', 'Rio de Janeiro', 'Empresa'), '23514'),
+      -- rate limit distribuído
+      (151, 'anon não executa o rate limit',                   'anon', null, 'aal1', 'denied', 'select public.rate_limit_hit(''rls-check:x'', 60)', '42501'),
+      (152, 'autenticado não executa o rate limit',            'auth', u_timp, 'aal2', 'denied', 'select public.rate_limit_hit(''rls-check:x'', 60)', '42501'),
+      (153, '[+] servidor executa o rate limit',               'svc', null, 'aal1', 'count', 'select 1 from public.rate_limit_hit(''rls-check:k'', 60) where hits = 1', '1'),
+      (154, '[+] segunda chamada incrementa a janela',         'svc', null, 'aal1', 'count', 'select 1 from public.rate_limit_hit(''rls-check:k'', 60) where hits = 2', '1'),
+      (155, 'contadores inacessíveis ao servidor via API',     'svc', null, 'aal1', 'denied', 'select * from app.rate_limit_buckets', '42501')
     ) as t(id, name, who, uid, aal, kind, sql, expected)
     order by id
   loop

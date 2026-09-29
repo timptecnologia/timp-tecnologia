@@ -1,15 +1,13 @@
 /**
- * Registro de URLs do site público — design-reference/docs/sitemap.md + decisões de
- * produto pós-handoff (rodada pós-2A: hubs /solucoes/ e /blog/; "Conhecimento" → "Blog").
+ * Registro de URLs do site público — arquitetura final da Macrofase 2
+ * (docs/MACROFASE-2-SITE-PUBLICO.md). Evolução de design-reference/docs/sitemap.md:
+ * hubs /solucoes/ e /blog/ (antes /conhecimento/) adicionados por decisão de produto.
  *
- * Regra do handoff: nenhum href="#" e nenhum link quebrado em produção.
- * - `path` é a URL DEFINITIVA planejada (não muda quando a página for publicada).
- * - `published` indica se a página já existe no código.
- * - `interim` é o destino provisório enquanto a página não existe: a entrada equivalente
- *   num hub publicado (ex.: /servicos/#cabeamento-estruturado) ou a seção mais completa
- *   da Home. Sem equivalente → `null` e o link NÃO é renderizado.
- * Quando a Macrofase 2B publicar a página, basta marcar `published: true`: todos os
- * links passam a usar `path` automaticamente.
+ * Regra: nenhum href="#", nenhum link para 404.
+ * - `path` é a URL DEFINITIVA.
+ * - `published` indica se a página existe no código.
+ * - Página não publicada sem destino equivalente (`interim: null`) nunca é linkada.
+ *   Projetos e Clientes e Parceiros aguardam conteúdo real (sem cases/logos inventados).
  * Verificado em tests/unit/site-routes.test.ts.
  */
 
@@ -31,19 +29,17 @@ export interface SiteRoute {
   path: `/${string}`
   label: string
   published: boolean
-  /** Destino provisório enquanto a página não é publicada (null = sem equivalente). */
+  /** Destino provisório enquanto a página não é publicada (null = sem equivalente: não linkar). */
   interim: string | null
 }
 
-/** Id da entrada de uma rota filha dentro do hub: último segmento da URL definitiva. */
+/** Último segmento da URL (slug / id de âncora). */
 export function entryId(path: string): string {
   return path.split("/").filter(Boolean).pop() ?? ""
 }
 
 const page = (path: SiteRoute["path"], label: string): SiteRoute => ({ path, label, published: true, interim: null })
 const planned = (path: SiteRoute["path"], label: string, interim: string | null): SiteRoute => ({ path, label, published: false, interim })
-/** Página filha ainda não publicada, representada pela sua entrada no hub. */
-const inHub = (hub: "/servicos/" | "/solucoes/", path: SiteRoute["path"], label: string): SiteRoute => planned(path, label, `${hub}#${entryId(path)}`)
 
 export const ROUTES = {
   home: page("/", "Início"),
@@ -52,43 +48,72 @@ export const ROUTES = {
   solucoes: page("/solucoes/", "Soluções"),
   contato: page("/contato/", "Contato"),
   blog: page("/blog/", "Blog"),
+  equipamentos: page("/equipamentos-e-tecnologia/", "Equipamentos e Tecnologia"),
+  privacidade: page("/politica-de-privacidade/", "Política de Privacidade"),
+  cookies: page("/politica-de-cookies/", "Política de Cookies"),
+  termos: page("/termos-de-uso/", "Termos de Uso"),
   areaCliente: page("/area-do-cliente/", "Área do Cliente"),
 
-  cabeamento: inHub("/servicos/", "/servicos/cabeamento-estruturado/", "Cabeamento Estruturado"),
-  redes: inHub("/servicos/", "/servicos/infraestrutura-de-redes/", "Infraestrutura de Redes"),
-  wifi: inHub("/servicos/", "/servicos/wi-fi-empresarial/", "Wi-Fi Empresarial"),
-  fibra: inHub("/servicos/", "/servicos/fibra-optica/", "Fibra Óptica"),
-  // Starlink e Monitoramento: a Home tem a seção mais completa até a página existir
-  starlink: planned("/servicos/instalacao-starlink/", "Instalação de Starlink", HOME_ANCHORS.starlink),
-  cftv: inHub("/servicos/", "/servicos/cftv-cameras-de-seguranca/", "CFTV e Câmeras de Segurança"),
-  segurancaEletronica: inHub("/servicos/", "/servicos/seguranca-eletronica/", "Segurança Eletrônica"),
-  alarmes: inHub("/servicos/", "/servicos/alarmes/", "Alarmes"),
-  controleAcesso: inHub("/servicos/", "/servicos/controle-de-acesso/", "Controle de Acesso"),
-  fechaduras: inHub("/servicos/", "/servicos/fechaduras-eletronicas/", "Fechaduras Eletrônicas"),
-  monitoramento: planned("/servicos/monitoramento-24h/", "Monitoramento 24h", HOME_ANCHORS.monitoramento),
-  suporteTi: inHub("/servicos/", "/servicos/suporte-de-ti/", "Suporte de TI para Empresas"),
-  consultoriaTi: inHub("/servicos/", "/servicos/consultoria-em-ti/", "Consultoria em TI"),
-  servidores: inHub("/servicos/", "/servicos/servidores-cloud-virtualizacao/", "Servidores, Cloud e Virtualização"),
-  segurancaInformacao: inHub("/servicos/", "/servicos/seguranca-da-informacao/", "Segurança da Informação"),
-  automacao: inHub("/servicos/", "/servicos/automacao-predial/", "Automação Predial"),
-  telefonia: inHub("/servicos/", "/servicos/telefonia-ip-pabx/", "Telefonia IP e PABX"),
+  // Serviços
+  cabeamento: page("/servicos/cabeamento-estruturado/", "Cabeamento Estruturado"),
+  redes: page("/servicos/infraestrutura-de-redes/", "Infraestrutura de Redes"),
+  wifi: page("/servicos/wi-fi-empresarial/", "Wi-Fi Empresarial"),
+  fibra: page("/servicos/fibra-optica/", "Fibra Óptica"),
+  starlink: page("/servicos/instalacao-starlink/", "Instalação de Starlink"),
+  cftv: page("/servicos/cftv-cameras-de-seguranca/", "CFTV e Câmeras de Segurança"),
+  segurancaEletronica: page("/servicos/seguranca-eletronica/", "Segurança Eletrônica"),
+  alarmes: page("/servicos/alarmes/", "Alarmes"),
+  controleAcesso: page("/servicos/controle-de-acesso/", "Controle de Acesso"),
+  fechaduras: page("/servicos/fechaduras-eletronicas/", "Fechaduras Eletrônicas"),
+  monitoramento: page("/servicos/monitoramento-24h/", "Monitoramento 24h"),
+  suporteTi: page("/servicos/suporte-de-ti/", "Suporte de TI para Empresas"),
+  consultoriaTi: page("/servicos/consultoria-em-ti/", "Consultoria em TI"),
+  servidores: page("/servicos/servidores-cloud-virtualizacao/", "Servidores, Cloud e Virtualização"),
+  segurancaInformacao: page("/servicos/seguranca-da-informacao/", "Segurança da Informação"),
+  automacao: page("/servicos/automacao-predial/", "Automação Predial"),
+  telefonia: page("/servicos/telefonia-ip-pabx/", "Telefonia IP e PABX"),
 
-  construtoras: planned("/solucoes/construtoras-e-engenharia/", "Construtoras e Engenharia", HOME_ANCHORS.construtoras),
-  empresas: inHub("/solucoes/", "/solucoes/empresas-e-escritorios/", "Empresas e Escritórios"),
-  condominios: inHub("/solucoes/", "/solucoes/condominios/", "Condomínios"),
-  clinicas: inHub("/solucoes/", "/solucoes/clinicas/", "Clínicas"),
-  comercio: inHub("/solucoes/", "/solucoes/comercio-e-restaurantes/", "Comércio e Restaurantes"),
-  industrias: inHub("/solucoes/", "/solucoes/industrias-e-galpoes/", "Indústrias e Galpões"),
-  multiplasUnidades: inHub("/solucoes/", "/solucoes/multiplas-unidades/", "Empresas com Múltiplas Unidades"),
+  // Soluções
+  construtoras: page("/solucoes/construtoras-e-engenharia/", "Construtoras e Engenharia"),
+  empresas: page("/solucoes/empresas-e-escritorios/", "Empresas e Escritórios"),
+  condominios: page("/solucoes/condominios/", "Condomínios"),
+  clinicas: page("/solucoes/clinicas/", "Clínicas"),
+  comercio: page("/solucoes/comercio-e-restaurantes/", "Comércio e Restaurantes"),
+  industrias: page("/solucoes/industrias-e-galpoes/", "Indústrias e Galpões"),
+  multiplasUnidades: page("/solucoes/multiplas-unidades/", "Empresas com Múltiplas Unidades"),
 
-  // Sem página nem equivalente: links omitidos até a publicação.
-  equipamentos: planned("/equipamentos-e-tecnologia/", "Equipamentos e Tecnologia", null),
+  // Aguardando conteúdo real: estrutura prevista, fora da navegação
   projetos: planned("/projetos/", "Projetos", null),
   clientesParceiros: planned("/clientes-e-parceiros/", "Clientes e Parceiros", null),
+  // Formulário vive em /contato/#projeto (redirect em next.config.ts)
   orcamento: planned("/orcamento/", "Orçamento", PROJECT_CTA),
 } as const satisfies Record<string, SiteRoute>
 
 export type RouteKey = keyof typeof ROUTES
+
+export const SERVICE_KEYS = [
+  "cabeamento",
+  "redes",
+  "wifi",
+  "fibra",
+  "starlink",
+  "cftv",
+  "segurancaEletronica",
+  "alarmes",
+  "controleAcesso",
+  "fechaduras",
+  "monitoramento",
+  "suporteTi",
+  "consultoriaTi",
+  "servidores",
+  "segurancaInformacao",
+  "automacao",
+  "telefonia",
+] as const satisfies readonly RouteKey[]
+export type ServiceKey = (typeof SERVICE_KEYS)[number]
+
+export const SOLUTION_KEYS = ["construtoras", "empresas", "condominios", "clinicas", "comercio", "industrias", "multiplasUnidades"] as const satisfies readonly RouteKey[]
+export type SolutionKey = (typeof SOLUTION_KEYS)[number]
 
 /** Onde o link está: `section` (âncora exata, ex.: "/#starlink") ou `page` (ex.: "/servicos/"). */
 export interface LinkContext {
@@ -97,24 +122,22 @@ export interface LinkContext {
 }
 
 /**
- * Destino navegável HOJE para a rota: a URL definitiva se publicada; senão o destino
- * provisório. Retorna null quando não há destino aceitável, ou quando o destino
- * provisório é o próprio lugar onde o link está (a própria seção, ou uma entrada da
- * mesma página-hub) — um link para si mesmo não leva a lugar algum.
+ * Destino navegável para a rota: a URL definitiva se publicada; senão o destino
+ * provisório. null quando não há destino aceitável ou quando o link apontaria para o
+ * próprio lugar onde está.
  */
 export function href(key: RouteKey, from: LinkContext = {}): string | null {
   const route: SiteRoute = ROUTES[key]
-  if (route.published) return route.path
-  const dest = route.interim
+  const dest = route.published ? route.path : route.interim
   if (!dest) return null
   if (from.section && dest === from.section) return null
-  if (from.page && dest.startsWith(`${from.page}#`)) return null
+  if (from.page && (dest === from.page || dest.startsWith(`${from.page}#`))) return null
   return dest
 }
 
 /**
- * Para pontos fixos da interface cuja rota SEMPRE tem destino (publicada ou provisória).
- * Uma rota mal configurada falha nos testes (site-routes.test.ts), nunca vira link quebrado.
+ * Para pontos fixos da interface cuja rota SEMPRE tem destino. Uma rota mal configurada
+ * falha nos testes (site-routes.test.ts), nunca vira link quebrado.
  */
 export function requiredHref(key: RouteKey): string {
   const dest = href(key)
@@ -122,17 +145,17 @@ export function requiredHref(key: RouteKey): string {
   return dest
 }
 
-/**
- * Artigos planejados (seo-geo.md). URL definitiva no Blog; sem corpo publicado ainda
- * (Macrofase 2B) → sem link: o card aparece como conteúdo, sem fingir que o artigo existe.
- */
-export const PUBLISHED_ARTICLES: readonly string[] = []
-
-export function articleHref(slug: string): string | null {
-  return PUBLISHED_ARTICLES.includes(slug) ? `/blog/${slug}/` : null
+/** Rota a partir do caminho definitivo (ex.: slug de /servicos/[slug]/). */
+export function routeKeyByPath(path: string): RouteKey | undefined {
+  return (Object.keys(ROUTES) as RouteKey[]).find((k) => ROUTES[k].path === path)
 }
 
-/** Relatório de pendências (launch-checklist): rotas servidas por destino provisório ou omitidas. */
+/** Artigos do Blog: URL definitiva /blog/{slug}/. */
+export function articlePath(slug: string): `/blog/${string}/` {
+  return `/blog/${slug}/`
+}
+
+/** Relatório de pendências (launch-checklist): rotas não publicadas. */
 export function pendingRoutes(): { key: RouteKey; path: string; interim: string | null }[] {
   return (Object.keys(ROUTES) as RouteKey[])
     .filter((key) => !ROUTES[key].published)

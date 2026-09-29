@@ -1,4 +1,4 @@
-import type { Article } from "@/lib/home/content"
+import type { Article } from "@/lib/content/articles"
 import { cn } from "@/lib/utils"
 
 /** Capa de artigo como diagrama em código (sem foto genérica) — Home.dc.html / Conhecimento.dc.html. */

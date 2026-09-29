@@ -1,73 +1,50 @@
-import { S } from "@/components/sections/home/ui"
-import { CtaButtons } from "@/components/sections/pages/cta-buttons"
+import { JsonLd } from "@/components/seo/json-ld"
+import { FinalCta } from "@/components/sections/home/final-cta"
+import { Section } from "@/components/sections/pages/blocks"
+import { ArticleCards } from "@/components/sections/pages/links"
 import { PageIntro } from "@/components/sections/pages/page-intro"
-import { ArticleCover } from "@/components/sections/shared/article-cover"
-import { MaybeLink } from "@/components/ui/maybe-link"
-import { ARTICLES } from "@/lib/home/content"
+import { ARTICLES } from "@/lib/content/articles"
 import { buildMetadata } from "@/lib/seo/metadata"
 import { PAGE_SEO } from "@/lib/seo/pages"
-import { articleHref } from "@/lib/site/routes"
-import { cn } from "@/lib/utils"
+import { graph, organizationSchema } from "@/lib/seo/schema"
 
 export const metadata = buildMetadata(PAGE_SEO.blog)
 
 /**
- * /blog/ — hub do conteúdo técnico ("Conhecimento" passou a "Blog" na rodada pós-2A).
- * Lista os conteúdos planejados (seo-geo.md). Enquanto um artigo não é publicado
- * (Macrofase 2B), o card é conteúdo sem link — nada de 404, nada de fingir o artigo.
+ * /blog/ — conteúdo técnico da Timp (antes "Conhecimento"). Intenção informacional:
+ * cada artigo linka para a página comercial correspondente.
  */
 export default function BlogPage() {
-  const published = ARTICLES.filter((a) => articleHref(a.slug)).length
+  const cats = [...new Set(ARTICLES.map((a) => a.cat))].map((c) => ({ c, n: ARTICLES.filter((a) => a.cat === c).length }))
   return (
     <>
+      <JsonLd data={graph(organizationSchema())} />
       <PageIntro
-        name="Blog"
-        path={PAGE_SEO.blog.path}
+        crumbs={[{ name: "Blog", path: PAGE_SEO.blog.path }]}
         eyebrow="BLOG · REDES, SEGURANÇA ELETRÔNICA, TI E OBRAS"
         title="Respostas técnicas, escritas por quem instala."
-        lead="Como funcionam redes, câmeras, alarmes, controle de acesso e monitoramento, e o que considerar antes de contratar."
-      />
-      <section aria-labelledby="artigos-titulo" className="bg-white text-g-950">
-        <div className={cn(S.container, S.pad, "flex flex-col gap-[clamp(24px,3vw,40px)]")}>
-          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
-            <h2 id="artigos-titulo" className="m-0 text-[clamp(24px,2.4vw,32px)] font-bold tracking-[-0.02em]">
-              Conteúdos
-            </h2>
-            {published === 0 && <p className="m-0 text-[14px] text-g-600">Artigos completos em publicação.</p>}
-          </div>
-          <ul className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))] gap-x-[clamp(20px,2.5vw,36px)] gap-y-10 p-0">
-            {ARTICLES.map((a) => (
-              <li key={a.slug} id={a.slug}>
-                <MaybeLink
-                  href={articleHref(a.slug)}
-                  className="group flex flex-col gap-4 text-g-950 no-underline hover:text-blue-600"
-                  staticClassName="flex flex-col gap-4 text-g-950"
-                >
-                  <ArticleCover article={a} />
-                  <span className="flex flex-col gap-2">
-                    <span className="font-mono text-[11px] tracking-[0.08em] text-g-500">{a.cat}</span>
-                    <span className="text-[21px] leading-[1.2] font-bold tracking-[-0.015em] text-balance">{a.title}</span>
-                    {a.dek && <span className="text-[15px] leading-[1.55] text-g-600">{a.dek}</span>}
-                  </span>
-                </MaybeLink>
-              </li>
+        lead="Como funcionam redes, câmeras, alarmes, controle de acesso e monitoramento, e o que considerar antes de contratar. Conteúdo da equipe técnica da Timp."
+        aside={
+          <dl className="m-0 flex flex-col rounded-md border border-g-800 bg-g-900 p-5">
+            <dt className="pb-2 font-mono text-[11px] tracking-[0.08em] text-g-400">CATEGORIAS</dt>
+            {cats.map(({ c, n }) => (
+              <dd key={c} className="m-0 flex min-h-11 items-center justify-between gap-3 border-t border-g-800 text-[15px] text-g-100">
+                <span>{c.charAt(0) + c.slice(1).toLowerCase()}</span>
+                <span className="font-mono text-[12px] text-g-400">
+                  {n} {n > 1 ? "artigos" : "artigo"}
+                </span>
+              </dd>
             ))}
-          </ul>
-        </div>
-      </section>
-      <section aria-labelledby="duvida-titulo" data-final-cta="" className="bg-blue-900">
-        <div className={cn(S.container, S.padTight, "flex flex-wrap items-center justify-between gap-x-12 gap-y-6")}>
-          <div className="flex flex-col gap-2">
-            <h2 id="duvida-titulo" className="m-0 text-[clamp(24px,2.6vw,34px)] font-bold tracking-[-0.02em]">
-              Tem uma dúvida sobre o seu ambiente?
-            </h2>
-            <p className="m-0 text-[17px] leading-[1.6] text-g-200">A equipe técnica avalia o caso e indica o próximo passo.</p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <CtaButtons />
-          </div>
-        </div>
-      </section>
+          </dl>
+        }
+      />
+      <Section tone="white" labelledBy="artigos-titulo">
+        <h2 id="artigos-titulo" className="m-0 text-[clamp(24px,2.4vw,32px)] font-bold tracking-[-0.02em]">
+          Todos os conteúdos
+        </h2>
+        <ArticleCards slugs={ARTICLES.map((a) => a.slug)} light />
+      </Section>
+      <FinalCta title="Tem uma dúvida sobre o seu ambiente?" text="A equipe técnica avalia o caso e indica o próximo passo." />
     </>
   )
 }

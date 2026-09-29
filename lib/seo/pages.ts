@@ -36,6 +36,12 @@ export const PAGE_SEO = {
       "Fale com a Timp pelo WhatsApp, e-mail ou formulário de projeto. Atendimento em todo o estado do Rio de Janeiro: visita técnica, diagnóstico ou proposta.",
     path: "/contato/",
   },
+  equipamentos: {
+    title: "Equipamentos e Tecnologia | Timp Tecnologia",
+    description:
+      "Cabeamento, rede, Wi-Fi, segurança eletrônica, servidores, comunicação e energia: as tecnologias com que a Timp trabalha, especificadas em cada projeto.",
+    path: "/equipamentos-e-tecnologia/",
+  },
   blog: {
     title: "Blog Timp: Redes, Segurança Eletrônica, TI e Obras",
     description:

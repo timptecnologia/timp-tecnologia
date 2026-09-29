@@ -2,10 +2,12 @@
 
 import { useActionState, useRef, useState, type FormEvent } from "react"
 
-import { submitProjectRequest, type ProjectRequestState } from "@/lib/forms/project-request"
+import { submitProjectRequest } from "@/lib/forms/project-request"
+import type { ProjectRequestState } from "@/lib/forms/project-request-core"
 import { WA_MESSAGES } from "@/lib/home/content"
 import { SITE, whatsappHref } from "@/lib/site/constants"
 import { PROJECT_SIZES, PROJECT_SOLUTION_LABELS, PROJECT_SOLUTIONS, PROJECT_TYPES, UFS } from "@/lib/forms/project-options"
+import { requiredHref } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
 /**
@@ -93,25 +95,53 @@ export function ProjectForm() {
   })
   const border = (k: keyof Fields) => (err(k) ? "border-crit" : "border-g-600")
 
-  if (state.status === "unavailable" && !editing) {
-    const summary = state.summary ?? ""
+  const firstName = f.name.trim().split(" ")[0]
+  const panel = "rounded-md border border-blue-800 bg-g-950 p-[clamp(20px,3vw,36px)] text-g-100"
+
+  // Sucesso: a solicitação foi GRAVADA no servidor (nunca antes disso)
+  if (state.status === "sent" && !editing) {
     return (
-      <div className="rounded-md border border-blue-800 bg-g-950 p-[clamp(20px,3vw,36px)] text-g-100">
+      <div className={panel}>
         <div role="status" className="flex flex-col gap-4 py-3">
-          <span className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.08em] text-blue-300">
-            <span aria-hidden="true" className="size-2.5 rounded-full bg-blue-400" />
-            DADOS CONFERIDOS · PRÓXIMO PASSO
+          <span className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.08em] text-ok-fg">
+            <span aria-hidden="true" className="size-2.5 rounded-full bg-ok" />
+            SOLICITAÇÃO RECEBIDA
           </span>
-          <span className="text-[26px] leading-[1.2] font-bold tracking-[-0.02em]">Falta só enviar para a equipe, {f.name.trim().split(" ")[0]}.</span>
+          <span className="text-[26px] leading-[1.2] font-bold tracking-[-0.02em]">Obrigado{firstName ? `, ${firstName}` : ""}. Sua solicitação foi registrada.</span>
           <span className="text-[16px] leading-[1.6] text-g-300">
-            O envio automático pelo site ainda não está ativo. Envie a solicitação pelo WhatsApp — a mensagem já vai preenchida com os dados — ou por e-mail para{" "}
-            {SITE.email}.
+            A equipe comercial da Timp retorna pelo e-mail ou WhatsApp informado com o próximo passo: visita técnica, diagnóstico ou proposta de projeto.
           </span>
           {outRJ && (
             <span className="text-[15px] leading-[1.6] text-blue-300">
               Projeto em {f.city}/{f.uf}: a avaliação considera porte, escopo e viabilidade logística.
             </span>
           )}
+          <button
+            type="button"
+            onClick={() => {
+              setF(BLANK)
+              setEditing(true)
+            }}
+            className="h-11 cursor-pointer self-start rounded-sm border border-g-600 px-4 text-[14px] font-semibold text-g-100"
+          >
+            Enviar outra solicitação
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Gravação indisponível: nada foi registrado — orienta o envio por WhatsApp/e-mail
+  if (state.status === "unavailable" && !editing) {
+    const summary = state.summary || WA_MESSAGES.home
+    return (
+      <div className={panel}>
+        <div role="alert" className="flex flex-col gap-4 py-3">
+          <span className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.08em] text-warn">
+            <span aria-hidden="true" className="size-2.5 rounded-full bg-warn" />
+            SOLICITAÇÃO NÃO REGISTRADA
+          </span>
+          <span className="text-[16px] leading-[1.6] text-g-200">{state.message}</span>
           <div className="flex flex-wrap gap-3">
             <a
               href={whatsappHref(summary)}
@@ -134,7 +164,7 @@ export function ProjectForm() {
             onClick={() => setEditing(true)}
             className="h-11 cursor-pointer self-start rounded-sm border border-g-600 px-4 text-[14px] font-semibold text-g-100"
           >
-            Editar solicitação
+            Voltar ao formulário
           </button>
         </div>
       </div>
@@ -266,7 +296,13 @@ export function ProjectForm() {
             Prefiro o WhatsApp
           </a>
         </div>
-        <span className="text-[13px] leading-normal text-g-400">* Campos obrigatórios. Seus dados são usados apenas para o retorno desta solicitação.</span>
+        <p className="m-0 text-[13px] leading-normal text-g-400">
+          * Campos obrigatórios. Usamos estes dados somente para responder a esta solicitação de projeto.{" "}
+          <a href={requiredHref("privacidade")} className="text-g-200 underline underline-offset-2 hover:text-white">
+            Política de Privacidade
+          </a>
+          .
+        </p>
       </form>
     </div>
   )

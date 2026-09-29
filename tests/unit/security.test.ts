@@ -94,7 +94,7 @@ describe("rate limit", () => {
 
   it("políticas definidas para todas as superfícies de abuso", () => {
     expect(Object.keys(RATE_LIMIT_POLICIES).sort()).toEqual(
-      ["api", "cnpjCheck", "expensiveIntegration", "login", "mfaVerify", "passwordRecovery", "publicForm", "signup", "upload"].sort(),
+      ["api", "cnpjCheck", "expensiveIntegration", "login", "mfaVerify", "passwordRecovery", "publicForm", "publicFormGlobal", "signup", "upload"].sort(),
     )
   })
 

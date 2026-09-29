@@ -248,6 +248,54 @@ export type Database = {
         }
         Relationships: []
       }
+      project_requests: {
+        Row: {
+          city: string
+          company: string | null
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string
+          project_type: string
+          size: string | null
+          solution: string | null
+          status: string
+          uf: string
+        }
+        Insert: {
+          city: string
+          company?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone: string
+          project_type: string
+          size?: string | null
+          solution?: string | null
+          status?: string
+          uf: string
+        }
+        Update: {
+          city?: string
+          company?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string
+          project_type?: string
+          size?: string | null
+          solution?: string | null
+          status?: string
+          uf?: string
+        }
+        Relationships: []
+      }
       units: {
         Row: {
           code: string | null
@@ -294,6 +342,13 @@ export type Database = {
       approve_membership: {
         Args: { p_membership_id: string }
         Returns: undefined
+      }
+      rate_limit_hit: {
+        Args: { p_key: string; p_window_seconds: number }
+        Returns: {
+          hits: number
+          reset_at: string
+        }[]
       }
       reject_membership: {
         Args: { p_membership_id: string; p_reason: string }

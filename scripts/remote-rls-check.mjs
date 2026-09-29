@@ -58,13 +58,14 @@ const residue = cli([
   "--linked",
   "-o",
   "json",
-  "select (select count(*) from auth.users where email like 'rls-%@example.test') as users, (select count(*) from public.companies where legal_name like 'RLS Teste %') as companies",
+  "select (select count(*) from auth.users where email like 'rls-%@example.test') as users, (select count(*) from public.companies where legal_name like 'RLS Teste %') as companies, (select count(*) from public.project_requests where email like 'rls-%@example.test') as requests, (select count(*) from app.rate_limit_buckets where key like 'rls-check:%') as buckets",
 ])
-const m = residue.match(/"companies":\s*(\d+)[\s\S]*?"users":\s*(\d+)/)
-if (!m) {
+const num = (k) => residue.match(new RegExp(`"${k}":\\s*(\\d+)`))?.[1]
+const m = ["companies", "users", "requests", "buckets"].map(num)
+if (m.some((v) => v === undefined)) {
   console.error("remote-rls-check: não foi possível verificar resíduos")
   process.exit(1)
 }
-console.log(`remote-rls-check: resíduos após rollback → users=${m[2]} companies=${m[1]}`)
+console.log(`remote-rls-check: resíduos após rollback → users=${m[1]} companies=${m[0]} requests=${m[2]} buckets=${m[3]}`)
 
-process.exit(report.passed === report.total && m[1] === "0" && m[2] === "0" ? 0 : 1)
+process.exit(report.passed === report.total && m.every((v) => v === "0") ? 0 : 1)

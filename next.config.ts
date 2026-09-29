@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  // Redirects permanentes: URLs previstas no sitemap original que mudaram por decisão de produto
+  async redirects() {
+    return [
+      { source: "/orcamento/", destination: "/contato/#projeto", permanent: true },
+      { source: "/conhecimento/", destination: "/blog/", permanent: true },
+      { source: "/conhecimento/:slug/", destination: "/blog/:slug/", permanent: true },
+    ]
+  },
   async headers() {
     return [{ source: "/:path*", headers: baseSecurityHeaders({ isProd }) }]
   },

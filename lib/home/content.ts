@@ -132,8 +132,6 @@ export const segmentId = (s: Segment) => entryId(ROUTES[s.key].path)
 
 // ------------------------------------------------------------------ Header
 export const TOP_LINKS: readonly LinkItem[] = navigable([
-  { label: "Equipamentos", href: href("equipamentos") },
-  { label: "Projetos", href: href("projetos") },
   { label: "Blog", href: href("blog") },
   { label: "Empresa", href: href("empresa") },
   { label: "Contato", href: href("contato") },
@@ -148,9 +146,19 @@ export const WA_MESSAGES = {
 export const COMPANY = {
   headline: "Parceira de tecnologia, infraestrutura, segurança e operação.",
   lead: "A Timp planeja, implanta e acompanha a tecnologia que mantém empresas, condomínios e obras funcionando. Um único parceiro responsável, do projeto à manutenção.",
-  /** Teaser curto da Home (2–3 linhas). */
-  teaser: "Desde 2016 no Rio de Janeiro, a Timp planeja, implanta e acompanha a tecnologia que mantém empresas, condomínios e obras funcionando — do projeto à manutenção.",
+  history:
+    "A Timp Tecnologia foi fundada em 24 de fevereiro de 2016 no Rio de Janeiro. Desde então, projeta, implanta e acompanha infraestrutura, conectividade, segurança eletrônica, automação e suporte de TI para empresas, condomínios e obras.",
 } as const
+
+/** Diferenciais reais (decorrem do modo de trabalho descrito no handoff; sem números). */
+export const DIFFERENTIALS = [
+  { t: "Um único responsável", d: "Do projeto à manutenção, o mesmo parceiro responde pela infraestrutura, pela segurança e pelo suporte." },
+  { t: "Sistemas projetados juntos", d: "Rede, câmeras, alarmes, acessos e automação são pensados em conjunto, sobre a mesma infraestrutura." },
+  { t: "Projeto antes da instalação", d: "Levantamento, projeto e proposta vêm antes da execução — inclusive na fase de projeto da obra." },
+  { t: "Documentação na entrega", d: "Pontos, equipamentos e configurações identificados e registrados." },
+  { t: "Monitoramento independente de fabricante", d: "A Central Timp recebe eventos de diferentes equipamentos, com verificação por operador." },
+  { t: "Atendimento no estado do Rio", d: "Todo o estado do Rio de Janeiro; projetos especiais em outras regiões sob avaliação." },
+] as const
 
 export const FACTS = [
   { q: "QUEM É", a: "Timp Tecnologia, empresa de tecnologia fundada em 24 de fevereiro de 2016 no Rio de Janeiro." },
@@ -238,27 +246,26 @@ export const MON_NOTES = [
  */
 export const MON_DEMO_STEPS = [
   { status: "NOVO", tone: "warn", action: "Assumir evento", narration: "Evento detectado: a Central Timp recebe o alerta.", add: null },
-  { status: "ASSUMIDO", tone: "info", action: "Abrir câmeras relacionadas", narration: "Um operador assume a ocorrência.", add: { t: "02:14:41", what: "Operador assumiu o evento", tone: "info" } },
-  { status: "EM VERIFICAÇÃO", tone: "info", action: "Registrar contato", narration: "O operador verifica as câmeras da zona.", add: { t: "02:15:03", what: "CAM-07 e CAM-08 abertas", tone: "info" } },
-  { status: "EM VERIFICAÇÃO", tone: "info", action: "Classificar e encerrar", narration: "O protocolo do cliente é seguido: contato com o responsável.", add: { t: "02:16:02", what: "Contato com responsável principal", tone: "info" } },
+  { status: "ASSUMIDO", tone: "info", action: "Abrir câmeras relacionadas", narration: "Um operador assume a ocorrência.", add: { t: "15:42:22", what: "Operador assumiu o evento", tone: "info" } },
+  { status: "EM VERIFICAÇÃO", tone: "info", action: "Registrar contato", narration: "O operador verifica as câmeras da zona.", add: { t: "15:42:44", what: "CAM-07 e CAM-08 abertas", tone: "info" } },
+  { status: "EM VERIFICAÇÃO", tone: "info", action: "Classificar e encerrar", narration: "O protocolo do cliente é seguido: contato com o responsável.", add: { t: "15:43:41", what: "Contato com responsável principal", tone: "info" } },
   {
     status: "ENCERRADO",
     tone: "ok",
     action: "Ocorrência registrada",
     narration: "Ocorrência classificada e registrada no histórico.",
-    add: { t: "02:30:00", what: "Encerrado · classificação registrada", tone: "ok" },
+    add: { t: "15:57:05", what: "Encerrado · classificação registrada", tone: "ok" },
   },
 ] as const
 
 /**
- * Imagens das câmeras da demonstração (fictícias). Nenhum asset aprovado existe ainda:
- * enquanto o caminho for null, a interface mostra um quadro técnico neutro.
- * Esperado: public/home/monitoramento/cam-07-entrada-lateral.webp e cam-08-corredor-lateral.webp
- * (16:9, 1280×720, visual de câmera de segurança) — ver docs/MACROFASE-2A-HOME.md.
+ * Imagens das câmeras da demonstração: ilustrações fictícias aprovadas (16:9, 1280×720,
+ * WebP), com nome da câmera e carimbo de hora gravados. Os horários da demonstração
+ * acompanham o carimbo das imagens (15:42). src null → quadro técnico neutro.
  */
 export const MON_CAMERAS: readonly { id: string; place: string; src: string | null }[] = [
-  { id: "CAM-07", place: "Entrada lateral", src: null },
-  { id: "CAM-08", place: "Corredor lateral", src: null },
+  { id: "CAM-07", place: "Entrada lateral", src: "/home/monitoramento/cam-07-entrada-lateral.webp" },
+  { id: "CAM-08", place: "Corredor lateral", src: "/home/monitoramento/cam-08-corredor-lateral.webp" },
 ]
 
 // ------------------------------------------------------------------ Projetos
@@ -267,51 +274,6 @@ export const MON_CAMERAS: readonly { id: string; place: string; src: string | nu
  * ("PROTÓTIPO · SEÇÃO ATIVADA QUANDO HOUVER CASES REAIS PUBLICADOS").
  */
 export const PUBLISHED_CASES: readonly { slug: string; segment: string; title: string }[] = []
-
-// ------------------------------------------------------------------ Blog
-export interface Article {
-  slug: string
-  cat: string
-  title: string
-  dek?: string
-  cover: readonly string[]
-  hl: number
-}
-
-/** Artigos planejados (seo-geo.md, Home.dc.html, Conhecimento.dc.html). */
-export const ARTICLES: readonly Article[] = [
-  {
-    slug: "o-que-e-cabeamento-estruturado",
-    cat: "REDES E INFRAESTRUTURA",
-    title: "O que é cabeamento estruturado e como funciona?",
-    dek: "Componentes, topologia e por que o cabeamento define a capacidade de toda a rede.",
-    cover: ["Switch", "Patch Panel", "Tomada", "Usuário"],
-    hl: 1,
-  },
-  {
-    slug: "como-funciona-uma-central-de-monitoramento-24h",
-    cat: "SEGURANÇA ELETRÔNICA",
-    title: "Como funciona uma Central de Monitoramento 24h?",
-    dek: "O caminho de um evento, do sensor ao registro da ocorrência, e o papel do operador em cada etapa.",
-    cover: ["Sensor", "Central", "Operador", "Protocolo"],
-    hl: 2,
-  },
-  {
-    slug: "infraestrutura-tecnologica-para-construtoras",
-    cat: "TECNOLOGIA PARA OBRAS",
-    title: "Infraestrutura tecnológica para construtoras",
-    dek: "O que prever no projeto da obra para evitar retrabalho na entrega e na operação.",
-    cover: ["Projeto", "Prumada", "Sala técnica", "Entrega"],
-    hl: 2,
-  },
-  { slug: "cat6-ou-cat6a", cat: "REDES E INFRAESTRUTURA", title: "Cat6 ou Cat6A?", cover: ["Cat6", "Cat6A", "Rede"], hl: 1 },
-  { slug: "cftv-ip-ou-analogico", cat: "SEGURANÇA ELETRÔNICA", title: "CFTV IP ou analógico?", cover: ["Câmera", "Rede", "NVR"], hl: 2 },
-  { slug: "servidor-local-cloud-ou-hibrido", cat: "TI CORPORATIVA", title: "Servidor local, cloud ou híbrido?", cover: ["Local", "Híbrido", "Cloud"], hl: 1 },
-  { slug: "controle-de-acesso-para-condominios", cat: "SEGURANÇA ELETRÔNICA", title: "Controle de acesso para condomínios", cover: ["Pessoa", "Acesso", "Registro"], hl: 1 },
-]
-
-/** Destaque da Home: o conteúdo mais ligado ao serviço central (cabeamento estruturado). */
-export const FEATURED_ARTICLE_SLUG = "o-que-e-cabeamento-estruturado"
 
 // ------------------------------------------------------------------ Footer
 export const FOOTER_COLUMNS = [
@@ -336,10 +298,11 @@ export const FOOTER_COLUMNS = [
     links: navigable([
       { label: "Empresa", href: href("empresa") },
       { label: "Equipamentos e tecnologia", href: href("equipamentos") },
-      { label: "Projetos", href: href("projetos") },
-      { label: "Clientes e parceiros", href: href("clientesParceiros") },
       { label: "Blog", href: href("blog") },
       { label: "Contato", href: href("contato") },
+      // Projetos e Clientes e parceiros: omitidos automaticamente até haver conteúdo real
+      { label: "Projetos", href: href("projetos") },
+      { label: "Clientes e parceiros", href: href("clientesParceiros") },
     ]),
   },
 ] as const

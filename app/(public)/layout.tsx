@@ -1,3 +1,4 @@
+import { CookieConsent } from "@/components/consent/cookie-consent"
 import { AnchorGuard } from "@/components/layout/anchor-guard"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { SiteHeader } from "@/components/layout/site-header"
@@ -17,6 +18,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       </main>
       <SiteFooter />
       <AnchorGuard />
+      <CookieConsent />
     </div>
   )
 }

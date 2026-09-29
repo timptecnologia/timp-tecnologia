@@ -77,6 +77,26 @@ export function serviceSchema(input: { name: string; description: string; path: 
   }
 }
 
+/**
+ * Article (seo-geo.md → Técnico). Autoria e publicação pela organização (equipe técnica
+ * Timp). datePublished/dateModified só entram quando houver data REAL de publicação/revisão.
+ */
+export function articleSchema(input: { headline: string; description: string; path: string; section: string; datePublished?: string; dateModified?: string }): JsonLd {
+  return {
+    "@type": "Article",
+    headline: input.headline,
+    description: input.description,
+    url: absoluteUrl(input.path),
+    mainEntityOfPage: absoluteUrl(input.path),
+    articleSection: input.section,
+    inLanguage: SITE.language,
+    author: { "@id": orgId() },
+    publisher: { "@id": orgId() },
+    ...(input.datePublished ? { datePublished: input.datePublished } : {}),
+    ...(input.dateModified ? { dateModified: input.dateModified } : {}),
+  }
+}
+
 export interface FaqItem {
   question: string
   answer: string
