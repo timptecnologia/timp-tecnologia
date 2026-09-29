@@ -157,10 +157,22 @@ export function FlowFigure({ title, steps, hl, caption }: { title: string; steps
   )
 }
 
+/**
+ * Colunas das etapas por quantidade: linhas completas em todas as faixas (nunca uma
+ * etapa sozinha na última linha). Classes literais para o Tailwind.
+ */
+const STEP_COLS: Record<number, string> = {
+  4: "tablet:grid-cols-2 desktop:grid-cols-4",
+  5: "tablet:grid-cols-5 desktop:grid-cols-5",
+  6: "tablet:grid-cols-3 desktop:grid-cols-6",
+  8: "tablet:grid-cols-4 desktop:grid-cols-4",
+  9: "tablet:grid-cols-3 desktop:grid-cols-3",
+}
+
 /** Lista numerada de etapas em grade horizontal (desktop) / vertical (mobile). */
 export function Steps({ steps, light }: { steps: readonly (readonly [string, string])[]; light?: boolean }) {
   return (
-    <ol className="m-0 grid list-none grid-cols-1 gap-x-6 p-0 tablet:grid-cols-2 desktop:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
+    <ol className={cn("m-0 grid list-none grid-cols-1 gap-x-6 p-0", STEP_COLS[steps.length] ?? "tablet:grid-cols-2 desktop:grid-cols-4")}>
       {steps.map(([t, d], i) => (
         <li key={t} className={cn("flex flex-col gap-1.5 border-t-2 pt-4 pb-5", i === 0 ? (light ? "border-blue-600" : "border-blue-500") : light ? "border-g-300" : "border-g-700")}>
           <span className={cn("font-mono text-[12px]", light ? "text-blue-600" : "text-blue-400")}>{String(i + 1).padStart(2, "0")}</span>

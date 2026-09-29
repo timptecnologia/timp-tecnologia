@@ -128,7 +128,7 @@ export function MonitoringDemo() {
                     src={cam.src}
                     alt=""
                     fill
-                    sizes="(min-width: 1280px) 320px, (min-width: 768px) 40vw, 46vw"
+                    sizes="(min-width: 1280px) 320px, 46vw"
                     className={cn("object-cover transition-opacity duration-320", camsOpen ? "opacity-100" : "opacity-0")}
                   />
                 )}
@@ -139,11 +139,18 @@ export function MonitoringDemo() {
                 </span>
                 <span
                   className={cn(
-                    "relative -mx-2 -mb-2 px-2 pt-4 pb-1.5 font-mono text-[10px]",
+                    "relative -mx-2 -mb-2 truncate px-2 pt-4 pb-1.5 font-mono text-[10px]",
                     cam.src && camsOpen ? "bg-[linear-gradient(to_top,rgb(7_9_12/0.85),transparent)] text-white" : "text-g-300",
                   )}
                 >
-                  {cam.src && camsOpen ? `● AO VIVO · ${cam.place}` : cam.place}
+                  {cam.src && camsOpen ? (
+                    <>
+                      <span className="max-tablet:hidden">● AO VIVO · </span>
+                      {cam.place}
+                    </>
+                  ) : (
+                    cam.place
+                  )}
                 </span>
               </div>
             ))}

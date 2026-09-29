@@ -142,6 +142,7 @@ async function open(url, { w, h, mobile = false, reduced = false, noJs = false }
 /** Distância entre o topo do destino e onde ele deveria estar (scroll-margin-top), ou 0 se o fim da página impede. */
 const OFFSET = (id) => `(() => {
   const el = document.getElementById(${JSON.stringify(id)})
+  if (!el) return { delta: 99999, atEnd: false, hash: location.hash, missing: true }
   const want = parseFloat(getComputedStyle(el).scrollMarginTop) || 0
   const top = el.getBoundingClientRect().top
   const atEnd = Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 1
@@ -180,8 +181,9 @@ const VIEWPORTS = [
 const HOME_ANCHORS = ["ecossistemas", "segmentos", "starlink", "infraestrutura", "construtoras", "monitoramento"]
 const DEEP_ANCHORS = [
   ["/contato/", "projeto"],
-  ["/servicos/", "cabeamento-estruturado"],
-  ["/solucoes/", "condominios"],
+  ["/servicos/", "monitoramento-24h"],
+  ["/equipamentos-e-tecnologia/", "seguranca-eletronica"],
+  ["/blog/o-que-e-cabeamento-estruturado/", "capacidade"],
 ]
 /** Viewports da varredura do site inteiro (capturas só nas marcadas). */
 const SITE_VIEWPORTS = [
@@ -227,6 +229,9 @@ const LAYOUT_RULES = `(() => {
   for (const g of document.querySelectorAll("main ul, main ol, main div")) {
     const cs = getComputedStyle(g)
     if (cs.display !== "grid" || g.children.length < 3) continue
+    // Só grades de CARTÕES (item com borda lateral ou fundo próprio); listas de texto em colunas não contam
+    const isCard = (el) => { const x = el.firstElementChild && el.children.length === 1 ? el.firstElementChild : el; const c = getComputedStyle(x); return parseFloat(c.borderLeftWidth) > 0 || (c.backgroundColor !== "rgba(0, 0, 0, 0)" && c.backgroundColor !== "transparent") }
+    if (![...g.children].some(isCard)) continue
     const kids = [...g.children].map((c) => c.getBoundingClientRect()).filter((b) => b.width > 0)
     const rows = new Map()
     for (const b of kids) rows.set(Math.round(b.top), [...(rows.get(Math.round(b.top)) ?? []), b])

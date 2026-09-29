@@ -64,13 +64,19 @@ export function ServiceCards({ items }: { items: readonly { key: ServiceKey; why
 export function ArticleCards({ slugs, light }: { slugs: readonly string[]; light?: boolean }) {
   const list = slugs.map(getArticle).filter((a) => a !== undefined)
   if (list.length === 0) return null
+  // Com 1–2 artigos, cartão horizontal (capa limitada): a capa 16:10 não estica pela largura toda
+  const row = list.length <= 2
   return (
-    <BalancedGrid max={3}>
+    <BalancedGrid max={row ? 2 : 3}>
       {list.map((a) => (
         <a
           key={a.slug}
           href={articleHref(a.slug) ?? requiredHref("blog")}
-          className={cn("group flex w-full flex-col gap-4 no-underline", light ? "text-g-950 hover:text-blue-600" : "text-g-100 hover:text-blue-300")}
+          className={cn(
+            "group w-full gap-4 no-underline",
+            row ? "grid items-center tablet:grid-cols-[minmax(0,min(40%,360px))_minmax(0,1fr)] tablet:gap-6" : "flex flex-col",
+            light ? "text-g-950 hover:text-blue-600" : "text-g-100 hover:text-blue-300",
+          )}
         >
           <ArticleCover article={a} />
           <span className="flex flex-col gap-1.5">

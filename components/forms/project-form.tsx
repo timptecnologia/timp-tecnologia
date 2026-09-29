@@ -174,7 +174,7 @@ export function ProjectForm() {
   return (
     <div className="rounded-md border border-blue-800 bg-g-950 p-[clamp(20px,3vw,36px)] text-g-100">
       <form ref={formRef} action={formAction} onSubmit={onSubmit} noValidate className="flex flex-col gap-[18px]" aria-label="Solicitar um projeto">
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-[18px]">
+        <div className="grid grid-cols-1 gap-[18px] tablet:grid-cols-2">
           {field("name", "Nome", true, <input type="text" autoComplete="name" value={f.name} onChange={set("name")} className={cn(control, border("name"))} {...a11y("name")} />)}
           {field("company", "Empresa", false, <input type="text" autoComplete="organization" value={f.company} onChange={set("company")} className={cn(control, "border-g-600")} {...a11y("company")} />)}
           {field("email", "E-mail", true, <input type="email" autoComplete="email" value={f.email} onChange={set("email")} className={cn(control, border("email"))} {...a11y("email")} />)}
@@ -213,7 +213,7 @@ export function ProjectForm() {
             <span className="text-[14px] leading-[1.55] text-g-200">Projetos fora do Rio de Janeiro são avaliados conforme porte, escopo e viabilidade logística.</span>
           </div>
         )}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-[18px]">
+        <div className="grid grid-cols-1 gap-[18px] tablet:grid-cols-2">
           {field(
             "projectType",
             "Tipo de projeto",
