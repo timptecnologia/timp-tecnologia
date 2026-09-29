@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+import { PROJECT_SIZES, PROJECT_SOLUTIONS, PROJECT_TYPES, UFS } from "@/lib/forms/project-options"
 import { ACCESS_STATUS } from "@/lib/permissions/roles"
 
 import { cnpj, email, loginPassword, multiLine, newPassword, phoneBR, singleLine, uuid } from "./primitives"
@@ -40,15 +41,27 @@ export const changeAccessStatusSchema = z.strictObject({
   reason: singleLine({ label: "a justificativa", min: 5, max: 500 }),
 })
 
-/** Formulário público de projeto (Macrofase 2). */
+const optionalText = (max: number, label: string) =>
+  multiLine({ label, max })
+    .optional()
+    .transform((v) => (v ? v : undefined))
+
+/** Formulário público de projeto (ProjectForm.dc.html). Campos opcionais aceitam vazio. */
 export const projectRequestSchema = z.strictObject({
-  name: singleLine({ label: "o nome", max: 120 }),
-  company: singleLine({ label: "a empresa", max: 160 }),
+  name: singleLine({ label: "seu nome", max: 120 }),
+  company: optionalText(160, "a empresa"),
   email,
-  phone: phoneBR,
-  state: z.string().trim().regex(/^[A-Z]{2}$/, { message: "Selecione o estado." }),
-  message: multiLine({ label: "a mensagem", max: 4000 }),
+  phone: z.string({ message: "Informe o número completo com DDD." }).pipe(phoneBR),
+  uf: z.enum(UFS, { message: "Selecione o estado." }),
+  city: singleLine({ label: "a cidade do projeto", max: 120 }),
+  projectType: z.enum(PROJECT_TYPES, { message: "Selecione o tipo de projeto." }),
+  size: z.union([z.enum(PROJECT_SIZES), z.literal("")]).optional(),
+  solution: z.union([z.enum(PROJECT_SOLUTIONS), z.literal("")]).optional(),
+  message: optionalText(4000, "a descrição"),
+  /** Honeypot anti-spam: humanos deixam vazio (campo invisível). */
+  website: z.string().max(200).optional(),
 })
+export type ProjectRequestInput = z.infer<typeof projectRequestSchema>
 
 /**
  * Valida o destino pós-login: somente caminho relativo interno.

@@ -2,6 +2,7 @@
  * Motion TIMP — design-reference/docs/motion-spec.md
  * Só transform / opacity / stroke-dashoffset / cor. Scroll nativo.
  * Tudo é progressive enhancement: o conteúdo existe sem JS e sem animação.
+ * Keyframes com os mesmos nomes/curvas do protótipo final (Home.dc.html).
  */
 
 @keyframes timp-fade-in {
@@ -28,10 +29,10 @@
 @keyframes timp-pulse-live {
   0% {
     transform: scale(1);
-    opacity: 0.7;
+    opacity: 0.6;
   }
   70% {
-    transform: scale(2.6);
+    transform: scale(2.8);
     opacity: 0;
   }
   100% {
@@ -49,25 +50,172 @@
   }
 }
 
+/* Cabos "desenham" da origem ao conector (pathLength=100) */
+@keyframes timp-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Pulso de dados: traço curto percorre 0–62 % do ciclo e some ao chegar */
+@keyframes timp-dash {
+  0% {
+    stroke-dashoffset: 6;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  58% {
+    opacity: 1;
+  }
+  62% {
+    stroke-dashoffset: -100;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0;
+  }
+}
+
+/* LED acende quando o pulso chega */
+@keyframes timp-led {
+  0%,
+  56% {
+    opacity: 0.35;
+  }
+  62% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes timp-beam {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* Ponto subindo nas prumadas (Infraestrutura em profundidade) */
+@keyframes timp-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+/* Pulso descendo nos conectores verticais (Starlink) */
+@keyframes timp-y {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.timp-draw {
+  stroke-dasharray: 100;
+  animation: timp-draw 1.4s var(--draw-delay, 0s) cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.timp-dash {
+  stroke-dasharray: 6 200;
+  stroke-dashoffset: 6;
+  opacity: 0;
+  animation: timp-dash var(--dash-dur, 3.6s) var(--dash-delay, 0s) cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+.timp-led {
+  animation: timp-led 3.6s var(--led-delay, 0s) linear infinite;
+}
+.timp-plug {
+  animation: timp-fade-in 0.6s var(--plug-delay, 0s) ease-out both;
+}
+.timp-beam {
+  stroke-dasharray: 3 7;
+  animation: timp-beam 1s linear infinite;
+}
+.timp-rise {
+  animation: timp-rise 3.2s var(--rise-delay, 0s) cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.timp-down {
+  animation: timp-y 2.6s var(--down-delay, 0s) cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.timp-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: timp-pulse-live 2s ease-out infinite;
+}
+
 /*
- * prefers-reduced-motion desliga animações e transições decorativas.
- * Sticky e troca de etapa por scroll permanecem (não são decorativos).
- * html[data-motion="off"] permite forçar o modo estático (QA / preferência futura).
+ * prefers-reduced-motion: experiência estática completa (motion-spec §5).
+ * Cabos e conectores no estado final, LEDs acesos, sem pulsos. Sticky e troca
+ * de etapa por scroll permanecem (não são decorativos), com trocas instantâneas.
+ * html[data-motion="off"] força o modo estático (QA / preferência).
  */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
   ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    transition: none !important;
     scroll-behavior: auto !important;
   }
 }
 html[data-motion="off"] *,
 html[data-motion="off"] ::before,
 html[data-motion="off"] ::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/*
+ * Pontos que percorrem prumadas (Infraestrutura) e conectores (Starlink) só existem
+ * como movimento: com reduced motion não ficam parados na tela (motion-spec §2/§3:
+ * "sem pontos subindo"). Sem JavaScript a Infraestrutura também não os mostra (§3/§6).
+ */
+@media (prefers-reduced-motion: reduce) {
+  .timp-rise,
+  .timp-down {
+    display: none;
+  }
+}
+html[data-motion="off"] .timp-rise,
+html[data-motion="off"] .timp-down {
+  display: none;
+}
+@media (scripting: none) {
+  .timp-rise {
+    display: none;
+  }
 }

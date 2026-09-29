@@ -16,7 +16,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
     <div data-theme="dark" data-density="comfortable" className="flex min-h-svh flex-col">
       <SkipLink />
       <header className="container-timp flex h-(--header-height) items-center">
-        <Link href="/" aria-label="TIMP Tecnologia — página inicial" className="rounded-sm">
+        <Link href="/" aria-label="Timp Tecnologia — página inicial" className="rounded-sm">
           <Logo height={36} />
         </Link>
       </header>

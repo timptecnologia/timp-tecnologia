@@ -11,7 +11,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["tests/**/*.test.ts"],
+    include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
     // Testes de banco inicializam Postgres (WASM) — tempo maior
     testTimeout: 60_000,
     hookTimeout: 120_000,

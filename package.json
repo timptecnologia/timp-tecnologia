@@ -16,11 +16,13 @@
     "security:audit": "npm audit --audit-level=low",
     "security:secrets": "node scripts/secret-scan.mjs",
     "check:design-reference": "node scripts/check-design-reference.mjs",
-    "check": "npm run typecheck && npm run lint && npm run test && npm run build && npm run security:audit && npm run security:secrets && npm run security:env-leak && npm run check:design-reference",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run build && npm run check:bundle && npm run security:audit && npm run security:secrets && npm run security:env-leak && npm run check:design-reference",
     "db:types": "node scripts/supabase-cli.mjs gen types typescript --linked --schema public",
     "security:env-leak": "node scripts/env-leak-scan.mjs",
     "supabase": "node scripts/supabase-cli.mjs",
-    "db:check:remote": "node scripts/remote-rls-check.mjs"
+    "db:check:remote": "node scripts/remote-rls-check.mjs",
+    "check:bundle": "node scripts/check-client-bundle.mjs",
+    "qa:home": "node scripts/qa-home.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

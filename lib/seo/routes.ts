@@ -14,7 +14,12 @@ export interface PublicRoute {
 }
 
 export const PUBLISHED_ROUTES: readonly PublicRoute[] = [
-  { path: "/", changeFrequency: "monthly", priority: 1, lastModified: "2026-09-27" },
+  { path: "/", changeFrequency: "monthly", priority: 1, lastModified: "2026-09-29" },
+  { path: "/empresa/", changeFrequency: "yearly", priority: 0.6, lastModified: "2026-09-29" },
+  { path: "/servicos/", changeFrequency: "monthly", priority: 0.9, lastModified: "2026-09-29" },
+  { path: "/solucoes/", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-09-29" },
+  { path: "/contato/", changeFrequency: "yearly", priority: 0.7, lastModified: "2026-09-29" },
+  { path: "/blog/", changeFrequency: "weekly", priority: 0.6, lastModified: "2026-09-29" },
 ]
 
 /** Prefixos que nunca devem ser indexados (launch-checklist → robots.txt). */

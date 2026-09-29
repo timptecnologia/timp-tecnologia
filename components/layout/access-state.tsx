@@ -8,13 +8,13 @@ const COPY = {
     tone: "crit" as const,
     chip: "SEM PERMISSÃO",
     title: "Você não tem acesso a esta área.",
-    body: "Seu perfil não inclui esta área. Se precisar de acesso, fale com o administrador da sua empresa ou com a TIMP.",
+    body: "Seu perfil não inclui esta área. Se precisar de acesso, fale com o administrador da sua empresa ou com a Timp.",
   },
   inactive: {
     tone: "warn" as const,
     chip: "ACESSO INATIVO",
     title: "Seu acesso não está ativo.",
-    body: "A conta está pendente de aprovação, suspensa ou bloqueada. A TIMP ou o administrador da sua empresa pode revisar o acesso.",
+    body: "A conta está pendente de aprovação, suspensa ou bloqueada. A Timp ou o administrador da sua empresa pode revisar o acesso.",
   },
   mfa_required: {
     tone: "warn" as const,

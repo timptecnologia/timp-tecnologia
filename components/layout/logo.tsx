@@ -9,16 +9,19 @@ import { cn } from "@/lib/utils"
  * Proporção preservada pelo arquivo (840×440). Tamanho mínimo digital: 28px de altura.
  * - variant "on-dark": fundos escuros (site, Auth, Admin, Central, CMS)
  * - variant "on-light": fundos claros (Portal)
+ * - fluid: altura controlada por classes CSS responsivas (uma única imagem/requisição)
  */
 export function Logo({
   variant = "on-dark",
   height = 40,
   priority = false,
+  fluid = false,
   className,
 }: {
   variant?: "on-dark" | "on-light"
   height?: number
   priority?: boolean
+  fluid?: boolean
   className?: string
 }) {
   const src = variant === "on-dark" ? darkBgLogo : lightBgLogo
@@ -27,13 +30,13 @@ export function Logo({
   return (
     <Image
       src={src}
-      alt="TIMP Tecnologia"
+      alt="Timp Tecnologia"
       width={width}
       height={safeHeight}
       priority={priority}
       sizes={`${width}px`}
-      className={cn("block h-auto max-w-none", className)}
-      style={{ height: safeHeight, width }}
+      className={cn("block max-w-none", fluid ? "w-auto" : "h-auto", className)}
+      style={fluid ? undefined : { height: safeHeight, width }}
     />
   )
 }

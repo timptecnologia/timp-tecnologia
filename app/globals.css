@@ -13,6 +13,36 @@
 
 @custom-variant dark (&:is([data-theme="dark"] *));
 
+/*
+ * Experiências de scroll da Home (Starlink, Infraestrutura em profundidade) —
+ * motion-spec §2, §3 e §3b. A geometria é decidida no HTML/CSS antes da hidratação,
+ * para que âncoras e o layout não mudem quando o JavaScript carrega:
+ * - estilos base (sem variante) = modo flat: trilho com altura automática, quadro no fluxo;
+ * - `track-sticky:` = modo sticky. Vale quando o JS mediu e fixou data-mode="sticky", ou,
+ *   antes da medição (sem data-mode), pelos limiares do protótipo: desktop vh ≥ 720,
+ *   tablet/mobile vh ≥ 760 — e só com JavaScript disponível (sem JS: sempre flat).
+ * Depois de medir o conteúdo real (ResizeObserver), o JS grava data-mode e prevalece.
+ * Navegador sem suporte a (scripting) cai no flat até a medição: seguro.
+ */
+@custom-variant track-sticky {
+  &:where([data-scroll-track][data-mode="sticky"], [data-scroll-track][data-mode="sticky"] *) {
+    @slot;
+  }
+  @media (scripting: enabled) and (min-width: 80rem) and (min-height: 720px) {
+    &:where([data-scroll-track]:not([data-mode]), [data-scroll-track]:not([data-mode]) *) {
+      @slot;
+    }
+  }
+  @media (scripting: enabled) and (max-width: 79.99rem) and (min-height: 760px) {
+    &:where([data-scroll-track]:not([data-mode]), [data-scroll-track]:not([data-mode]) *) {
+      @slot;
+    }
+  }
+}
+
+/* Viewports de altura reduzida (ex.: notebook 1366×768): composição compacta proporcional. */
+@custom-variant short (@media (max-height: 50rem));
+
 /* ------------------------------------------------------------------ */
 /* 1. Tokens primitivos                                                */
 /* ------------------------------------------------------------------ */
@@ -34,6 +64,7 @@
 
   /* Neutros: preto → grafite → branco */
   --color-ink: #000000;
+  --color-g-975: #05070a; /* fundo da experiência Starlink */
   --color-g-950: #07090c;
   --color-g-900: #0c1015;
   --color-g-850: #11161d;
@@ -151,7 +182,12 @@
   --focus-ring-offset: 2px;
   --focus-ring-color: var(--color-blue-400);
 
-  --header-height: 76px;
+  --header-height: 64px;
+}
+@media (min-width: 80rem) {
+  :root {
+    --header-height: 76px;
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -302,6 +338,7 @@
     border-color: var(--color-border);
   }
   html {
+    scroll-behavior: smooth;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -331,6 +368,9 @@
   samp,
   pre {
     font-family: var(--font-mono);
+  }
+  [id] {
+    scroll-margin-top: calc(var(--header-height) + 4px);
   }
   ::selection {
     background-color: var(--color-blue-800);
@@ -378,4 +418,11 @@
     linear-gradient(var(--color-g-900) 1px, transparent 1px),
     linear-gradient(90deg, var(--color-g-900) 1px, transparent 1px);
   background-size: 32px 32px;
+}
+
+/* Animações pausadas quando a experiência está fora da tela (sem trabalho à toa). */
+[data-offscreen] *,
+[data-offscreen] *::before,
+[data-offscreen] *::after {
+  animation-play-state: paused !important;
 }

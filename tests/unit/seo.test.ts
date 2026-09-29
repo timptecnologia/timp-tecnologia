@@ -30,12 +30,12 @@ describe("schema.org", () => {
   })
 
   it("Organization com fundação e redes reais", () => {
-    expect(organizationSchema()).toMatchObject({ foundingDate: "2016-02-24", name: "TIMP Tecnologia" })
+    expect(organizationSchema()).toMatchObject({ foundingDate: "2016-02-24", name: "Timp Tecnologia" })
   })
 
   it("BreadcrumbList com posições e URLs absolutas", () => {
     const b = breadcrumbSchema([
-      { name: "TIMP", path: "/" },
+      { name: "Timp", path: "/" },
       { name: "Serviços", path: "/servicos/" },
     ]) as { itemListElement: Array<{ position: number; item: string }> }
     expect(b.itemListElement.map((i) => [i.position, i.item])).toEqual([
@@ -59,7 +59,7 @@ describe("schema.org", () => {
 
 describe("sitemap e robots", () => {
   it("sitemap só contém rotas publicadas, nunca rotas privadas", () => {
-    expect(PUBLISHED_ROUTES.map((r) => r.path)).toEqual(["/"])
+    expect(PUBLISHED_ROUTES.map((r) => r.path)).toEqual(["/", "/empresa/", "/servicos/", "/solucoes/", "/contato/", "/blog/"])
     for (const route of PUBLISHED_ROUTES) {
       expect(NOINDEX_PREFIXES.some((p) => route.path.startsWith(p))).toBe(false)
     }
