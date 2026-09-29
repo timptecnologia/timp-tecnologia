@@ -2,13 +2,15 @@
  * Classes compartilhadas das seções públicas — protótipo final (Home.dc.html): contêiner
  * 1440, margens clamp(20–64), eyebrow mono 12/.1em, H2 em duas escalas.
  * Ritmo vertical revisto na rodada pós-2A (docs/MACROFASE-2A-HOME.md §7.8): o respiro do
- * protótipo, clamp(64–128) por lado, somava até 256 px entre seções; agora clamp(48–96)
- * — 48 px no mobile, ~94 px em 1440 — e `padTight` para faixas curtas (teaser, CTA).
+ * protótipo, clamp(64–128) por lado, somava até 256 px entre seções; Macrofase 2 final:
+ * clamp(40–72) — 40 px no mobile, 72 px em 1440 — e `padTight` para faixas curtas.
  */
 export const S = {
   container: "mx-auto w-full max-w-[1440px] px-[clamp(20px,5vw,64px)]",
-  pad: "py-[clamp(48px,6.5vw,96px)]",
-  padTight: "py-[clamp(40px,4.5vw,64px)]",
+  pad: "py-[clamp(40px,5vw,72px)]",
+  padTight: "py-[clamp(32px,3.5vw,48px)]",
+  /** Título que acompanha a rolagem ao lado de uma lista longa (a coluna nunca fica vazia). */
+  stickyHead: "desktop:sticky desktop:top-[calc(var(--header-height)+32px)] desktop:self-start",
   eyebrow: "font-mono text-[12px] tracking-[0.1em]",
   h2: "m-0 text-[clamp(30px,3.6vw,52px)] leading-[1.05] font-bold tracking-[-0.03em] text-balance",
   h2Lg: "m-0 text-[clamp(34px,4.4vw,64px)] leading-none font-bold tracking-[-0.035em] text-balance",

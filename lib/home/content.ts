@@ -242,21 +242,45 @@ export const MON_NOTES = [
 
 /**
  * Demonstração passiva da Central — DADOS FICTÍCIOS, ilustrativos da interface.
- * Cada etapa mostra o que a EQUIPE TIMP executa (o visitante só observa).
+ * Cada etapa mostra o que a EQUIPE TIMP já executou (`done`, indicador passivo — nunca
+ * um controle). A timeline completa aparece no fim; o visitante só observa.
  */
 export const MON_DEMO_STEPS = [
-  { status: "NOVO", tone: "warn", action: "Assumir evento", narration: "Evento detectado: a Central Timp recebe o alerta.", add: null },
-  { status: "ASSUMIDO", tone: "info", action: "Abrir câmeras relacionadas", narration: "Um operador assume a ocorrência.", add: { t: "15:42:22", what: "Operador assumiu o evento", tone: "info" } },
-  { status: "EM VERIFICAÇÃO", tone: "info", action: "Registrar contato", narration: "O operador verifica as câmeras da zona.", add: { t: "15:42:44", what: "CAM-07 e CAM-08 abertas", tone: "info" } },
-  { status: "EM VERIFICAÇÃO", tone: "info", action: "Classificar e encerrar", narration: "O protocolo do cliente é seguido: contato com o responsável.", add: { t: "15:43:41", what: "Contato com responsável principal", tone: "info" } },
+  {
+    status: "NOVO",
+    tone: "warn",
+    done: "Alerta recebido pela Central Timp",
+    narration: "Evento detectado: a Central Timp recebe o alerta da Zona 03.",
+    add: { t: "15:42:18", what: "Evento recebido · Zona 03", tone: "crit" },
+  },
+  { status: "ASSUMIDO", tone: "info", done: "Operador assumiu o evento", narration: "Um operador da Central Timp assume a ocorrência.", add: { t: "15:42:22", what: "Operador assumiu o evento", tone: "info" } },
+  {
+    status: "EM VERIFICAÇÃO",
+    tone: "info",
+    done: "Câmeras relacionadas abertas",
+    narration: "O operador verifica as câmeras da zona: CAM-07 e CAM-08.",
+    add: { t: "15:42:44", what: "CAM-07 e CAM-08 abertas", tone: "info" },
+  },
+  {
+    status: "EM VERIFICAÇÃO",
+    tone: "info",
+    done: "Protocolo consultado · contato realizado",
+    narration: "O protocolo da unidade é seguido: contato com o responsável principal.",
+    add: { t: "15:43:41", what: "Contato com responsável principal", tone: "info" },
+  },
   {
     status: "ENCERRADO",
     tone: "ok",
-    action: "Ocorrência registrada",
+    done: "Ocorrência registrada · evento encerrado",
     narration: "Ocorrência classificada e registrada no histórico.",
     add: { t: "15:57:05", what: "Encerrado · classificação registrada", tone: "ok" },
   },
 ] as const
+
+/** Etapa a partir da qual as câmeras relacionadas estão abertas. */
+export const MON_CAMS_OPEN_STEP = 2
+/** Protocolo exibido na ocorrência (fictício, por unidade). */
+export const MON_PROTOCOL = "Unidade Barra · horário 08h–19h · contato 1: responsável principal · contato 2: responsável secundário"
 
 /**
  * Imagens das câmeras da demonstração: ilustrações fictícias aprovadas (16:9, 1280×720,

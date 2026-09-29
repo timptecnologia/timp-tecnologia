@@ -76,7 +76,7 @@ export default function SolucoesPage() {
 
       <Section tone="alt" labelledBy="frentes-titulo">
         <div className="grid items-start gap-x-[clamp(32px,5vw,80px)] gap-y-8 desktop:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-          <div className="flex flex-col gap-4">
+          <div className={cn("flex flex-col gap-4", S.stickyHead)}>
             <span className={cn(S.eyebrow, "text-blue-400")}>COMO UMA SOLUÇÃO É MONTADA</span>
             <h2 id="frentes-titulo" className={S.h2}>
               Cinco frentes. Uma operação integrada.

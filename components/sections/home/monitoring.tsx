@@ -70,7 +70,9 @@ export function Monitoring() {
             )}
           </div>
         </div>
-        <MonitoringDemo />
+        <div className={S.stickyHead}>
+          <MonitoringDemo />
+        </div>
       </div>
     </section>
   )

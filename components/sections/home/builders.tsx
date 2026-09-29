@@ -15,7 +15,7 @@ export function Builders() {
   const solutionHref = href("construtoras", { section: HOME_ANCHORS.construtoras })
   return (
     <section id="construtoras" aria-labelledby="construtoras-titulo" className="bg-blue-900">
-      <div className={cn(S.container, S.pad, "flex flex-col gap-[clamp(36px,4.5vw,64px)]")}>
+      <div className={cn(S.container, S.pad, "flex flex-col gap-[clamp(28px,3.5vw,48px)]")}>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,460px),1fr))] items-start gap-[clamp(36px,5vw,80px)]">
           <div className="flex flex-col gap-6">
             <span className={cn(S.eyebrow, "text-blue-300")}>CONSTRUTORAS E ENGENHARIA</span>

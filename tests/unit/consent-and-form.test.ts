@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
+
 import { describe, expect, it, vi } from "vitest"
 
 import { CONSENT_COOKIE, CONSENT_VERSION, OPTIONAL_CATEGORIES, acceptAll, customChoice, isAllowed, parseConsent, rejectOptional, serializeConsent } from "@/lib/consent/consent"
@@ -35,6 +38,19 @@ describe("consentimento de cookies", () => {
     expect(isAllowed(parseConsent(forged), "marketing")).toBe(false)
     expect(customChoice(["marketing"]).allowed).toEqual([])
     expect(isAllowed(null, "analytics")).toBe(false)
+  })
+})
+
+describe("banner de cookies (texto aprovado)", () => {
+  const src = readFileSync(join(__dirname, "..", "..", "components", "consent", "cookie-consent.tsx"), "utf8")
+  it("usa o texto aprovado, sem título e sem afirmação categórica", () => {
+    expect(src).toContain("Utilizamos cookies para melhorar sua experiência no site. Você pode aceitar todos, rejeitar os não necessários ou configurar suas preferências.")
+    expect(src).not.toContain("Cookies no site da Timp")
+    expect(src).not.toMatch(/Não usamos cookies de análise/)
+    for (const a of ["Aceitar todos", "Rejeitar não necessários", "Configurar cookies", "/politica-de-cookies/"]) expect(src).toContain(a)
+  })
+  it("faixa de largura total no rodapé da viewport", () => {
+    expect(src).toMatch(/aria-label="Aviso de cookies" className="fixed inset-x-0 bottom-0/)
   })
 })
 

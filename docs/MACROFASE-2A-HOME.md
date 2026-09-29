@@ -84,8 +84,8 @@ Removidos da Home: bloco institucional extenso, formulário, grade de 3 + 4 arti
 - Texto: "Sua empresa protegida enquanto você dorme." A Central Timp recebe, verifica, consulta câmeras e executa o protocolo; "Você não precisa operar nada".
 - A demonstração avança sozinha só enquanto está visível (IntersectionObserver; pausa fora da tela e com a aba oculta). O único controle é **Pausar/Retomar demonstração** (WCAG 2.2.2). "Assumir evento", "Abrir câmeras relacionadas" e "Registrar contato" aparecem como indicador visual do que o OPERADOR TIMP executa, não como botões.
 - Identificação: "Demonstração da Central Timp" · "DADOS FICTÍCIOS · FLUXO ILUSTRATIVO".
-- Reduced motion e sem JS: ocorrência completa e estática; "Reproduzir demonstração" é opcional.
-- **Imagem de câmera pendente.** Nenhum asset aprovado existe. A estrutura já aceita as imagens: `MON_CAMERAS[].src` em `lib/home/content.ts`, renderizadas com `next/image`. Até lá aparece um quadro técnico neutro. Especificação no §7.9.
+- Reduced motion e sem JS: ocorrência completa e estática, câmeras abertas, sem nenhum controle. Regras atuais e detalhadas: `MACROFASE-2-SITE-PUBLICO.md` §6.1.
+- **Imagens de câmera:** recebidas e conectadas (ver §7.9 e `MACROFASE-2-SITE-PUBLICO.md` §6.1).
 
 ### 7.6 Ritmo vertical (auditoria da página inteira)
 - Respiro base de seção: de `clamp(64–128)` para `clamp(48–96)` por lado; `padTight` `clamp(40–64)` para faixas curtas.

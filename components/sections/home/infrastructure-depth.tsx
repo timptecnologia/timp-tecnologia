@@ -10,7 +10,7 @@ export function InfrastructureDepth() {
       <div
         className={cn(
           S.container,
-          "grid grid-cols-[repeat(auto-fit,minmax(min(100%,460px),1fr))] items-end gap-x-16 gap-y-5 pt-[clamp(48px,6.5vw,96px)] pb-[clamp(8px,2vw,24px)]",
+          "grid grid-cols-[repeat(auto-fit,minmax(min(100%,460px),1fr))] items-end gap-x-16 gap-y-5 pt-[clamp(40px,5vw,72px)] pb-[clamp(8px,1.5vw,16px)]",
         )}
       >
         <div className="flex flex-col gap-5">

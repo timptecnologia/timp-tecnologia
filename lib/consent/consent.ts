@@ -4,11 +4,12 @@
  * O que o site usa HOJE (declarado em /politica-de-cookies/):
  * - Essenciais: a própria escolha de consentimento (`timp_consent`) e, apenas na Área do
  *   Cliente, os cookies de sessão da autenticação. Não dependem de consentimento.
- * - Nenhum cookie de análise, publicidade ou de terceiros.
+ * - Categorias opcionais (Análise, Marketing/Publicidade): suportadas pela arquitetura,
+ *   mas só são declaradas quando uma ferramenta real estiver ativa.
  *
- * `OPTIONAL_CATEGORIES` está vazio de propósito: nenhuma categoria é declarada sem uso
- * real. Quando uma ferramenta opcional for adotada, ela entra aqui (id, nome, descrição)
- * e seu script só é carregado por <ConsentGate category="…"> depois da permissão.
+ * `OPTIONAL_CATEGORIES` está vazio hoje: nenhuma categoria é declarada sem uso real.
+ * Ao adotar uma ferramenta (ex.: análise), ela entra aqui (id, nome, descrição) e seu
+ * script só é carregado por <ConsentGate category="…"> depois da permissão.
  */
 
 export interface OptionalCategory {

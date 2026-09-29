@@ -184,18 +184,34 @@ describe("decisões da Macrofase 2", () => {
     const footer = renderToStaticMarkup(createElement(SiteFooter))
     for (const p of ["/politica-de-privacidade/", "/politica-de-cookies/", "/termos-de-uso/"]) expect(footer).toContain(`href="${p}"`)
     expect(footer).toContain("Preferências de cookies")
+    // Coluna LEGAL na grade principal: [Marca] [Serviços] [Soluções] [Timp] [Legal]
+    const navs = [...footer.matchAll(/<nav aria-label="([^"]+)"/g)].map((m) => m[1])
+    expect(navs.slice(0, 4)).toEqual(["SERVIÇOS", "SOLUÇÕES", "TIMP", "LEGAL"])
+    const legal = footer.slice(footer.indexOf('<nav aria-label="LEGAL"'))
+    expect(legal.slice(0, legal.indexOf("</nav>"))).toContain("Preferências de cookies")
     const footerOnly = footer.slice(0, footer.indexOf("</footer>"))
     const last = footerOnly.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
     expect(last.endsWith("Criação de Site Profissional por Kinau Company")).toBe(true)
     expect(footer).toMatch(/<a[^>]*href="https:\/\/kinaucompany.com.br\/"[^>]*>Criação de Site Profissional<\/a> por Kinau Company/)
   })
 
-  it("demonstração da Central sem controles operacionais e com as imagens de câmera", () => {
-    const buttons = [...home.matchAll(/<button[^>]*>([\s\S]*?)<\/button>/g)].map((m) => m[1]!.replace(/<[^>]+>/g, ""))
-    for (const op of ["Assumir evento", "Abrir câmeras relacionadas", "Registrar contato", "Classificar e encerrar"]) expect(buttons.some((b) => b.includes(op)), op).toBe(false)
-    expect(home).toContain("Demonstração da Central Timp")
-    expect(home).toMatch(/cam-07-entrada-lateral\.webp/)
-    expect(home).toMatch(/cam-08-corredor-lateral\.webp/)
+  it("demonstração da Central: visitante não opera nada; estado final estático (sem JS) com câmeras abertas", () => {
+    const start = home.indexOf("Demonstração da Central Timp")
+    const demo = home.slice(start, home.indexOf("</section>", start))
+    expect(start).toBeGreaterThan(0)
+    // Nenhum controle no HTML inicial (Pausar/Retomar só existe após iniciar a animação no cliente)
+    expect(demo).not.toMatch(/<button|role="button"|tabindex=|cursor-pointer/i)
+    for (const op of ["Assumir evento", "Abrir câmeras relacionadas", "Registrar contato", "Classificar e encerrar"]) expect(demo).not.toContain(op)
+    // Indicadores passivos e timeline completa
+    expect(demo.replace(/<!-- -->/g, "")).toMatch(/✓\s*Ocorrência registrada · evento encerrado/)
+    for (const t of ["15:42:18", "15:42:22", "15:42:44", "15:43:41", "15:57:05"]) expect(demo).toContain(t)
+    // Câmeras abertas com as imagens reais (sem JS/estado final), sem rótulo "aguardando"
+    expect(demo).toMatch(/data-cam="CAM-07" data-cam-open=""/)
+    expect(demo).toMatch(/data-cam="CAM-08" data-cam-open=""/)
+    expect(demo).toMatch(/cam-07-entrada-lateral\.webp/)
+    expect(demo).toMatch(/cam-08-corredor-lateral\.webp/)
+    expect(demo).toContain('loading="eager"')
+    expect(demo).toContain("DADOS FICTÍCIOS · FLUXO ILUSTRATIVO")
   })
 
   it("404 com identidade, navegação útil e noindex", () => {

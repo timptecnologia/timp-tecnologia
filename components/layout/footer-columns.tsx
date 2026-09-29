@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 
 import { useHydrated } from "@/lib/hooks/use-client-state"
 
@@ -9,11 +9,12 @@ import { cn } from "@/lib/utils"
 
 /**
  * Colunas de navegação do footer (SiteFooter.dc.html):
- * desktop/tablet → colunas abertas; mobile → accordions (Serviços, Soluções, TIMP).
+ * desktop/tablet → colunas abertas; mobile → accordions (Serviços, Soluções, Timp, Legal).
+ * `extra` acrescenta um item não-link ao fim de uma coluna (ex.: "Preferências de cookies").
  * Sem JS os links ficam visíveis (HTML presente); após hidratação, no mobile, os
  * accordions iniciam fechados. Seção abaixo da dobra: sem impacto em CLS.
  */
-export function FooterColumns({ columns }: { columns: readonly { t: string; links: readonly LinkItem[] }[] }) {
+export function FooterColumns({ columns, extra }: { columns: readonly { t: string; links: readonly LinkItem[] }[]; extra?: { column: string; node: ReactNode } }) {
   const [open, setOpen] = useState<number | null>(null)
   const ready = useHydrated()
 
@@ -43,6 +44,7 @@ export function FooterColumns({ columns }: { columns: readonly { t: string; link
                   {l.label}
                 </a>
               ))}
+              {extra?.column === c.t && extra.node}
             </div>
           </nav>
         )

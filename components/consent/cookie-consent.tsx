@@ -115,27 +115,25 @@ export function CookieConsent() {
   return (
     <>
       {showBanner && (
-        <div
-          role="region"
-          aria-label="Aviso de cookies"
-          className="fixed inset-x-3 bottom-3 z-(--z-modal) mx-auto max-w-[760px] rounded-md border border-g-700 bg-g-900 p-4 shadow-[0_24px_48px_rgb(0_0_0/0.55)] tablet:inset-x-6 tablet:bottom-6 tablet:p-5"
-        >
-          <div className="flex flex-col gap-4">
-            <p className="m-0 text-[14px] leading-[1.6] text-g-200">
-              <strong className="font-semibold text-white">Cookies no site da Timp.</strong> Usamos somente cookies essenciais, necessários para o funcionamento do site
-              e da Área do Cliente. Não usamos cookies de análise, publicidade ou de terceiros.{" "}
+        // Faixa inferior de largura total; conteúdo no mesmo contêiner do site (texto à esquerda, ações à direita)
+        <div role="region" aria-label="Aviso de cookies" className="fixed inset-x-0 bottom-0 z-(--z-modal) border-t border-g-700 bg-g-900/98 shadow-[0_-16px_40px_rgb(0_0_0/0.45)] backdrop-blur-[10px]">
+          <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-[clamp(16px,5vw,64px)] pt-3.5 pb-[calc(14px+env(safe-area-inset-bottom))] desktop:flex-row desktop:items-center desktop:justify-between desktop:gap-10 desktop:py-4">
+            <p className="m-0 max-w-[62em] text-[14px] leading-[1.55] text-g-200">
+              Utilizamos cookies para melhorar sua experiência no site. Você pode aceitar todos, rejeitar os não necessários ou configurar suas preferências. Consulte
+              nossa{" "}
               <a href="/politica-de-cookies/" className="font-semibold text-white underline decoration-white/40 underline-offset-3 hover:decoration-white">
                 Política de Cookies
               </a>
+              .
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid flex-none grid-cols-2 gap-2 tablet:flex tablet:flex-wrap">
               <button type="button" onClick={() => decide(acceptAll())} className={cn(btn, "bg-blue-600 text-white hover:bg-blue-650")}>
                 Aceitar todos
               </button>
               <button type="button" onClick={() => decide(rejectOptional())} className={cn(btn, "border border-g-500 text-g-100 hover:border-g-300")}>
                 Rejeitar não necessários
               </button>
-              <button type="button" onClick={openPreferences} className={cn(btn, "text-g-200 underline underline-offset-3 hover:text-white")}>
+              <button type="button" onClick={openPreferences} className={cn(btn, "col-span-2 text-g-200 underline underline-offset-3 hover:text-white tablet:col-span-1")}>
                 Configurar cookies
               </button>
             </div>
@@ -193,7 +191,7 @@ export function CookieConsent() {
               })}
               {OPTIONAL_CATEGORIES.length === 0 && (
                 <li className="py-4 text-[14px] leading-[1.6] text-g-300">
-                  No momento o site não usa cookies de análise, publicidade ou de terceiros. Se passar a usar, eles aparecerão aqui e só serão ativados com a sua
+                  Não há outras categorias ativas no momento. Categorias como análise ou marketing, se forem adotadas, aparecerão aqui e só serão ativadas com a sua
                   permissão.
                 </li>
               )}

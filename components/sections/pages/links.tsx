@@ -66,15 +66,18 @@ export function ArticleCards({ slugs, light }: { slugs: readonly string[]; light
   if (list.length === 0) return null
   // Com 1–2 artigos, cartão horizontal (capa limitada): a capa 16:10 não estica pela largura toda
   const row = list.length <= 2
+  // Com número ímpar (≥ 3), o último ocupa a linha inteira no tablet: também horizontal ali
+  const wideLast = !row && list.length % 2 === 1
   return (
     <BalancedGrid max={row ? 2 : 3}>
-      {list.map((a) => (
+      {list.map((a, i) => (
         <a
           key={a.slug}
           href={articleHref(a.slug) ?? requiredHref("blog")}
           className={cn(
             "group w-full gap-4 no-underline",
             row ? "grid items-center tablet:grid-cols-[minmax(0,min(40%,360px))_minmax(0,1fr)] tablet:gap-6" : "flex flex-col",
+            wideLast && i === list.length - 1 && "tablet:grid tablet:grid-cols-[minmax(0,min(40%,360px))_minmax(0,1fr)] tablet:items-center tablet:gap-6 desktop:flex",
             light ? "text-g-950 hover:text-blue-600" : "text-g-100 hover:text-blue-300",
           )}
         >

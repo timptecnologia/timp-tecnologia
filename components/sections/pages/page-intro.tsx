@@ -41,7 +41,7 @@ export function PageIntro({
   return (
     <section aria-labelledby="pagina-titulo" className="border-b border-g-800 bg-g-950">
       <JsonLd data={breadcrumbSchema(trail)} />
-      <div className={cn(S.container, "flex flex-col gap-6 pt-[clamp(24px,3.5vw,48px)] pb-[clamp(36px,4.5vw,64px)]")}>
+      <div className={cn(S.container, "flex flex-col gap-6 pt-[clamp(20px,3vw,40px)] pb-[clamp(32px,4vw,56px)]")}>
         <nav aria-label="Você está em">
           <ol className="m-0 flex list-none flex-wrap items-center gap-2 p-0 font-mono text-[12px] tracking-[0.06em] text-g-400">
             {trail.map((c, i) => (

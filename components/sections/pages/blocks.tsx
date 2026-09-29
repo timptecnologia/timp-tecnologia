@@ -43,7 +43,7 @@ export function Section({
       data-theme={tone === "light" || tone === "white" ? "light" : undefined}
       className={cn(TONES[tone], id && "scroll-mt-[calc(var(--header-height)+8px)]")}
     >
-      <div className={cn(S.container, tight ? S.padTight : S.pad, "flex flex-col gap-[clamp(24px,3vw,44px)]", className)}>{children}</div>
+      <div className={cn(S.container, tight ? S.padTight : S.pad, "flex flex-col gap-[clamp(20px,2.5vw,36px)]", className)}>{children}</div>
     </section>
   )
 }
@@ -108,7 +108,7 @@ export function Faq({ id, title, items, light }: { id: string; title: string; it
   return (
     <div className="grid items-start gap-x-[clamp(32px,5vw,80px)] gap-y-6 desktop:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]">
       <JsonLd data={faqSchema({ visible: true, items: items.map((i) => ({ question: i.q, answer: i.a })) })} />
-      <div className="flex flex-col gap-4">
+      <div className={cn("flex flex-col gap-4", S.stickyHead)}>
         <span className={cn(S.eyebrow, light ? "text-blue-600" : "text-blue-400")}>PERGUNTAS FREQUENTES</span>
         <h2 id={id} className={S.h2}>
           {title}

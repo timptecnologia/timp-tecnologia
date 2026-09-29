@@ -48,33 +48,34 @@ export default function EmpresaPage() {
         }
       />
 
+      {/* História em largura total (título + texto lado a lado), diferenciais logo abaixo em 3 + 3 */}
       <Section labelledBy="historia-titulo">
-        <div className="grid items-start gap-x-[clamp(32px,5vw,80px)] gap-y-8 desktop:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div className="grid items-end gap-x-[clamp(32px,5vw,80px)] gap-y-5 desktop:grid-cols-2">
           <div className="flex flex-col gap-5">
             <span className={cn(S.eyebrow, "text-blue-400")}>HISTÓRIA</span>
             <h2 id="historia-titulo" className={S.h2}>
               Um único parceiro responsável, do projeto à manutenção.
             </h2>
-            <p className={cn(S.lead18, "text-g-300")}>{COMPANY.history}</p>
           </div>
-          <div className="flex flex-col gap-4">
-            <span className="font-mono text-[11px] tracking-[0.1em] text-g-400">COMO TRABALHAMOS</span>
-            <BalancedGrid max={2}>
-              {DIFFERENTIALS.map((d) => (
-                <div key={d.t} className="flex w-full flex-col gap-1.5 rounded-md border border-g-800 bg-g-900 p-5">
-                  <span className="text-[17px] font-semibold text-g-100">{d.t}</span>
-                  <span className="text-[15px] leading-[1.55] text-g-400">{d.d}</span>
-                </div>
-              ))}
-            </BalancedGrid>
-          </div>
+          <p className={cn(S.lead18, "text-g-300")}>{COMPANY.history}</p>
+        </div>
+        <div className="flex flex-col gap-4">
+          <span className="font-mono text-[11px] tracking-[0.1em] text-g-400">COMO TRABALHAMOS</span>
+          <BalancedGrid max={3}>
+            {DIFFERENTIALS.map((d) => (
+              <div key={d.t} className="flex w-full flex-col gap-1.5 rounded-md border border-g-800 bg-g-900 p-5">
+                <span className="text-[17px] font-semibold text-g-100">{d.t}</span>
+                <span className="text-[15px] leading-[1.55] text-g-400">{d.d}</span>
+              </div>
+            ))}
+          </BalancedGrid>
         </div>
       </Section>
 
       {/* Respostas objetivas (GEO) */}
       <Section tone="alt" labelledBy="resumo-titulo">
         <div className="grid items-start gap-x-[clamp(32px,5vw,80px)] gap-y-8 desktop:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-          <div className="flex flex-col gap-4">
+          <div className={cn("flex flex-col gap-4", S.stickyHead)}>
             <span className={cn(S.eyebrow, "text-blue-400")}>EM RESUMO</span>
             <h2 id="resumo-titulo" className={S.h2}>
               Quem é, o que faz e onde atende.

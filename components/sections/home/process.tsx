@@ -8,7 +8,7 @@ import { S } from "./ui"
 export function Process() {
   return (
     <section id="processo" aria-labelledby="processo-titulo" data-theme="light" className="bg-g-100 text-g-950">
-      <div className={cn(S.container, S.pad, "flex flex-col gap-[clamp(28px,4vw,56px)]")}>
+      <div className={cn(S.container, S.pad, "flex flex-col gap-[clamp(24px,3vw,40px)]")}>
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-5">
           <div className="flex max-w-[760px] flex-col gap-5">
             <span className={cn(S.eyebrow, "text-blue-600")}>PROCESSO TIMP</span>

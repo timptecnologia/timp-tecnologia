@@ -49,7 +49,7 @@ export function Starlink() {
   return (
     <section id="starlink" aria-labelledby="starlink-titulo" className="relative border-b border-g-800 bg-g-975">
       {/* Mobile: texto no fluxo ANTES do trilho (responsive.md) */}
-      <div className="flex flex-col gap-5 px-5 pt-16 pb-7 tablet:hidden">
+      <div className="flex flex-col gap-5 px-5 pt-10 pb-6 tablet:hidden">
         <Intro />
       </div>
       <StarlinkExperience intro={<Intro headingId="starlink-titulo" />} />

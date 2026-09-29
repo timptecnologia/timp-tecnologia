@@ -23,26 +23,36 @@ const CONTACTS = [
   { k: "CLIENTES", v: "Área do Cliente →", href: requiredHref("areaCliente"), external: false },
 ] as const
 
-const LEGAL = [
-  { label: "Política de Privacidade", href: requiredHref("privacidade") },
-  { label: "Política de Cookies", href: requiredHref("cookies") },
-  { label: "Termos de Uso", href: requiredHref("termos") },
-] as const
+const LEGAL = {
+  t: "LEGAL",
+  links: [
+    { label: "Política de Privacidade", href: requiredHref("privacidade") },
+    { label: "Política de Cookies", href: requiredHref("cookies") },
+    { label: "Termos de Uso", href: requiredHref("termos") },
+  ],
+} as const
 
 export function SiteFooter() {
   const year = new Date().getFullYear()
   return (
     <>
       <footer data-hide-sticky-cta="" className="border-t border-g-800 bg-ink text-g-100">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-[clamp(20px,5vw,64px)] pt-[clamp(40px,5vw,72px)] pb-6 tablet:gap-9">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-x-8 tablet:gap-y-10">
-            <div className="flex flex-col gap-4 pb-6 tablet:pb-0 desktop:col-span-2">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-[clamp(20px,5vw,64px)] pt-[clamp(36px,4vw,56px)] pb-5 tablet:gap-8">
+          {/* [ Marca ] [ Serviços ] [ Soluções ] [ Timp ] [ Legal ] — tablet: marca em cima + 4 colunas */}
+          <div className="grid grid-cols-1 gap-x-8 tablet:grid-cols-4 tablet:gap-y-8 desktop:grid-cols-[minmax(0,1.5fr)_repeat(4,minmax(0,1fr))]">
+            <div className="flex flex-col gap-4 pb-6 tablet:col-span-4 tablet:pb-0 desktop:col-span-1">
               <Logo height={48} fluid className="h-10 self-start tablet:h-12" />
               <p className="m-0 max-w-[24em] text-[15px] leading-[1.6] text-g-400">
                 Infraestrutura, conectividade, segurança, automação e suporte tecnológico. Rio de Janeiro/RJ, desde 2016.
               </p>
             </div>
-            <FooterColumns columns={FOOTER_COLUMNS} />
+            <FooterColumns
+              columns={[...FOOTER_COLUMNS, LEGAL]}
+              extra={{
+                column: LEGAL.t,
+                node: <CookiePreferencesButton className="cursor-pointer py-2.5 text-left text-[15px] text-g-300 hover:text-white tablet:py-0.5" />,
+              }}
+            />
           </div>
 
           <nav aria-label="Atendimento" className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,150px),1fr))] border-y border-g-800 tablet:grid-cols-[repeat(auto-fit,minmax(min(100%,180px),1fr))]">
@@ -59,32 +69,16 @@ export function SiteFooter() {
             ))}
           </nav>
 
-          {/* Linha institucional: atendimento + © na mesma linha no desktop; links legais */}
-          <div className="flex flex-col gap-4 text-[13px] leading-normal text-g-400">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1.5">
-              <p className="m-0">{SITE.areaServedText}</p>
-              <p className="m-0">
-                © 2016–{year} {SITE.name} · Rio de Janeiro/RJ
-              </p>
-            </div>
-            <nav aria-label="Informações legais">
-              <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-1 p-0">
-                {LEGAL.map((l) => (
-                  <li key={l.label}>
-                    <a href={l.href} className="inline-flex min-h-11 items-center text-g-300 no-underline hover:text-white tablet:min-h-8">
-                      {l.label}
-                    </a>
-                  </li>
-                ))}
-                <li>
-                  <CookiePreferencesButton className="inline-flex min-h-11 cursor-pointer items-center text-g-300 hover:text-white tablet:min-h-8" />
-                </li>
-              </ul>
-            </nav>
+          {/* Linha institucional: atendimento + © na mesma linha no desktop */}
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1.5 text-[13px] leading-normal text-g-400">
+            <p className="m-0">{SITE.areaServedText}</p>
+            <p className="m-0">
+              © 2016–{year} {SITE.name} · Rio de Janeiro/RJ
+            </p>
           </div>
         </div>
         {/* Assinatura final do site: centralizada, encostada na base do footer */}
-        <p className="m-0 border-t border-g-800 px-5 pt-4 pb-5 text-center text-[13px] leading-normal text-g-400">
+        <p className="m-0 border-t border-g-800 px-5 py-4 text-center text-[13px] leading-normal text-g-400">
           <a
             href="https://kinaucompany.com.br/"
             target="_blank"

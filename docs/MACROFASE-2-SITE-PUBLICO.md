@@ -74,12 +74,14 @@ Fontes: `design-reference/prototype/*` (Pagina de Servico, Instalacao Starlink, 
 - O limiter em memória fica só para desenvolvimento, testes e superfícies internas.
 
 ## 4. Cookies e privacidade
-- **Uso real:** somente cookies essenciais — `timp_consent` (escolha, 180 dias) e sessão de autenticação da Área do Cliente (prefixo `sb-`). Sem analytics, publicidade ou terceiros.
+- **Uso real hoje:** somente cookies essenciais — `timp_consent` (escolha, 180 dias) e sessão de autenticação da Área do Cliente (prefixo `sb-`). Os textos dizem "no momento"; nenhum texto promete que categorias opcionais nunca serão usadas.
 - **Consentimento** (`components/consent/cookie-consent.tsx`, regras em `lib/consent/consent.ts`):
-  - banner com Aceitar todos · Rejeitar não necessários · Configurar cookies;
+  - banner com o texto aprovado, sem título: "Utilizamos cookies para melhorar sua experiência no site. Você pode aceitar todos, rejeitar os não necessários ou configurar suas preferências. Consulte nossa Política de Cookies." (link para a política);
+  - desktop: faixa de largura total na base da viewport, com contêiner interno (texto à esquerda, ações à direita); mobile: compacto, ações em grade 2 + 1 com alvos de 44 px;
+  - ações: Aceitar todos · Rejeitar não necessários · Configurar cookies;
   - painel de preferências acessível (diálogo modal, foco preso, Esc);
   - reabertura por "Preferências de cookies" no footer.
-- **Categorias opcionais:** `OPTIONAL_CATEGORIES` está vazio de propósito. Uma ferramenta futura entra ali, e seu script só carrega dentro de `<ConsentGate>`.
+- **Categorias opcionais:** `OPTIONAL_CATEGORIES` está vazio de propósito — só categorias ATIVAS são declaradas. A arquitetura suporta Essenciais / Análise / Marketing: uma ferramenta futura entra ali (aparece no painel e na política) e seu script só carrega dentro de `<ConsentGate>`.
 - **Políticas** (`lib/content/legal.ts`): descrevem o que o site faz — finalidade, base legal, Supabase em São Paulo, retenção, HMAC do IP, terceiros acionados só por clique, direitos LGPD.
 - **Contato:** aviso de finalidade junto ao formulário, sem checkbox decorativo.
 
@@ -98,9 +100,19 @@ Fontes: `design-reference/prototype/*` (Pagina de Servico, Instalacao Starlink, 
 ## 6. Layout e ritmo (regra global)
 - Duas colunas só com dois conteúdos reais. `PageIntro` usa `aside` real (fatos, navegação, diagrama, canais); sem ele, a largura editorial é ampliada.
 - `BalancedGrid`: escolhe colunas para a última linha fechar ou ter ao menos metade dos itens (5 → 3 + 2; 7 → 4 + 3). Nunca card órfão.
-- **Respiro:** seções `clamp(48–96)` por lado; faixas curtas `clamp(40–64)`. Trilhos sticky descontados (altura funcional).
-- **Footer:** colunas, contatos clicáveis, atendimento + © na mesma linha (desktop), links legais, preferências de cookies e a assinatura Kinau centralizada como última informação do site.
+- **Respiro (tokens em `components/sections/home/ui.ts`):** seções `py-[clamp(40px,5vw,72px)]`; faixas curtas `clamp(32–48)`; espaço interno entre cabeçalho e conteúdo `clamp(20–36)`; `PageIntro` `clamp(20–40)` / `clamp(32–56)`. Trilhos sticky descontados (altura funcional).
+- **Colunas desiguais:** quando o título de uma seção de duas colunas é bem mais curto que o conteúdo, ele fica fixo (`S.stickyHead`, só desktop) em vez de deixar uma coluna vazia (FAQ, "Em resumo" da Empresa, "Como uma solução é montada").
+- **Grades:** `STEP_COLS` fecha etapas sem órfão (4 → 2/4, 6 → 3/6, 8 → 4, 9 → 3); Empresa: História em duas colunas (título | texto) e "Como trabalhamos" em `BalancedGrid` de 3.
+- **QA automatizado:** espaço morto > 220 px, coluna direita vazia em seção alta e card órfão falham o QA em todas as páginas e viewports.
+- **Footer:** desktop `[Marca/descrição] [Serviços] [Soluções] [Timp] [Legal]`; LEGAL = Política de Privacidade, Política de Cookies, Termos de Uso e Preferências de cookies (botão). Contatos clicáveis; "Atendimento em todo o estado do Rio de Janeiro. Projetos personalizados em todo o Brasil." e "© 2016–2026 Timp Tecnologia · Rio de Janeiro/RJ" na mesma linha (desktop). Assinatura Kinau centralizada como último elemento do site ("Criação de Site Profissional" é o único link, para https://kinaucompany.com.br/).
 - **Contatos:** todo WhatsApp e e-mail exibido é link (teste por página).
+
+## 6.1 Demonstração da Central (Home · Monitoramento 24h)
+- **Passiva:** o visitante nunca opera a Central. Único controle público: **Pausar / Retomar demonstração** (`aria-pressed`; congela e continua do mesmo ponto). Ações do operador aparecem como indicador "OPERADOR TIMP ✓ …" — sem botão, `role=button`, foco ou cursor de ação.
+- **Fluxo automático** (`MON_DEMO_STEPS` em `lib/home/content.ts`): evento recebido 15:42:18 → operador assume 15:42:22 → CAM-07 e CAM-08 abertas 15:42:44 → protocolo consultado e contato 15:43:41 → encerrado 15:57:05. Data 08/10/2026, alinhada ao carimbo das imagens. Avança a cada 2,8 s só com a demonstração na tela e a aba ativa; estado final fica 5,6 s e recomeça.
+- **Timeline** é a explicação principal: todas as linhas ficam no lugar (sem CLS); as próximas aparecem pendentes e esmaecidas. O protocolo do cliente mostra "consultado após a verificação das câmeras" até a etapa de contato.
+- **Câmeras:** fechadas são um estado intencional ("Câmera relacionada · aguardando verificação"). As imagens carregam antes (`loading="eager"`, ocultas) e surgem sozinhas quando a timeline chega a "CAM-07 e CAM-08 abertas" (`MON_CAMS_OPEN_STEP`), sem flash; ficam abertas até o recomeço. Overlay só com o local (a imagem já traz câmera/data/hora). Erro real do arquivo → "Imagem temporariamente indisponível" só na câmera afetada.
+- **Reduced motion e sem JS:** estado final completo e estático, câmeras abertas e visíveis, sem controles. Leitores de tela recebem o fluxo inteiro em lista (`sr-only`); o painel animado é `aria-hidden`.
 
 ## 7. Segurança
 - Secret key só em `lib/supabase/admin.ts` (via `server-only`); nenhuma variável secreta `NEXT_PUBLIC`.
@@ -113,6 +125,13 @@ Fontes: `design-reference/prototype/*` (Pagina de Servico, Instalacao Starlink, 
 - **Cases reais e logos de clientes/parceiros**, para ativar Projetos e Clientes e Parceiros.
 - **Dados societários** (razão social, CNPJ, encarregado de dados) e **revisão jurídica** das políticas antes da publicação.
 - **Notificação da equipe comercial** a cada nova solicitação (e-mail transacional): depende de SMTP próprio (§19.6 da Macrofase 1). Até lá, consulta no painel do Supabase.
+
+## 8.1 QA de navegador (`npm run qa:home`)
+- Um servidor (`next start -p 3100`) e um Chrome headless por vez; rodar em lotes: `QA_PART=home|site|extra` e `QA_VP=1440x900,390x844`.
+- **site:** todas as URLs do sitemap × 11 viewports (1440×900, 1366×768, 1280×680, 1112×834, 1024×768, 834×1112, 430×932, 390×844, 375×667, 360×640, 924×540): H1 único, overflow, nome acessível, alt, espaço morto, coluna vazia, card órfão, console/CSP/hidratação; todo link interno responde 200.
+- **home:** âncoras, experiências de scroll, header/CTA/footer por clique, CTA fixo mobile (9 viewports).
+- **extra:** 404 e redirects, banner de cookies (faixa inteira, texto aprovado, toque ≥ 44 px, escolha persistida, preferências pelo footer, Esc), câmeras HTTP 200, demonstração da Central em 8 viewports (avanço 0→4, único foco Pausar/Retomar, sem cursor de ação, câmeras pré-carregadas e abertas na etapa certa, pausa congela e retoma), erro de imagem, reduced motion e sem JS. `QA_FORM=1` envia uma solicitação real — apagar o registro de teste depois (resíduo zero).
+- **Resultado final da Macrofase 2 (29/09/2026):** site 2.545/2.545 (4 lotes, 11 viewports × 43 URLs do sitemap) · home 240/240 (3 lotes) · extra 72/72 (inclui formulário real; registro de teste apagado, resíduo 0) — 2.857 verificações, 0 falhas.
 
 ## 9. Divergências conscientes em relação ao Claude Design
 Ver também `MACROFASE-2A-HOME.md` §7. Resumo:

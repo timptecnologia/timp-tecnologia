@@ -139,7 +139,7 @@ export const LEGAL: Record<LegalDoc["key"], LegalDoc> = {
         id: "resumo",
         title: "Em resumo",
         paragraphs: [
-          ["O site usa somente cookies essenciais. Não usamos cookies de análise (analytics), de publicidade ou de terceiros. Por isso, nenhum cookie opcional é ativado — nem antes nem depois da sua escolha."],
+          ["No momento, o site usa somente cookies essenciais. Nenhum cookie opcional está ativo; se alguma categoria opcional for adotada (por exemplo, de análise), ela será listada aqui e só funcionará com a sua permissão."],
         ],
       },
       {
@@ -156,7 +156,7 @@ export const LEGAL: Record<LegalDoc["key"], LegalDoc> = {
         title: "Cookies opcionais",
         paragraphs: [
           [
-            "Hoje não há nenhum. Se o site passar a usar alguma ferramenta opcional, ela será listada aqui e no painel de preferências, e só será ativada depois da sua permissão.",
+            "Não há cookies opcionais ativos no momento. Categorias como análise ou marketing, se adotadas, serão listadas aqui e no painel de preferências e só serão ativadas depois da sua permissão.",
           ],
         ],
       },
@@ -177,7 +177,7 @@ export const LEGAL: Record<LegalDoc["key"], LegalDoc> = {
     ],
     seo: {
       title: "Política de Cookies | Timp Tecnologia",
-      description: "O site da Timp usa somente cookies essenciais: a escolha de consentimento e a sessão da Área do Cliente. Sem analytics, publicidade ou cookies de terceiros.",
+      description: "Quais cookies o site da Timp usa, para quê e como gerenciar sua escolha: hoje, somente cookies essenciais de consentimento e da Área do Cliente.",
     },
   },
 
