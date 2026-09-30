@@ -1213,7 +1213,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
 
 /** Etapas da contratação (Pagina de Servico.dc.html). */
 export const HIRING_STEPS = [
-  ["Levantamento", "Visita técnica e entendimento da operação."],
+  ["Diagnóstico", "Avaliação do ambiente, necessidades e objetivos da operação, com visita técnica quando necessário."],
   ["Projeto", "Pontos, equipamentos e rotas definidos."],
   ["Proposta", "Escopo, prazos e investimento."],
   ["Instalação", "Execução por etapas, com o mínimo de interferência."],

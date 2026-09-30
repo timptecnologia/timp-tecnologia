@@ -665,48 +665,118 @@ for (const vp of pick(MON_VIEWPORTS)) {
     await shot(`demo-${vp.tag}`)
   }
 }
-// Timeline "Da planta à operação": luz verde percorre as etapas (Home e Construtoras)
-for (const [path, vp] of [
-  ["/", { tag: "1440x900", w: 1440, h: 900 }],
-  ["/", { tag: "390x844", w: 390, h: 844, mobile: true }],
-  ["/solucoes/construtoras-e-engenharia/", { tag: "1440x900", w: 1440, h: 900 }],
+// Progressões automáticas: Processo Timp (Home), Construtoras, contratação (6 etapas)
+for (const [path, sel, vp, n] of [
+  ["/", "#processo [data-timeline-step]", { tag: "1440x900", w: 1440, h: 900 }, 8],
+  ["/", "#construtoras [data-timeline-step]", { tag: "390x844", w: 390, h: 844, mobile: true }, 9],
+  ["/solucoes/construtoras-e-engenharia/", "[data-timeline-step]", { tag: "1440x900", w: 1440, h: 900 }, 9],
+  ["/servicos/cabeamento-estruturado/", '[aria-label="Etapas, do diagnóstico ao suporte"]', { tag: "1440x900", w: 1440, h: 900 }, 6],
+  ["/servicos/cabeamento-estruturado/", '[aria-label="Etapas, do diagnóstico ao suporte"]', { tag: "390x844", w: 390, h: 844, mobile: true }, 6],
+  ["/servicos/cabeamento-estruturado/", '[aria-label="Etapas, do diagnóstico ao suporte"]', { tag: "834x1112", w: 834, h: 1112 }, 6],
 ]) {
   await open(url(path), vp)
-  await js(`document.querySelector("[data-timeline-step]").scrollIntoView({ block: "center", behavior: "instant" })`)
+  await js(`document.querySelector(${JSON.stringify(sel)}).scrollIntoView({ block: "center", behavior: "instant" })`)
   const tl = await js(`(async () => {
-    const ol = document.querySelector("[data-timeline-step]")
+    const ol = document.querySelector(${JSON.stringify(sel)})
     const seen = []
     for (let i = 0; i < 60 && Number(ol.dataset.timelineStep) !== 0; i++) await new Promise((r) => setTimeout(r, 50))
     for (let i = 0; i < 40; i++) { const s = Number(ol.dataset.timelineStep); if (seen[seen.length - 1] !== s) seen.push(s); await new Promise((r) => setTimeout(r, 250)) }
-    return { seen, done: ol.querySelectorAll("[data-done]").length, controls: ol.querySelectorAll("button, [tabindex]").length }
+    const tops = [...ol.children].map((li) => Math.round(li.getBoundingClientRect().top))
+    return {
+      seen, items: ol.children.length, controls: ol.querySelectorAll("button, [tabindex]").length,
+      horizontal: new Set(tops).size === 1, vertical: tops.every((t, i) => i === 0 || t > tops[i - 1]),
+      hscroll: document.documentElement.scrollWidth > innerWidth,
+      text: ol.textContent,
+    }
   })()`)
-  check(`${vp.tag} ${path} timeline avança sozinha (0→…), sem controles`, tl.seen[0] === 0 && tl.seen.length >= 5 && tl.seen.every((v, i) => i === 0 || v === tl.seen[i - 1] + 1) && tl.controls === 0, JSON.stringify(tl))
+  const orient = vp.w >= 1280 ? tl.horizontal : tl.vertical
+  check(
+    `${vp.tag} ${path} progressão de ${n} etapas avança sozinha, ${vp.w >= 1280 ? "horizontal" : "vertical"}, sem controles nem overflow`,
+    tl.items === n && tl.seen[0] === 0 && tl.seen.length >= 5 && tl.seen.every((v, i) => i === 0 || v === tl.seen[i - 1] + 1) && tl.controls === 0 && orient && !tl.hscroll && !/Levantamento/.test(tl.text),
+    JSON.stringify({ ...tl, text: undefined }),
+  )
 }
-// Demonstração Starlink: automática, só Pausar/Retomar
-for (const vp of [
-  { tag: "1440x900", w: 1440, h: 900 },
-  { tag: "390x844", w: 390, h: 844, mobile: true },
+// Demonstração Starlink — componente único (Home compacta, página completa)
+for (const [path, vp] of [
+  ["/servicos/instalacao-starlink/", { tag: "1440x900", w: 1440, h: 900 }],
+  ["/servicos/instalacao-starlink/", { tag: "390x844", w: 390, h: 844, mobile: true }],
+  ["/", { tag: "1440x900", w: 1440, h: 900 }],
+  ["/", { tag: "360x640", w: 360, h: 640, mobile: true }],
+  ["/", { tag: "834x1112", w: 834, h: 1112 }],
 ]) {
   events.length = 0
-  await open(url("/servicos/instalacao-starlink/"), vp)
+  await open(url(path), vp)
   await js(`document.querySelector("[data-starlink-step]").scrollIntoView({ block: "center", behavior: "instant" })`)
   const sd = await js(`(async () => {
     const root = document.querySelector("[data-starlink-step]")
-    const seen = []
-    for (let i = 0; i < 50 && Number(root.dataset.starlinkStep) !== 0; i++) await new Promise((r) => setTimeout(r, 50))
+    const seen = [], states = {}
+    for (let i = 0; i < 60 && Number(root.dataset.starlinkStep) !== 0; i++) await new Promise((r) => setTimeout(r, 50))
     const t0 = performance.now()
-    while (performance.now() - t0 < 11000) { const s = Number(root.dataset.starlinkStep); if (seen[seen.length - 1] !== s) seen.push(s); await new Promise((r) => setTimeout(r, 200)) }
-    return { seen, focus: [...root.querySelectorAll("button, a[href], [tabindex]")].map((e) => e.textContent.trim()) }
+    // Ciclo completo (7 etapas + pausa final) e o recomeço
+    while (performance.now() - t0 < 30000) {
+      const s = Number(root.dataset.starlinkStep)
+      if (seen[seen.length - 1] !== s) { seen.push(s); states[s] = root.dataset.fiber + "/" + root.dataset.starlink }
+      if (seen.length > 8) break
+      await new Promise((r) => setTimeout(r, 200))
+    }
+    const svg = [...root.querySelectorAll("svg")].find((s) => s.getBoundingClientRect().width > 0)
+    const part = (p) => { const el = svg?.querySelector('[data-starlink-part="' + p + '"]'); const r = el?.getBoundingClientRect(); return !!r && (r.width > 0 || r.height > 0) }
+    return {
+      seen, states,
+      parts: ["satellite", "beam", "antenna", "firewall", "switch", "fiber-link", "starlink-link"].filter((p) => !part(p)),
+      focus: [...root.querySelectorAll("button, a[href], [tabindex], select, [role=tab]")].map((e) => e.textContent.trim()),
+      overflow: document.documentElement.scrollWidth > innerWidth || (svg && svg.getBoundingClientRect().right > innerWidth + 1),
+      layout: svg?.getAttribute("viewBox"),
+    }
   })()`)
   await clickAt(`[...document.querySelectorAll("[data-starlink-step] button")].find((b) => /Pausar/.test(b.textContent))`)
   const frozen = await js(`document.querySelector("[data-starlink-step]").dataset.starlinkStep`)
-  await pause(4000)
-  const still = await js(`document.querySelector("[data-starlink-step]").dataset.starlinkStep`)
+  await pause(4200)
+  const still = await js(`({ step: document.querySelector("[data-starlink-step]").dataset.starlinkStep, label: document.querySelector("[data-starlink-step] button")?.textContent, pressed: document.querySelector("[data-starlink-step] button")?.getAttribute("aria-pressed") })`)
+  await clickAt(`[...document.querySelectorAll("[data-starlink-step] button")].find((b) => /Retomar/.test(b.textContent))`)
+  await pause(6000)
+  const resumed = await js(`document.querySelector("[data-starlink-step]").dataset.starlinkStep`)
+  const cycle = sd.seen.slice(0, 8).join() === "0,1,2,3,4,5,6,0"
+  const states = sd.states["4"] === "active/standby" && sd.states["5"] === "fail/active" && sd.states["6"] === "active/standby"
+  const tall = vp.w < 768 ? sd.layout === "0 0 360 640" : sd.layout === "0 0 1000 440"
   check(
-    `${vp.tag} Starlink: demonstração automática (0→3…), único controle Pausar/Retomar, pausa congela`,
-    sd.seen.slice(0, 4).join() === "0,1,2,3" && sd.focus.length === 1 && /Pausar demonstração/.test(sd.focus[0] ?? "") && still === frozen && events.length === 0,
-    JSON.stringify({ ...sd, frozen, still, events: events.slice(0, 2) }),
+    `${vp.tag} ${path} Starlink: ciclo automático 0→6 e recomeço, falha/recuperação, satélite+feixe+antena visíveis, só Pausar/Retomar, sem overflow`,
+    cycle && states && sd.parts.length === 0 && sd.focus.length === 1 && /Pausar demonstração/.test(sd.focus[0] ?? "") && !sd.overflow && tall && events.length === 0,
+    JSON.stringify({ seen: sd.seen, states: sd.states, missing: sd.parts, focus: sd.focus, overflow: sd.overflow, layout: sd.layout, events: events.slice(0, 2) }),
   )
+  check(`${vp.tag} ${path} Starlink: Pausar congela e Retomar continua do mesmo ponto`, still.step === frozen && still.pressed === "true" && /Retomar/.test(still.label ?? "") && resumed !== frozen, JSON.stringify({ frozen, still, resumed }))
+  if (path === "/" && vp.w === 1440) await shot("starlink-home-1440")
+}
+// WhatsApp: seta visível e sem recorte em normal, hover, foco e ativo; largura estável
+for (const [path, vp] of [
+  ["/servicos/cftv-cameras-de-seguranca/", { tag: "1440x900", w: 1440, h: 900 }],
+  ["/solucoes/", { tag: "1440x900", w: 1440, h: 900 }],
+  ["/", { tag: "390x844", w: 390, h: 844, mobile: true }],
+]) {
+  await open(url(path), vp)
+  const links = await js(`[...document.querySelectorAll("a[data-wa-context]")].filter((a) => a.querySelector("[data-wa-arrow]") && a.offsetParent).map((a, i) => (a.dataset.qaWa = String(i), i))`)
+  const out = []
+  for (const i of links) {
+    const sel = `document.querySelector('[data-qa-wa="${i}"]')`
+    const before = await js(`(() => { const a = ${sel}; a.scrollIntoView({ block: "center", behavior: "instant" }); return Math.round(a.getBoundingClientRect().width) })()`)
+    const box = await js(`(() => { const r = ${sel}.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 } })()`)
+    await send("Input.dispatchMouseEvent", { type: "mouseMoved", x: box.x, y: box.y })
+    await pause(250)
+    const measure = `(() => { const a = ${sel}; const s = a.querySelector("[data-wa-arrow]"); const r = s.getBoundingClientRect(); const b = a.getBoundingClientRect(); const range = document.createRange(); range.selectNodeContents(s); const g = range.getBoundingClientRect(); return { w: Math.round(b.width), glyphIn: g.right <= b.right - 2 && g.left >= b.left, glyphFits: g.width <= r.width + 0.5, clip: ["overflow", "overflowX"].some((k) => getComputedStyle(s)[k] !== "visible") || getComputedStyle(a).overflow !== "visible", op: getComputedStyle(s).opacity } })()`
+    const hover = await js(measure)
+    await send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 2, y: 2 })
+    await js(`${sel}.focus({ focusVisible: true })`)
+    await send("Input.dispatchKeyEvent", { type: "keyDown", key: "Shift", code: "ShiftLeft" })
+    await send("Input.dispatchKeyEvent", { type: "keyUp", key: "Shift", code: "ShiftLeft" })
+    await pause(200)
+    const focus = await js(measure)
+    await js(`document.activeElement.blur()`)
+    out.push({ i, before, hover, focus })
+  }
+  // Toque (mobile) não tem hover: lá vale o foco
+  const hoverOk = (o) => o.hover.glyphIn && o.hover.glyphFits && !o.hover.clip && o.hover.w === o.before && (vp.mobile || o.hover.op === "1")
+  const bad = out.filter((o) => !(hoverOk(o) && o.focus.glyphIn && !o.focus.clip && o.focus.w === o.before && o.focus.op === "1"))
+  check(`${vp.tag} ${path} WhatsApp: seta inteira no hover/foco, sem recorte, largura estável (${out.length} botões)`, out.length > 0 && bad.length === 0, JSON.stringify(bad.slice(0, 2)))
 }
 // Falha real do arquivo de uma câmera → aviso explícito (não quadro preto)
 await send("Network.setBlockedURLs", { urls: ["*cam-07-entrada-lateral*"] })
@@ -717,23 +787,17 @@ const camErr = await js(`[...document.querySelectorAll("[data-cam]")].map((c) =>
 check("Central: erro de imagem mostra \"Imagem temporariamente indisponível\" só na câmera afetada", camErr[0] === "CAM-07:open:true" && camErr[1] === "CAM-08:open:false", JSON.stringify(camErr))
 await send("Network.setBlockedURLs", { urls: [] })
 
-// 924×540: controles manuais sem rolagem
+// 924×540: camadas da Infraestrutura por clique, sem rolagem
 await open(url("/"), { w: 924, h: 540 })
 const manual = await js(`(async () => {
   const out = []
-  const sl = document.querySelector("#starlink")
-  for (const label of ["Conectividade", "Integração Timp", "Contingência", "Falha do link terrestre", "Operação normal"]) {
-    const b = [...sl.querySelectorAll("button")].find((x) => x.textContent.includes(label)); const y = scrollY
-    b.click(); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
-    out.push({ label, caption: sl.querySelector("[aria-live]").textContent.slice(0, 40), scrolled: scrollY !== y })
-  }
   for (const b of document.querySelectorAll("#infraestrutura ol button")) {
     const y = scrollY; b.click(); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
     out.push({ label: b.textContent.slice(0, 24), current: b.getAttribute("aria-current"), scrolled: scrollY !== y })
   }
   return out
 })()`)
-check("924x540 etapas/camadas por clique, sem rolagem", manual.every((m) => !m.scrolled && (m.caption || m.current === "step")), JSON.stringify(manual.map((m) => m.caption ?? m.current)))
+check("924x540 camadas por clique, sem rolagem", manual.length > 0 && manual.every((m) => !m.scrolled && m.current === "step"), JSON.stringify(manual.map((m) => m.current)))
 
 // Reduced motion
 await open(url("/"), { w: 1440, h: 900, reduced: true })
@@ -748,8 +812,8 @@ const rm = await js(`({
   step: document.querySelector("[data-demo-step]").dataset.demoStep,
   cams: [...document.querySelectorAll("[data-cam]")].map((c) => c.hasAttribute("data-cam-open") && c.querySelector("img")?.naturalWidth > 0),
 })`)
-const rmTl = await js(`({ done: document.querySelectorAll("[data-timeline-step] [data-done]").length, step: document.querySelector("[data-timeline-step]").dataset.timelineStep })`)
-check("reduced motion: timeline com as 9 etapas concluídas, estática", rmTl.done === 9 && rmTl.step === "8", JSON.stringify(rmTl))
+const rmTl = await js(`({ timelines: [...document.querySelectorAll("[data-timeline-step]")].map((o) => o.children.length === o.querySelectorAll("[data-done]").length && Number(o.dataset.timelineStep) === o.children.length - 1), starlink: document.querySelector("[data-starlink-step]")?.dataset.starlinkStep, slButtons: document.querySelectorAll("[data-starlink-step] button").length })`)
+check("reduced motion: Processo, Construtoras e Starlink estáticos no estado final, sem controles", rmTl.timelines.length === 2 && rmTl.timelines.every(Boolean) && rmTl.starlink === "6" && rmTl.slButtons === 0, JSON.stringify(rmTl))
 check("reduced motion: sem animação, sem pontos/pulsos, pilha aberta, Central em estado final estático", rm.running === 0 && rm.dots === 0 && rm.pulses === 0 && rm.idp === "1" && rm.demo === 0 && rm.step === "4" && rm.cams.every(Boolean), JSON.stringify(rm))
 await shot("reduced-1440")
 

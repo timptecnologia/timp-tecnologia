@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 
 import { MonitoringExtras, MonitoringLead, SecurityLead, StarlinkExtras, StarlinkLead } from "@/components/sections/services/extras"
+import { StarlinkBackdrop } from "@/components/sections/starlink/starlink-backdrop"
 import { ServicePage } from "@/components/templates/service-page"
 import { SERVICES } from "@/lib/content/services"
 import { buildMetadata } from "@/lib/seo/metadata"
@@ -33,5 +34,5 @@ export default async function ServicoPage({ params }: PageProps<"/servicos/[slug
   const key = bySlug.get((await params).slug)
   if (!key) notFound()
   const x = EXTRAS[key]
-  return <ServicePage s={SERVICES[key]} lead={x?.lead && <x.lead />} extra={x?.extra && <x.extra />} hideHiring={x?.hideHiring} />
+  return <ServicePage s={SERVICES[key]} lead={x?.lead && <x.lead />} extra={x?.extra && <x.extra />} hideHiring={x?.hideHiring} backdrop={key === "starlink" ? <StarlinkBackdrop /> : undefined} />
 }

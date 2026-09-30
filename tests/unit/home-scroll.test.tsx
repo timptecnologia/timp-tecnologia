@@ -8,7 +8,6 @@ import { decideMode, trackProgress } from "@/components/home/use-scroll-track"
 import { samePageHashTarget } from "@/components/layout/anchor-guard"
 import { stageMetrics } from "@/components/sections/home/depth-experience"
 import { InfrastructureDepth } from "@/components/sections/home/infrastructure-depth"
-import { Starlink } from "@/components/sections/home/starlink"
 
 /**
  * Regressões de navegação por âncora e das experiências de scroll (motion-spec §2, §3,
@@ -22,12 +21,11 @@ const motion = readFileSync(join(root, "styles", "motion.css"), "utf8")
 
 describe("geometria reservada no HTML (SSR)", () => {
   const tracks = [
-    ["Starlink", renderToStaticMarkup(<Starlink />), "210svh"],
     ["Infraestrutura", renderToStaticMarkup(<InfrastructureDepth />), "150svh"],
   ] as const
 
   it.each(tracks)("%s: trilho declarado, sem modo decidido no servidor e altura sticky via CSS", (_name, html, extra) => {
-    expect(html).toMatch(/data-scroll-track="(starlink|depth)"/)
+    expect(html).toMatch(/data-scroll-track="depth"/)
     expect(html).not.toMatch(/data-mode=/)
     expect(html).toContain(`track-sticky:h-[calc(100svh-var(--header-height)+${extra})]`)
     expect(html).toContain("track-sticky:sticky")

@@ -14,7 +14,7 @@ export const metadata = buildMetadata(PAGE_SEO.contato)
 const AREA = FACTS.find((f) => f.q === "ONDE ATENDE")?.a ?? SITE.areaServedText
 
 const NEXT_STEPS = [
-  ["Visita técnica", "Levantamento no local quando o ambiente precisa ser avaliado."],
+  ["Visita técnica", "Avaliação no local quando o ambiente precisa ser visto de perto."],
   ["Diagnóstico", "Análise da infraestrutura e da operação para indicar o que fazer primeiro."],
   ["Proposta de projeto", "Escopo, equipamentos e etapas definidos para a sua operação."],
 ] as const

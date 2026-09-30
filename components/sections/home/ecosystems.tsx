@@ -17,7 +17,7 @@ export function Ecosystems() {
           <div className="flex flex-col gap-5">
             <span className={cn(S.eyebrow, "text-blue-400")}>SERVIÇOS</span>
             <h2 id="ecossistemas-titulo" className={S.h2}>
-              Tecnologia em várias frentes, do jeito que a sua operação precisa.
+              Tecnologia em várias frentes, do jeito que a sua operação precisar.
             </h2>
           </div>
           <div className="flex flex-col items-start gap-5">

@@ -185,7 +185,7 @@ export const COMPANY = {
 export const DIFFERENTIALS = [
   { t: "Um único responsável", d: "Do projeto à manutenção, o mesmo parceiro responde pela infraestrutura, pela segurança e pelo suporte." },
   { t: "Sistemas projetados juntos", d: "Rede, câmeras, alarmes, acessos e automação são pensados em conjunto, sobre a mesma infraestrutura." },
-  { t: "Projeto antes da instalação", d: "Levantamento, projeto e proposta vêm antes da execução — inclusive na fase de projeto do empreendimento." },
+  { t: "Projeto antes da instalação", d: "Diagnóstico, projeto e proposta vêm antes da execução — inclusive na fase de projeto do empreendimento." },
   { t: "Documentação na entrega", d: "Pontos, equipamentos e configurações identificados e registrados." },
   { t: "Monitoramento independente de fabricante", d: "A Central Timp recebe eventos de diferentes equipamentos, com verificação por operador." },
   { t: "Atendimento no estado do Rio", d: "Todo o estado do Rio de Janeiro; projetos especiais em outras regiões sob avaliação." },
@@ -208,21 +208,9 @@ export const FACTS = [
 // ------------------------------------------------------------------ Starlink
 export const STARLINK_APPLICATIONS = ["Empresas", "Obras", "Áreas remotas", "Mobilidade", "Projetos especiais"] as const
 
-/** Legendas das 4 etapas (título, texto, tom). */
-export const STARLINK_CAPTIONS = [
-  { title: "01 · CONECTIVIDADE", text: "Satélite → sinal → local. O terminal Starlink leva conectividade a endereços onde a rede terrestre não chega ou não é suficiente.", fail: false },
-  { title: "02 · Integração Timp", text: "Starlink → firewall Dual WAN → rede Timp → Wi-Fi e dispositivos. O link entra na infraestrutura como parte do projeto.", fail: false },
-  { title: "03 · CONTINGÊNCIA · OPERAÇÃO NORMAL", text: "A fibra é o link principal. O Starlink permanece disponível no firewall como caminho secundário.", fail: false },
-  {
-    title: "03 · CONTINGÊNCIA · FALHA DO LINK TERRESTRE",
-    text: "Com a fibra degradada ou interrompida, o firewall passa o tráfego para o Starlink. Conectividade principal ou contingência, conforme o projeto.",
-    fail: true,
-  },
-] as const
-
 // ------------------------------------------------------------------ Processo
 export const PROCESS = [
-  ["Planejar", "Levantamento do ambiente, da operação e dos objetivos."],
+  ["Planejar", "Diagnóstico do ambiente, da operação e dos objetivos."],
   ["Projetar", "Projeto técnico com pontos, rotas, equipamentos e capacidade."],
   ["Implantar", "Instalação da infraestrutura e dos equipamentos."],
   ["Integrar", "Rede, segurança, voz e automação funcionando em conjunto."],

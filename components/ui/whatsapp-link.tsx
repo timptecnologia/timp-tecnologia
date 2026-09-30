@@ -53,7 +53,12 @@ export function WhatsAppLink({
     >
       <WhatsAppIcon />
       <span>{children}</span>
-      <span aria-hidden="true" className="-ml-1 w-0 overflow-hidden opacity-0 transition-all duration-150 group-hover:ml-0 group-hover:w-3 group-hover:opacity-100">
+      {/* Seta com espaço próprio e fixo (nada é recortado; o botão não muda de largura no hover) */}
+      <span
+        aria-hidden="true"
+        data-wa-arrow=""
+        className="-ml-1 inline-block w-[1.1em] flex-none -translate-x-1 text-left opacity-0 transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 group-active:translate-x-0.5 group-active:opacity-100"
+      >
         →
       </span>
     </a>

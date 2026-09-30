@@ -1,10 +1,10 @@
 import { JsonLd } from "@/components/seo/json-ld"
 import { FinalCta } from "@/components/sections/home/final-cta"
 import { S } from "@/components/sections/home/ui"
-import { BalancedGrid, Faq, Section, SectionHead, Steps } from "@/components/sections/pages/blocks"
+import { BalancedGrid, Faq, Section, SectionHead } from "@/components/sections/pages/blocks"
 import { ArticleCards } from "@/components/sections/pages/links"
-import { BuildTimeline } from "@/components/sections/home/build-timeline"
 import { PageIntro } from "@/components/sections/pages/page-intro"
+import { ProgressTimeline } from "@/components/sections/shared/progress-timeline"
 import { WhatsAppLink } from "@/components/ui/whatsapp-link"
 import { HIRING_STEPS } from "@/lib/content/services"
 import { BUILDER_LAYERS, BUILDER_REGIONS, BUILDER_ROLES, BUILDER_STEPS, type SolutionContent } from "@/lib/content/solutions"
@@ -123,12 +123,12 @@ export function SolutionPage({ s }: { s: SolutionContent }) {
       {builders ? (
         <Section tone="blue" labelledBy="processo-titulo">
           <SectionHead id="processo-titulo" eyebrow="DA PLANTA À OPERAÇÃO" title="Nove etapas, do planejamento à manutenção." lead={s.evolution} />
-          <BuildTimeline steps={BUILDER_STEPS} />
+          <ProgressTimeline steps={BUILDER_STEPS} label="Etapas, do planejamento à manutenção" />
         </Section>
       ) : (
         <Section tone="light" labelledBy="processo-titulo">
-          <SectionHead id="processo-titulo" eyebrow="Processo Timp" title="Do levantamento ao suporte, com o mesmo parceiro." lead={s.evolution} light />
-          <Steps steps={HIRING_STEPS} light />
+          <SectionHead id="processo-titulo" eyebrow="Processo Timp" title="Do diagnóstico ao suporte, com o mesmo parceiro." lead={s.evolution} light />
+          <ProgressTimeline steps={HIRING_STEPS} label="Etapas, do diagnóstico ao suporte" tone="light" descDesktop />
         </Section>
       )}
 

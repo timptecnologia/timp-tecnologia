@@ -19,11 +19,13 @@ import NotFound from "@/app/not-found"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { SiteHeaderClient } from "@/components/layout/site-header-client"
 import { MonitoringExtras, MonitoringLead, SecurityLead, StarlinkExtras, StarlinkLead } from "@/components/sections/services/extras"
+import { starlinkVisual } from "@/components/sections/starlink/starlink-demo"
 import { ArticlePage } from "@/components/templates/article-page"
 import { ServicePage } from "@/components/templates/service-page"
 import { SolutionPage } from "@/components/templates/solution-page"
 import { ARTICLES } from "@/lib/content/articles"
-import { SERVICES } from "@/lib/content/services"
+import { HIRING_STEPS, SERVICES } from "@/lib/content/services"
+import { STARLINK_STAGES } from "@/lib/content/starlink-demo"
 import { SOLUTIONS } from "@/lib/content/solutions"
 import { PUBLISHED_ROUTES } from "@/lib/seo/routes"
 import { ECOSYSTEMS } from "@/lib/home/content"
@@ -264,7 +266,7 @@ describe("decisões da Macrofase 2", () => {
   })
 
   it("Home: Serviços sem 'cinco frentes', Starlink nomeada no H2, Arquitetos logo após Construtoras", () => {
-    expect(home).toContain("Tecnologia em várias frentes, do jeito que a sua operação precisa.")
+    expect(home).toContain("Tecnologia em várias frentes, do jeito que a sua operação precisar.")
     expect(home).not.toMatch(/[Cc]inco frentes/)
     expect(home).toMatch(/<h2[^>]*>Instalação profissional de Starlink/)
     const order = ["id=\"construtoras\"", "id=\"arquitetos\"", "id=\"monitoramento\""].map((m) => home.indexOf(m))
@@ -296,6 +298,58 @@ describe("decisões da Macrofase 2", () => {
     const demo = page.slice(page.indexOf("data-starlink-step"))
     expect(demo).toMatch(/^data-starlink-step="6"/)
     expect(demo.slice(0, demo.indexOf("</section>"))).not.toMatch(/<button/)
+  })
+
+  it("Starlink: Home e página usam o MESMO componente (7 etapas, cena com satélite, feixe e antena, sem seletor manual)", () => {
+    const page = html[ROUTES.starlink.path]!
+    const block = (markup: string, variant: string) => {
+      const i = markup.indexOf(`data-starlink-demo="${variant}"`)
+      expect(i, variant).toBeGreaterThan(0)
+      return markup.slice(i, markup.indexOf("</section>", i))
+    }
+    const homeDemo = block(home, "compact")
+    const pageDemo = block(page, "full")
+    for (const demo of [homeDemo, pageDemo]) {
+      // Estado inicial do HTML = etapa final (recuperação), estático; sem JS não há controles
+      expect(demo).toMatch(/data-starlink-step="6" data-fiber="active" data-starlink="standby"/)
+      expect(demo).not.toMatch(/<button|role="tab"|<select|Selecione a etapa/)
+      for (const s of STARLINK_STAGES) expect(demo, s.title).toContain(s.title)
+      // Cena nas duas composições (horizontal e vertical): satélite, feixe e antena presentes
+      for (const part of ["satellite", "beam", "antenna", "firewall", "switch", "device-wifi", "device-cam", "fiber-link", "starlink-link"])
+        expect(demo.match(new RegExp(`data-starlink-part="${part}"`, "g"))?.length, part).toBe(2)
+    }
+    // A experiência antiga (trilho de scroll com etapas por clique) não existe mais na Home
+    const section = home.slice(home.indexOf('id="starlink"'), home.indexOf("</section>", home.indexOf('id="starlink"')))
+    expect(section).not.toMatch(/data-scroll-track|ROLE PARA AVANÇAR/)
+    expect(STARLINK_STAGES.map((s) => s.title)).toEqual(["Sinal via satélite", "Terminal Starlink", "Integração Timp", "Rede interna", "Operação normal", "A fibra saiu do ar", "Recuperação"])
+  })
+
+  it("Starlink: estados visuais — fibra em falha desvia o tráfego para a Starlink; recuperação restaura", () => {
+    const v = STARLINK_STAGES.map((s, i) => starlinkVisual(s, i))
+    // 01–02: sinal chegando à antena, ainda sem rede
+    expect([v[0]!.beam, v[0]!.dishOn, v[0]!.dishFw]).toEqual(["active", false, "off"])
+    expect([v[1]!.beam, v[1]!.dishOn]).toEqual(["active", true])
+    // 05 operação normal: fibra carrega o tráfego, Starlink de prontidão
+    expect([v[4]!.fiber, v[4]!.dishFw, v[4]!.beam, v[4]!.lan]).toEqual(["active", "standby", "standby", true])
+    // 06 falha: fibra interrompida e tráfego pela Starlink
+    expect([v[5]!.fiber, v[5]!.dishFw, v[5]!.beam, v[5]!.lan]).toEqual(["fail", "active", "active", true])
+    expect(v[5]!.traffic).not.toBe(v[4]!.traffic)
+    // 07 recuperação: volta ao estado de operação normal
+    expect(v[6]).toEqual(v[4])
+  })
+
+  it("Processo: 'Diagnóstico' no lugar de 'Levantamento' e progressão animada (estado final sem JS)", () => {
+    expect(HIRING_STEPS[0]![0]).toBe("Diagnóstico")
+    for (const [path, markup] of Object.entries(html)) {
+      expect(markup, path).not.toMatch(/Do levantamento ao suporte|>Levantamento</)
+      if (path.startsWith("/servicos/") && path !== "/servicos/" && path !== ROUTES.starlink.path) {
+        expect(markup, path).toContain("Do diagnóstico ao suporte, com o mesmo parceiro.")
+        const tl = markup.slice(markup.indexOf('aria-label="Etapas, do diagnóstico ao suporte"'))
+        expect(tl.slice(0, tl.indexOf("</ol>")).match(/data-done=""/g)?.length, path).toBe(6)
+      }
+    }
+    const proc = home.slice(home.indexOf('id="processo"'))
+    expect(proc.slice(0, proc.indexOf("</ol>"))).toMatch(/data-timeline-step="7"/)
   })
 
   it("Monitoramento 24h: página própria com a demonstração da Central", () => {

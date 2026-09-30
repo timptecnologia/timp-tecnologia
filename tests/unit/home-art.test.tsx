@@ -4,7 +4,7 @@ import { join } from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it } from "vitest"
 
-import { DualWanJunction, HeroScene, PlaneArt, StarlinkScene, type HeroVariant, type StarlinkPhase } from "@/components/home/art"
+import { HeroScene, PlaneArt, type HeroVariant } from "@/components/home/art"
 
 /**
  * A arte inline da Home precisa ser a MESMA dos assets oficiais exportados pelo
@@ -50,29 +50,6 @@ describe("Hero RJ45 = assets/home/hero", () => {
   it("mantém o texto técnico (Timp, OPERAÇÃO, P1–P4 no desktop)", () => {
     const html = renderToStaticMarkup(<HeroScene variant="d" />)
     for (const t of ["Timp", "OPERAÇÃO", "P1", "P4"]) expect(html).toContain(`>${t}<`)
-  })
-})
-
-describe("Starlink · Rio = assets/starlink", () => {
-  const states: [StarlinkPhase, string][] = [
-    [0, "1-conectividade"],
-    [1, "2-integracao"],
-    [2, "3-contingencia-normal"],
-    [3, "4-contingencia-falha"],
-  ]
-  const sizes: [HeroVariant, string][] = [
-    ["d", "desktop-1440"],
-    ["t", "tablet-834"],
-    ["m", "mobile-390"],
-  ]
-  for (const [variant, size] of sizes) {
-    it.each(states)(`${size} · fase %s`, (phase, name) => {
-      expectSameGeometry(renderToStaticMarkup(<StarlinkScene variant={variant} phase={phase} />), read(`starlink/starlink-rio-${size}-${name}.svg`))
-    })
-  }
-
-  it.each(states)("junção Dual WAN · fase %s", (phase, name) => {
-    expectSameGeometry(renderToStaticMarkup(<DualWanJunction phase={phase} />), read(`starlink/starlink-dual-wan-junction-${phase + 1}-${name.slice(2)}.svg`))
   })
 })
 

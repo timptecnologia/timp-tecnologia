@@ -161,6 +161,19 @@
   stroke-dasharray: 3 7;
   animation: timp-beam 1s linear infinite;
 }
+/* Demonstração Starlink: pulsos de tráfego percorrendo o caminho ativo e deriva lenta do satélite */
+.timp-flow {
+  stroke-dasharray: 5 15;
+  animation: timp-beam 0.9s linear infinite;
+}
+@keyframes timp-drift {
+  to {
+    transform: translateX(10px);
+  }
+}
+.timp-drift {
+  animation: timp-drift 6s ease-in-out infinite alternate;
+}
 .timp-rise {
   animation: timp-rise 3.2s var(--rise-delay, 0s) cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }

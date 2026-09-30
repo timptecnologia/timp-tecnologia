@@ -1,10 +1,11 @@
+import { ProgressTimeline } from "@/components/sections/shared/progress-timeline"
 import { PROCESS } from "@/lib/home/content"
 import { PROJECT_CTA } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
 import { S } from "./ui"
 
-/** Processo Timp (seção clara, "respiração", estática). */
+/** Processo Timp (seção clara, "respiração"): progressão automática das 8 etapas. */
 export function Process() {
   return (
     <section id="processo" aria-labelledby="processo-titulo" data-theme="light" className="bg-g-100 text-g-950">
@@ -23,15 +24,7 @@ export function Process() {
             Solicitar um projeto <span aria-hidden="true">→</span>
           </a>
         </div>
-        <ol className="m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(min(100%,250px),1fr))] gap-x-7 p-0">
-          {PROCESS.map(([t, d], i) => (
-            <li key={t} className={cn("flex flex-col gap-2 border-t-2 pt-5 pb-6", i === 0 ? "border-blue-600" : "border-g-300")}>
-              <span className="font-mono text-[12px] text-blue-600">{String(i + 1).padStart(2, "0")}</span>
-              <span className="text-[24px] font-bold tracking-[-0.02em]">{t}</span>
-              <span className="max-w-[26em] text-[15px] leading-[1.55] text-g-600">{d}</span>
-            </li>
-          ))}
-        </ol>
+        <ProgressTimeline steps={PROCESS} label="Processo Timp, do planejamento à evolução" tone="light" descDesktop />
       </div>
     </section>
   )

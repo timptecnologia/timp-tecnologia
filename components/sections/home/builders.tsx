@@ -1,10 +1,10 @@
+import { ProgressTimeline } from "@/components/sections/shared/progress-timeline"
 import { WhatsAppLink } from "@/components/ui/whatsapp-link"
 import { BUILDER_STEPS } from "@/lib/content/solutions"
 import { BUILD_LAYERS } from "@/lib/home/content"
 import { HOME_ANCHORS, href } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
-import { BuildTimeline } from "./build-timeline"
 import { S } from "./ui"
 
 /**
@@ -60,7 +60,7 @@ export function Builders() {
         </div>
         <div className="flex flex-col gap-5">
           <span className="font-mono text-[11px] tracking-[0.1em] text-blue-300">DA PLANTA À OPERAÇÃO</span>
-          <BuildTimeline steps={BUILDER_STEPS} />
+          <ProgressTimeline steps={BUILDER_STEPS} label="Etapas, do planejamento à manutenção" />
         </div>
       </div>
     </section>

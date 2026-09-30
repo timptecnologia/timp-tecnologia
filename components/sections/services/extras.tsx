@@ -1,12 +1,14 @@
 import { MonitoringDemo } from "@/components/sections/home/monitoring-demo"
 import { S } from "@/components/sections/home/ui"
-import { BalancedGrid, Section, SectionHead, Steps } from "@/components/sections/pages/blocks"
+import { BalancedGrid, Section, SectionHead } from "@/components/sections/pages/blocks"
 import { FlowBox } from "@/components/sections/shared/flow-box"
+import { ProgressTimeline } from "@/components/sections/shared/progress-timeline"
+import { StarlinkBackdrop } from "@/components/sections/starlink/starlink-backdrop"
+import { StarlinkDemo } from "@/components/sections/starlink/starlink-demo"
 import { MON_FLOW } from "@/lib/home/content"
 import { ROUTES, requiredHref, type ServiceKey } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
-import { StarlinkDemo } from "./starlink-demo"
 
 /**
  * Seções exclusivas de algumas páginas de serviço. `…Lead` entra logo depois da
@@ -51,15 +53,19 @@ export function StarlinkLead() {
           </div>
         </div>
       </Section>
-      <Section tone="alt" labelledBy="veja-titulo">
-        <SectionHead
-          id="veja-titulo"
-          eyebrow="VEJA COMO FUNCIONA"
-          title="Como a Starlink entra na rede da empresa?"
-          lead="Uma demonstração automática, do sinal via satélite ao que acontece se a fibra sair do ar. Diagrama ilustrativo: a configuração real depende do projeto."
-        />
-        <StarlinkDemo />
-      </Section>
+      {/* Demonstração completa (mesmo componente da Home) sobre o céu noturno */}
+      <section aria-labelledby="veja-titulo" className="relative overflow-hidden border-y border-g-800 bg-g-975">
+        <StarlinkBackdrop />
+        <div className={cn(S.container, S.pad, "relative flex flex-col gap-[clamp(20px,2.5vw,36px)]")}>
+          <SectionHead
+            id="veja-titulo"
+            eyebrow="DEMONSTRAÇÃO AUTOMÁTICA"
+            title="Como a Starlink entra na rede da empresa?"
+            lead="Do sinal do satélite à antena, da infraestrutura Timp aos dispositivos — e o que acontece se a fibra sair do ar. Diagrama ilustrativo: a configuração real depende do projeto."
+          />
+          <StarlinkDemo variant="full" />
+        </div>
+      </section>
     </>
   )
 }
@@ -139,7 +145,7 @@ export function StarlinkExtras() {
 
       <Section tone="light" labelledBy="instalacao-titulo">
         <SectionHead id="instalacao-titulo" eyebrow="Como a Timp instala" title="Da análise do local à entrega, com testes." light />
-        <Steps steps={install} light />
+        <ProgressTimeline steps={install} label="Etapas da instalação" tone="light" descDesktop />
       </Section>
 
       <Section labelledBy="limites-titulo">

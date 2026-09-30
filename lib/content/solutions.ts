@@ -385,7 +385,7 @@ export const BUILDER_ROLES = [
 ] as const
 
 export const BUILDER_STEPS = [
-  ["Planejamento", "Levantamento do empreendimento e dos sistemas desejados."],
+  ["Planejamento", "Diagnóstico do empreendimento e dos sistemas desejados."],
   ["Projeto", "Projeto das disciplinas de tecnologia e compatibilização."],
   ["Infraestrutura", "Rotas, eletrodutos e prumadas executados conforme o projeto."],
   ["Instalação", "Cabos, equipamentos e racks instalados."],

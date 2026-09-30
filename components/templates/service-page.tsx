@@ -3,9 +3,10 @@ import type { ReactNode } from "react"
 import { JsonLd } from "@/components/seo/json-ld"
 import { FinalCta } from "@/components/sections/home/final-cta"
 import { S } from "@/components/sections/home/ui"
-import { BalancedGrid, Faq, FlowFigure, Section, SectionHead, Steps } from "@/components/sections/pages/blocks"
+import { BalancedGrid, Faq, FlowFigure, Section, SectionHead } from "@/components/sections/pages/blocks"
 import { ArticleCards, RouteChips, ServiceCards } from "@/components/sections/pages/links"
 import { PageIntro } from "@/components/sections/pages/page-intro"
+import { ProgressTimeline } from "@/components/sections/shared/progress-timeline"
 import { WhatsAppLink } from "@/components/ui/whatsapp-link"
 import { HIRING_STEPS, type ServiceContent } from "@/lib/content/services"
 import { graph, organizationSchema, serviceSchema } from "@/lib/seo/schema"
@@ -17,7 +18,20 @@ import { cn } from "@/lib/utils"
  * SSG). Blocos: abertura + diagrama, problema e benefícios, escopo × fatores,
  * contratação, extras do serviço, relacionados e segmentos, FAQ, conteúdo, CTA.
  */
-export function ServicePage({ s, lead, extra, hideHiring }: { s: ServiceContent; lead?: ReactNode; extra?: ReactNode; hideHiring?: boolean }) {
+export function ServicePage({
+  s,
+  lead,
+  extra,
+  hideHiring,
+  backdrop,
+}: {
+  s: ServiceContent
+  lead?: ReactNode
+  extra?: ReactNode
+  hideHiring?: boolean
+  /** Fundo decorativo da abertura (Starlink: céu noturno). */
+  backdrop?: ReactNode
+}) {
   const path = ROUTES[s.key].path
   return (
     <>
@@ -38,6 +52,7 @@ export function ServicePage({ s, lead, extra, hideHiring }: { s: ServiceContent;
             <WhatsAppLink context={s.key} />
           </>
         }
+        backdrop={backdrop}
         aside={<FlowFigure title={s.flow.title} steps={s.flow.steps} hl={s.flow.hl} caption={s.flow.caption} />}
       />
 
@@ -90,8 +105,8 @@ export function ServicePage({ s, lead, extra, hideHiring }: { s: ServiceContent;
 
       {!hideHiring && (
         <Section tone="light" labelledBy="contratacao-titulo">
-          <SectionHead id="contratacao-titulo" eyebrow="COMO FUNCIONA A CONTRATAÇÃO" title="Do levantamento ao suporte, com o mesmo parceiro." light />
-          <Steps steps={HIRING_STEPS} light />
+          <SectionHead id="contratacao-titulo" eyebrow="COMO FUNCIONA A CONTRATAÇÃO" title="Do diagnóstico ao suporte, com o mesmo parceiro." light />
+          <ProgressTimeline steps={HIRING_STEPS} label="Etapas, do diagnóstico ao suporte" tone="light" descDesktop />
         </Section>
       )}
 
