@@ -89,8 +89,17 @@ export function PhotoBackdrop({
       {side === "right" && <div className={cn("absolute inset-0 hidden desktop:block", RIGHT)} />}
       {baseFade && <div className="absolute inset-0 hidden bg-[linear-gradient(to_top,var(--color-g-975)_0%,rgb(5_7_10/0)_30%)] tablet:block" />}
       {/* strong: reforço atrás do texto (parágrafo longo) — do lado do texto no desktop */}
-      {strong && <div className={cn("absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(5_7_10/0.4)_0%,rgb(5_7_10/0.3)_50%,rgb(5_7_10/0)_62%)] tablet:block", side === "right" && "desktop:hidden")} />}
-      {strong && side === "right" && <div className="absolute inset-0 hidden bg-[linear-gradient(270deg,rgb(5_7_10/0.4)_0%,rgb(5_7_10/0.3)_40%,rgb(5_7_10/0)_55%)] desktop:block" />}
+      {strong && (
+        <div
+          className={cn(
+            "absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(5_7_10/0.4)_0%,rgb(5_7_10/0.3)_50%,rgb(5_7_10/0)_62%)] tablet:block",
+            side === "right" && "desktop:hidden",
+          )}
+        />
+      )}
+      {strong && side === "right" && (
+        <div className="absolute inset-0 hidden bg-[linear-gradient(270deg,rgb(5_7_10/0.4)_0%,rgb(5_7_10/0.3)_40%,rgb(5_7_10/0)_55%)] desktop:block" />
+      )}
     </div>
   )
 }

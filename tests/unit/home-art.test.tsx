@@ -55,7 +55,11 @@ describe("Hero RJ45 = assets/home/hero", () => {
     const own = HERO_CABLES[variant]!
     const oldCables = new Set([...official.cables, official.up].map((d) => `path ${d}`))
     const newCables = new Set(own.cables.map((d) => `path ${d}`))
-    const generated = unique(geometry(renderToStaticMarkup(<HeroScene variant={variant as HeroVariant} />)))
+    const scene = renderToStaticMarkup(<HeroScene variant={variant as HeroVariant} />)
+    // Sinal interno (conector → LED → OPERAÇÃO) é só luz animada (sem linha fixa): fora da comparação
+    for (const m of scene.matchAll(/class="timp-sig-out" d="([^"]+)"/g)) newCables.add(`path ${m[1]}`)
+    expect([...scene.matchAll(/class="timp-sig-out"/g)]).toHaveLength(8)
+    const generated = unique(geometry(scene))
     const expected = unique(geometry(read(`home/hero/${file}`))).filter((g) => !oldCables.has(g))
     expect(generated.filter((g) => !newCables.has(g))).toEqual(expected)
     // Exatamente 4 cabos, cada um terminando no mesmo ponto do cabo oficial (o RJ45)

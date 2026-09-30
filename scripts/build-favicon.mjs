@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Favicon da Timp a partir da versão PREPARADA e aprovada pelo responsável:
- * public/brand/favicon/timp-favicon-source.png.png (círculo azul com "timp" branco, fundo
+ * public/brand/favicon/timp-favicon-source.png (círculo azul com "timp" branco, fundo
  * transparente, 1254×1254). Não altera o arquivo-fonte: recorta o círculo (trim), centraliza
  * e exporta nos tamanhos de uso.
  *
@@ -15,7 +15,7 @@ import { mkdirSync, writeFileSync } from "node:fs"
 
 import sharp from "sharp"
 
-const SRC = "public/brand/favicon/timp-favicon-source.png.png"
+const SRC = "public/brand/favicon/timp-favicon-source.png"
 const CLEAR = { r: 0, g: 0, b: 0, alpha: 0 }
 const DARK = { r: 7, g: 9, b: 12, alpha: 1 } // --color-g-950 (#07090C)
 

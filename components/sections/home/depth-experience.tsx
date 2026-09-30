@@ -87,7 +87,11 @@ export function DepthExperience() {
   }, [viewport, listHeight])
   const activeRef = useRef(0)
   // Progressão luminosa: passo final (todas acesas) no servidor, sem JS e com reduced motion
-  const { ref: energyRef, step: energyStep } = usePassiveSequence<HTMLDivElement>({ length: DEPTH_LAYERS.length, stepMs: ENERGY_STEP_MS, holdMs: ENERGY_HOLD_MS })
+  const { ref: energyRef, step: energyStep } = usePassiveSequence<HTMLDivElement>({
+    length: DEPTH_LAYERS.length,
+    stepMs: ENERGY_STEP_MS,
+    holdMs: ENERGY_HOLD_MS,
+  })
   const lit = energized(energyStep)
 
   // Altura real da lista (define o palco no tablet) — medida antes da primeira pintura,
@@ -147,7 +151,14 @@ export function DepthExperience() {
           )}
         >
           {/* Pilha isométrica (decorativa: a informação está na lista) */}
-          <div ref={energyRef} aria-hidden="true" data-track-measure="" data-energy-step={energyStep} className="relative order-1 w-full desktop:order-2" style={{ height: m.stage }}>
+          <div
+            ref={energyRef}
+            aria-hidden="true"
+            data-track-measure=""
+            data-energy-step={energyStep}
+            className="relative order-1 w-full desktop:order-2"
+            style={{ height: m.stage }}
+          >
             {DEPTH_LAYERS.map((layer, i) => {
               const on = i === active
               const hot = lit[i]!
@@ -174,7 +185,10 @@ export function DepthExperience() {
                   }}
                 >
                   <span
-                    className={cn("absolute top-2 left-2.5 font-mono tracking-[0.08em] whitespace-nowrap transition-colors duration-500", on || hot ? "text-blue-300" : "text-g-400")}
+                    className={cn(
+                      "absolute top-2 left-2.5 font-mono tracking-[0.08em] whitespace-nowrap transition-colors duration-500",
+                      on || hot ? "text-blue-300" : "text-g-400",
+                    )}
                     style={{ fontSize: m.mobile ? 8 : 10 }}
                   >
                     {layer.tag}

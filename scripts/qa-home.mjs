@@ -963,16 +963,61 @@ if (PARTS.has("visual")) {
         cables: cables.length, extra: hero.querySelectorAll("[data-hero-ambient]").length,
         fromLeft: u.left <= sec.left + 1, fromTop: u.top <= sec.top + 1, behindH1: u.top < h1.bottom && u.bottom > h1.top && u.left < h1.right,
         below: cables.every((c) => z(c) < z(document.getElementById("hero-titulo"))),
-        pulses: cables.flatMap((c) => [...c.querySelectorAll(".timp-glide")]).filter((p) => getComputedStyle(p).animationName === "timp-glide").length,
+        pulses: cables.flatMap((c) => [...c.querySelectorAll(".timp-sig")]).filter((p) => getComputedStyle(p).animationName === "timp-sig").length,
         hscroll: document.documentElement.scrollWidth > innerWidth,
       }
     })()`)
     const origin = vp.w < 768 ? h.fromTop : h.fromLeft
     check(`${vp.tag} Hero: exatamente 4 cabos (${vp.w < 768 ? "do topo" : "da esquerda"}), atrás do texto e do H1, pulsos animados, sem overflow`, h.cables === 4 && h.extra === 0 && origin && h.behindH1 && h.below && h.pulses === 8 && !h.hscroll, JSON.stringify(h))
   }
+  // Sinal sincronizado: por cabo, a cabeça do pulso chega ao RJ45 → o LED daquele conector acende → o
+  // pulso segue pelo módulo até OPERAÇÃO. Medido em tempo real (amostras de 25 ms, ~16 s), desktop e mobile.
+  for (const vp of [MOBILE_VPS[2], DESKTOP_VPS[2]]) {
+    await open(url("/"), vp)
+    const sync = await js(`(async () => {
+      const hero = document.querySelector("section[aria-labelledby='hero-titulo']")
+      const svg = [...hero.querySelectorAll("svg")].find((s) => s.querySelector("[data-hero-cable]") && s.getBoundingClientRect().width > 0)
+      const cable = (i) => svg.querySelector('[data-hero-cable="' + (i + 1) + '"] .timp-sig:last-child')
+      const led = (i) => svg.querySelector('[data-signal-led="' + (i + 1) + '"]')
+      const out = (i) => svg.querySelectorAll('[data-signal="out"]')[i].querySelector(".timp-sig-out:last-child")
+      const res = [0, 1, 2, 3].map(() => ({ arrive: [], ledOn: [], outOn: [] }))
+      const prev = [0, 1, 2, 3].map(() => ({ head: false, led: false, out: false }))
+      const t0 = performance.now()
+      while (performance.now() - t0 < 16000) {
+        const t = performance.now() - t0
+        for (let i = 0; i < 4; i++) {
+          const head = parseFloat(getComputedStyle(cable(i)).strokeDashoffset) <= -86 && parseFloat(getComputedStyle(cable(i)).opacity) > 0.05
+          const on = parseFloat(getComputedStyle(led(i)).opacity) >= 0.9
+          const o = parseFloat(getComputedStyle(out(i)).opacity) > 0.3
+          if (head && !prev[i].head) res[i].arrive.push(Math.round(t))
+          if (on && !prev[i].led) res[i].ledOn.push(Math.round(t))
+          if (o && !prev[i].out) res[i].outOn.push(Math.round(t))
+          prev[i] = { head, led: on, out: o }
+        }
+        await new Promise((r) => setTimeout(r, 25))
+      }
+      const anim = (el) => el.getAnimations()[0]?.effect.getTiming()
+      return { res, timing: [0, 1, 2, 3].map((i) => [anim(cable(i)), anim(led(i)), anim(out(i))].map((t) => t && t.duration + "/" + t.delay).join(" ")) }
+    })()`)
+    // Para cada chegada: LED acende em até 180 ms e a saída começa em até 400 ms; tempos iguais por cabo
+    // (chegadas nos últimos 500 ms da janela não têm tempo de ser seguidas pela amostragem)
+    const ok = sync.res.every((r) => {
+      const arrivals = r.arrive.filter((a) => a < 15500)
+      return arrivals.length > 0 && arrivals.every((a) => r.ledOn.some((l) => Math.abs(l - a) <= 180) && r.outOn.some((o) => o >= a - 60 && o - a <= 400))
+    })
+    // LED não acende "do nada": nenhum acendimento sem chegada correspondente (inclusive no início)
+    const noRandom = sync.res.every((r) => r.ledOn.every((l) => r.arrive.some((a) => Math.abs(l - a) <= 180)))
+    const sameTiming = sync.timing.every((t) => new Set(t.split(" ")).size === 1)
+    const simultaneous = new Set(sync.timing).size === 4
+    check(`${vp.tag} Hero: pulso chega ao RJ45 → LED do conector acende junto → sinal segue até OPERAÇÃO (4 cabos, tempos próprios)`, ok && noRandom && sameTiming && simultaneous, JSON.stringify(sync))
+  }
   await open(url("/"), { ...MOBILE_VPS[2], reduced: true })
-  const hr = await js(`[...document.querySelectorAll(".timp-glide")].map((p) => getComputedStyle(p).animationName + ":" + getComputedStyle(p).opacity)`)
-  check("reduced motion: pulsos dos cabos do Hero parados e ocultos", hr.length > 0 && hr.every((x) => x === "none:0"), JSON.stringify(hr.slice(0, 3)))
+  const hr = await js(`({ pulses: [...document.querySelectorAll(".timp-sig, .timp-sig-out")].map((p) => getComputedStyle(p).animationName + ":" + getComputedStyle(p).opacity), leds: [...document.querySelectorAll(".timp-sig-led")].filter((l) => l.getBoundingClientRect().width > 0).map((l) => getComputedStyle(l).animationName + ":" + getComputedStyle(l).opacity) })`)
+  check(
+    "reduced motion: pulsos do Hero parados e ocultos, LEDs acesos e estáticos",
+    hr.pulses.length > 0 && hr.pulses.every((x) => x === "none:0") && hr.leds.length === 4 && hr.leds.every((x) => x === "none:1"),
+    JSON.stringify({ pulses: hr.pulses.slice(0, 2), leds: hr.leds }),
+  )
 
   // 1a'''. Camadas: progressão luminosa cumulativa, estado final aceso, recomeço; reduced motion estático
   for (const vp of [MOBILE_VPS[2], DESKTOP_VPS[2]]) {

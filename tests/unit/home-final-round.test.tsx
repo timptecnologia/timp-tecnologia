@@ -6,7 +6,7 @@ import sharp from "sharp"
 import { describe, expect, it } from "vitest"
 
 import manifest from "@/app/manifest"
-import { HERO_CABLES, HeroScene } from "@/components/home/art"
+import { HERO_CABLES, HeroScene, SIGNAL_ARRIVAL } from "@/components/home/art"
 import { energized } from "@/components/sections/home/depth-experience"
 import { HeroRj45 } from "@/components/sections/home/hero-rj45"
 import { InfrastructureDepth } from "@/components/sections/home/infrastructure-depth"
@@ -90,10 +90,42 @@ describe("Hero: só 4 cabos, conectados aos 4 RJ45", () => {
     expect(html.indexOf("data-hero-art-mobile")).toBeLessThan(html.indexOf("data-hero-cta"))
   })
 
-  it("pulsos macios e estáticos (invisíveis) sem animação — reduced motion preservado", () => {
+  it("pulsos ocultos e LEDs acesos, estáticos, sem animação — reduced motion preservado", () => {
     const css = read("styles/motion.css")
-    expect(css).toMatch(/\.timp-glide\s*\{[^}]*opacity:\s*0;/)
+    expect(css).toMatch(/\.timp-sig,\s*\.timp-sig-out\s*\{[^}]*opacity:\s*0;/)
+    expect(css).not.toMatch(/\.timp-sig-led\s*\{[^}]*opacity/)
     expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*\{\s*\*,[\s\S]*?animation: none !important/)
+  })
+
+  it.each(["d", "m"] as const)("variante %s: por cabo, pulso → LED → OPERAÇÃO com a MESMA duração e atraso", (v) => {
+    const html = renderToStaticMarkup(<HeroScene variant={v} />)
+    const timing = (re: RegExp) => [...html.matchAll(re)].map((m) => m[1])
+    const cable = timing(/class="timp-sig"[^>]*style="(--sig-dur:[^;]+;--sig-delay:[^"]+)"/g)
+    const out = timing(/class="timp-sig-out"[^>]*style="(--sig-dur:[^;]+;--sig-delay:[^"]+)"/g)
+    const led = timing(/class="timp-sig-led"[^>]*style="(--sig-dur:[^;]+;--sig-delay:[^"]+)"/g)
+    // 2 traços (halo + núcleo) por cabo e por saída; 1 LED por conector
+    expect(cable).toHaveLength(8)
+    expect(out).toHaveLength(8)
+    expect(led).toHaveLength(4)
+    for (let i = 0; i < 4; i++) {
+      expect(cable[2 * i]).toBe(led[i])
+      expect(out[2 * i]).toBe(led[i])
+    }
+    // Vários pulsos ao mesmo tempo, sem sincronia robótica: tempos distintos entre os cabos
+    expect(new Set(led).size).toBe(4)
+  })
+
+  it("keyframes casados: a chegada do pulso ao RJ45 cai na janela em que o LED acende e a saída começa", () => {
+    const css = read("styles/motion.css")
+    const kf = (name: string) => css.slice(css.indexOf(`@keyframes ${name} {`), css.indexOf("\n}", css.indexOf(`@keyframes ${name} {`)))
+    // Traço de 14 (dasharray 14) percorre de +14 a −100 entre 0 % e 45 %: cabeça chega ao fim (100) em 45 % × 100/114
+    expect(kf("timp-sig")).toMatch(/45% \{\s*stroke-dashoffset: -100;/)
+    const arrival = 0.45 * (100 / 114)
+    expect(arrival).toBeCloseTo(SIGNAL_ARRIVAL, 3)
+    expect(kf("timp-sig-led")).toMatch(/39% \{\s*opacity: 0\.35;\s*\}\s*41% \{\s*opacity: 1;/)
+    expect(arrival).toBeGreaterThanOrEqual(0.39)
+    expect(arrival).toBeLessThanOrEqual(0.41)
+    expect(kf("timp-sig-out")).toMatch(/41% \{\s*stroke-dashoffset: 14;\s*opacity: 0;/)
   })
 })
 

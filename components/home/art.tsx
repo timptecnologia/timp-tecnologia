@@ -127,6 +127,47 @@ export const HERO_CABLES: Partial<Record<HeroVariant, { cables: readonly string[
   },
 }
 
+/**
+ * Sinal dos 4 cabos (desktop e mobile): cabo → RJ45 → LED verde → saída para OPERAÇÃO.
+ * Pulso do cabo, LED do conector e pulso interno do módulo usam a MESMA duração e o MESMO
+ * atraso (--sig-dur/--sig-delay) com keyframes casados em styles/motion.css: o pulso chega ao
+ * RJ45 em 39,5 % do ciclo (velocidade constante), o LED acende nesse instante e o pulso segue
+ * pelo módulo até a porta OPERAÇÃO. Durações e atrasos diferentes por cabo: vários pulsos ao
+ * mesmo tempo, em posições diferentes, sem sincronia robótica.
+ */
+export const SIGNAL_TIMING = [
+  { dur: 6.4, delay: 0.9 },
+  { dur: 7.0, delay: 2.6 },
+  { dur: 6.7, delay: 1.7 },
+  { dur: 7.3, delay: 3.8 },
+] as const
+/** Fração do ciclo em que o pulso do cabo chega ao RJ45 (e o LED acende). */
+export const SIGNAL_ARRIVAL = 0.395
+
+/** Trajeto interno do sinal (só luz, sem linha fixa): do conector, passando pelo LED, até OPERAÇÃO. */
+function signalOut(variant: "d" | "m", port: number, G: HeroGeometry): string {
+  const { sw } = G
+  if (variant === "d") {
+    const upY = G.upY ?? 385
+    return `M ${sw.x + 6} ${port} H ${sw.x + sw.w - 34} C ${sw.x + sw.w - 16} ${port} ${sw.x + sw.w - 16} ${upY} ${sw.x + sw.w - 4} ${upY} H ${sw.x + sw.w + 96}`
+  }
+  const cx = sw.x + sw.w / 2
+  return `M ${port} ${sw.y + 4} V ${sw.y + sw.h - 18} C ${port} ${sw.y + sw.h - 6} ${cx} ${sw.y + sw.h - 10} ${cx} ${sw.y + sw.h} V ${sw.y + sw.h + 20}`
+}
+
+/** Pulso do sinal: traço com halo; `out` = trecho interno (módulo → OPERAÇÃO). */
+function SignalPulse({ d, w, i, out = false }: { d: string; w: number; i: number; out?: boolean }) {
+  const t = SIGNAL_TIMING[i]!
+  const style: Vars = { "--sig-dur": `${t.dur}s`, "--sig-delay": `${t.delay}s` }
+  const cls = out ? "timp-sig-out" : "timp-sig"
+  return (
+    <g data-signal={out ? "out" : "cable"}>
+      <path className={cls} d={d} pathLength={100} fill="none" strokeLinecap="round" stroke={P.blue500} strokeOpacity={0.3} strokeWidth={w + 6} style={style} />
+      <path className={cls} d={d} pathLength={100} fill="none" strokeLinecap="round" stroke={P.blue300} strokeWidth={Math.max(1.8, w * 0.34)} style={style} />
+    </g>
+  )
+}
+
 /** Pulso de dados: halo blue-500 a 35 % + núcleo blue-300 (motion-spec §1). */
 function DataPulse({ d, w, dur, delay, nonScaling }: { d: string; w: number; dur: string; delay: number; nonScaling?: boolean }) {
   const style: Vars = { "--dash-dur": dur, "--dash-delay": `${delay}s` }
@@ -139,7 +180,12 @@ function DataPulse({ d, w, dur, delay, nonScaling }: { d: string; w: number; dur
   )
 }
 
-function Led({ x, y, delay, w = 10, h = 8 }: { x: number; y: number; delay: number; w?: number; h?: number }) {
+function Led({ x, y, delay, w = 10, h = 8, signal }: { x: number; y: number; delay: number; w?: number; h?: number; signal?: number }) {
+  // Com `signal` (cabos longos): acende junto com a chegada do pulso daquele cabo
+  if (signal !== undefined) {
+    const t = SIGNAL_TIMING[signal]!
+    return <rect className="timp-sig-led" data-signal-led={signal + 1} x={x} y={y} width={w} height={h} rx={1} fill={P.ok} style={{ "--sig-dur": `${t.dur}s`, "--sig-delay": `${t.delay}s` } as Vars} />
+  }
   return <rect className="timp-led" x={x} y={y} width={w} height={h} rx={1} fill={P.ok} style={{ "--led-delay": `${delay}s` } as Vars} />
 }
 
@@ -189,7 +235,7 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
             <path className="timp-draw" d={d} pathLength={100} fill="none" stroke={ART.cable} strokeWidth={widths[i]} strokeLinecap="round" style={drawStyle} />
             <path className="timp-draw" d={d} pathLength={100} fill="none" stroke={ART.cableSheen} strokeWidth={1.2} strokeLinecap="round" style={drawStyle} />
             {/* Cabos longos: pulso macio (7,2 s = 2 ciclos do LED de 3,6 s); oficiais: pulso original */}
-            {own ? <GlidePulse d={d} w={widths[i] ?? 6} dur={7.2} delay={1.4 + i * 1.8} /> : <DataPulse d={d} w={widths[i] ?? 6} dur="3.6s" delay={1.4 + i * 0.9} />}
+            {own ? <SignalPulse d={d} w={widths[i] ?? 6} i={i} /> : <DataPulse d={d} w={widths[i] ?? 6} dur="3.6s" delay={1.4 + i * 0.9} />}
           </g>
         )
       })}
@@ -209,7 +255,7 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
               <text x={sw.x + 34} y={py + 3} fill={P.g500} style={mono(9)}>
                 P{i + 1}
               </text>
-              <Led x={sw.x + sw.w - 22} y={py - 4} delay={1.4 + i * 0.9} />
+              <Led x={sw.x + sw.w - 22} y={py - 4} delay={1.4 + i * 0.9} signal={own ? i : undefined} />
             </g>
           ))}
           {G.ports.map((py, i) => (
@@ -227,7 +273,7 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
           {G.ports.map((px, i) => (
             <g key={px}>
               <rect x={px - 13 * ps} y={sw.y - 2} width={26 * ps} height={22 * ps} rx={2} fill={P.ink} stroke={P.g700} />
-              <Led x={px - 5 * ps} y={sw.y + sw.h - 14 * ps} delay={1.4 + i * 0.9} w={10 * ps} h={6 * ps} />
+              <Led x={px - 5 * ps} y={sw.y + sw.h - 14 * ps} delay={1.4 + i * 0.9} w={10 * ps} h={6 * ps} signal={own ? i : undefined} />
             </g>
           ))}
           {G.ports.map((px, i) => (
@@ -235,24 +281,9 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
           ))}
         </>
       )}
+      {/* Sinal segue do conector, pelo LED, até OPERAÇÃO (só luz; sem linha fixa extra) */}
+      {own && (variant === "d" || variant === "m") && G.ports.map((port, i) => <SignalPulse key={`out-${port}`} d={signalOut(variant, port, G)} w={G.vert ? 3 : 4} i={i} out />)}
     </svg>
-  )
-}
-
-// ============================================================ Hero RJ45 — pulso dos cabos longos
-
-/**
- * Pulso de ambiente (fechamento visual): traço mais longo e macio que o DataPulse, entra e sai
- * em fade (`.timp-glide`, styles/motion.css) — fluxo de dados evidente sem piscar. Halo discreto.
- * Reduced motion / sem animação: invisível (os cabos ficam estáticos).
- */
-function GlidePulse({ d, w, dur, delay }: { d: string; w: number; dur: number; delay: number }) {
-  const style: Vars = { "--glide-dur": `${dur}s`, "--glide-delay": `${delay}s` }
-  return (
-    <g>
-      <path className="timp-glide" d={d} pathLength={100} fill="none" strokeLinecap="round" vectorEffect="non-scaling-stroke" stroke={P.blue500} strokeOpacity={0.28} strokeWidth={w + 6} style={style} />
-      <path className="timp-glide" d={d} pathLength={100} fill="none" strokeLinecap="round" vectorEffect="non-scaling-stroke" stroke={P.blue300} strokeWidth={Math.max(1.6, w * 0.32)} style={style} />
-    </g>
   )
 }
 

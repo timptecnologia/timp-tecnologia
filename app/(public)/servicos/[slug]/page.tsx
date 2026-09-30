@@ -33,7 +33,7 @@ const EXTRAS: Partial<Record<ServiceKey, { lead?: () => React.ReactElement; extr
 
 /** Fundo fotográfico da abertura (assets finais em public/home/…). */
 const BACKDROPS: Partial<Record<ServiceKey, React.ReactElement>> = {
-  starlink: <StarlinkBackdrop priority strong side="right" />,
+  starlink: <StarlinkBackdrop priority strong side="right" hero />,
   energiaSolar: <SolarBackdrop />,
 }
 

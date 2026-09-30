@@ -151,19 +151,27 @@
   opacity: 0;
   animation: timp-dash var(--dash-dur, 3.6s) var(--dash-delay, 0s) cubic-bezier(0.45, 0, 0.25, 1) infinite;
 }
-/* Pulso de ambiente do Hero: mais longo e macio, entra e sai em fade (sem piscar) */
-@keyframes timp-glide {
+/*
+ * Sinal do Hero (4 cabos): cabo → RJ45 → LED verde → OPERAÇÃO. As três animações de cada cabo
+ * usam a MESMA duração e o MESMO atraso (--sig-dur/--sig-delay) e keyframes casados:
+ * - timp-sig: o traço (14 de 100) percorre o cabo em velocidade constante; a cabeça chega ao
+ *   RJ45 em 39,5 % (0,45 × 100/114) e o traço sai em 45 %;
+ * - timp-sig-led: o LED do conector acende entre 39 % e 41 % (chegada), fica aceso e apaga;
+ * - timp-sig-out: a partir de 41 % o pulso atravessa o módulo até OPERAÇÃO e some em 60 %.
+ * Reduced motion / sem animação: pulsos ocultos (opacity 0) e LEDs acesos, estáticos.
+ */
+@keyframes timp-sig {
   0% {
     stroke-dashoffset: 14;
     opacity: 0;
   }
-  10% {
+  3% {
     opacity: 0.95;
   }
-  60% {
+  41% {
     opacity: 0.95;
   }
-  72% {
+  45% {
     stroke-dashoffset: -100;
     opacity: 0;
   }
@@ -172,11 +180,58 @@
     opacity: 0;
   }
 }
-.timp-glide {
+@keyframes timp-sig-led {
+  0%,
+  39% {
+    opacity: 0.35;
+  }
+  41% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    opacity: 0.35;
+  }
+}
+@keyframes timp-sig-out {
+  0%,
+  41% {
+    stroke-dashoffset: 14;
+    opacity: 0;
+  }
+  43% {
+    opacity: 0.95;
+  }
+  56% {
+    opacity: 0.95;
+  }
+  60% {
+    stroke-dashoffset: -100;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0;
+  }
+}
+.timp-sig,
+.timp-sig-out {
   stroke-dasharray: 14 200;
   stroke-dashoffset: 14;
   opacity: 0;
-  animation: timp-glide var(--glide-dur, 7s) var(--glide-delay, 0s) cubic-bezier(0.37, 0, 0.3, 1) infinite;
+}
+.timp-sig {
+  animation: timp-sig var(--sig-dur, 6.8s) var(--sig-delay, 0s) linear infinite;
+}
+.timp-sig-out {
+  animation: timp-sig-out var(--sig-dur, 6.8s) var(--sig-delay, 0s) linear infinite;
+}
+.timp-sig-led {
+  /* backwards: durante o atraso inicial o LED já fica no estado apagado (não acende "do nada") */
+  animation: timp-sig-led var(--sig-dur, 6.8s) var(--sig-delay, 0s) linear infinite backwards;
 }
 .timp-led {
   animation: timp-led 3.6s var(--led-delay, 0s) linear infinite;
