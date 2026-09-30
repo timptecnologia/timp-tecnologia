@@ -5,9 +5,16 @@ import { cn } from "@/lib/utils"
 import { S } from "./ui"
 
 /**
+ * Home mobile (<768): só estas 4 soluções, nesta ordem (as 4 primeiras de SEGMENTS — teste
+ * garante); as demais seguem no HTML, visíveis no tablet/desktop e em /solucoes/.
+ */
+export const HOME_MOBILE_SEGMENTS = ["construtoras", "arquitetos", "empresas", "casasCondominios"] as const
+const onMobile = (key: string) => (HOME_MOBILE_SEGMENTS as readonly string[]).includes(key)
+
+/**
  * Soluções por segmento: "Soluções para cada tipo de operação." (título fixo no
- * tablet/desktop, duas colunas a partir de 768; no mobile o CTA fecha a seção, depois da
- * lista). Cada segmento leva à sua entrada em /solucoes/ (Construtoras, à
+ * tablet/desktop, duas colunas a partir de 768). Mobile: só as 4 soluções de
+ * HOME_MOBILE_SEGMENTS e o CTA "Ver todas as soluções" logo depois da quarta. Cada segmento leva à sua entrada em /solucoes/ (Construtoras, à
  * seção da Home dedicada à obra) até as páginas próprias existirem.
  */
 export function Segments() {
@@ -29,7 +36,7 @@ export function Segments() {
         </div>
         <ul aria-label="Segmentos" className="m-0 flex list-none flex-col border-t border-g-700 p-0">
           {SEGMENTS.map((s) => (
-            <li key={s.key} className="border-b border-g-800">
+            <li key={s.key} data-home-mobile={onMobile(s.key) ? "" : undefined} className={cn("border-b border-g-800", !onMobile(s.key) && "max-tablet:hidden")}>
               <a
                 href={href(s.key, { section: HOME_ANCHORS.segmentos }) ?? requiredHref("solucoes")}
                 className="grid grid-cols-[minmax(0,1fr)_24px] items-start gap-3.5 py-[18px] pr-2 text-g-100 no-underline transition-[background-color,padding] duration-200 hover:bg-g-900 hover:pl-3 hover:text-white tablet:py-5"
@@ -45,7 +52,7 @@ export function Segments() {
             </li>
           ))}
         </ul>
-        {/* Mobile: o CTA fecha a seção, depois de todas as soluções */}
+        {/* Mobile: o CTA vem logo depois da quarta solução */}
         {cta("self-start tablet:hidden")}
       </div>
     </section>

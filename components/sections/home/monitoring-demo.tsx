@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useState } from "react"
 
 import { usePassiveSequence } from "@/components/home/use-passive-sequence"
+import { DemoPauseButton } from "@/components/ui/demo-pause-button"
 import { MON_CAMERAS, MON_CAMS_OPEN_STEP, MON_DEMO_STEPS, MON_PROTOCOL } from "@/lib/home/content"
 import { cn } from "@/lib/utils"
 
@@ -34,6 +35,8 @@ const LAST = MON_DEMO_STEPS.length - 1
 /** Tempo de leitura de cada etapa; a etapa final fica mais tempo antes de recomeçar. */
 const STEP_MS = 2800
 const HOLD_MS = 5600
+/** Status possíveis, sem repetição (reserva de largura do chip). */
+const STATUSES = [...new Set(MON_DEMO_STEPS.map((s) => s.status))]
 
 export function MonitoringDemo({ headingLevel = "h3" }: { headingLevel?: "h2" | "h3" }) {
   const { ref: rootRef, step, animated, paused, setPaused } = usePassiveSequence<HTMLDivElement>({ length: MON_DEMO_STEPS.length, stepMs: STEP_MS, holdMs: HOLD_MS })
@@ -71,8 +74,13 @@ export function MonitoringDemo({ headingLevel = "h3" }: { headingLevel?: "h2" | 
               <span className="size-[7px] rounded-[1px] bg-g-950" />
               CRÍTICO
             </span>
-            <span className={cn("rounded-[3px] border px-2 py-[3px] font-mono text-[11px] tracking-[0.06em] transition-colors duration-320", TONE[ev.tone].text, TONE[ev.tone].border)}>
-              {ev.status}
+            {/* Todas as variantes do status na mesma célula: largura fixa (sem deslocamento) */}
+            <span className={cn("grid rounded-[3px] border px-2 py-[3px] font-mono text-[11px] tracking-[0.06em] transition-colors duration-320", TONE[ev.tone].text, TONE[ev.tone].border)}>
+              {STATUSES.map((st) => (
+                <span key={st} className={cn("col-start-1 row-start-1", st === ev.status ? "visible" : "invisible")}>
+                  {st}
+                </span>
+              ))}
             </span>
           </span>
           <span className="font-mono text-[12px] text-g-300 tabular">08/10/2026 · 15:42:18</span>
@@ -158,7 +166,13 @@ export function MonitoringDemo({ headingLevel = "h3" }: { headingLevel?: "h2" | 
           {/* O que a equipe já executou: indicador passivo, não é controle */}
           <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-g-800 pt-3">
             <span className="font-mono text-[10px] tracking-[0.08em] text-g-400">Operador Timp</span>
-            <span className={cn("text-[14px] font-semibold", closed ? "text-ok-fg" : "text-g-100")}>✓ {ev.done}</span>
+            <span className={cn("grid text-[14px] font-semibold", closed ? "text-ok-fg" : "text-g-100")}>
+              {MON_DEMO_STEPS.map((s, i) => (
+                <span key={s.done} className={cn("col-start-1 row-start-1", i === step ? "visible" : "invisible")}>
+                  ✓ {s.done}
+                </span>
+              ))}
+            </span>
           </p>
         </div>
       </div>
@@ -172,16 +186,7 @@ export function MonitoringDemo({ headingLevel = "h3" }: { headingLevel?: "h2" | 
             </span>
           ))}
         </p>
-        {animated && (
-          <button
-            type="button"
-            onClick={() => setPaused((p) => !p)}
-            aria-pressed={paused}
-            className="h-11 flex-none cursor-pointer rounded-sm border border-g-600 px-3.5 text-[13px] font-semibold text-g-100 hover:border-g-400"
-          >
-            {paused ? "Retomar demonstração" : "Pausar demonstração"}
-          </button>
-        )}
+        <DemoPauseButton animated={animated} paused={paused} onToggle={() => setPaused((p) => !p)} />
       </div>
       <div aria-hidden="true" className="flex gap-1.5">
         {MON_DEMO_STEPS.map((s, i) => (

@@ -905,6 +905,104 @@ if (PARTS.has("visual")) {
     }
   }
 
+  // 1b. Causa raiz do bug intermitente (lazy): a foto precisa estar CARREGADA antes de o visitante
+  // chegar à seção — sem rolar até ela — e continuar em reload, ida e volta por link e troca de breakpoint.
+  const READY = `(() => [...document.querySelectorAll("[data-starlink-photo]")].map((i) => ({ src: new URL(i.currentSrc || "about:blank").pathname, ok: i.complete && i.naturalWidth > 0, loading: i.loading })))()`
+  const waitReady = async (want) => {
+    let s = []
+    for (let i = 0; i < 40; i++) {
+      s = await js(READY)
+      if (s.length && s.every((x) => x.ok && x.src === want)) break
+      await pause(100)
+    }
+    return s
+  }
+  const pick1 = (w) => (w < 768 ? SKY.mobile[0] : SKY.desktop[0])
+  for (const vp of [MOBILE_VPS[0], MOBILE_VPS[2], MOBILE_VPS[3], DESKTOP_VPS[1], DESKTOP_VPS[2], DESKTOP_VPS[3]]) {
+    const want = pick1(vp.w)
+    const steps = {}
+    await open(url("/"), vp)
+    // Sem rolar: no topo da Home a foto já foi pedida e carregada (eager, prioridade baixa)
+    steps.semRolar = await waitReady(want)
+    await send("Page.reload", { ignoreCache: true })
+    await settle()
+    steps.reload = await waitReady(want)
+    await open(url("/#starlink"), vp)
+    steps.ancora = await waitReady(want)
+    // Ida à página Starlink por link e volta pelo histórico (sem forçar nada). Parte de "/" (não da
+    // âncora): com /#starlink o AnchorGuard segura a posição até um gesto real do usuário.
+    await open(url("/"), vp)
+    await clickAndSettle(`[...document.querySelectorAll('#starlink a[href="/servicos/instalacao-starlink/"]')].find((a) => a.getBoundingClientRect().height > 0)`)
+    steps.pagina = (await path()) === "/servicos/instalacao-starlink/" ? await waitReady(want) : [{ src: await path(), ok: false }]
+    await js("history.back()")
+    await pause(400)
+    await settle()
+    steps.volta = (await path()).startsWith("/") ? await waitReady(want) : []
+    const ok = Object.values(steps).every((s) => s.length > 0 && s.every((x) => x.ok && x.src === want && x.loading === "eager"))
+    check(`${vp.tag} foto Starlink pronta antes da seção e após reload, âncora, link e voltar (${want.split("noturno-")[1]})`, ok, JSON.stringify(steps))
+  }
+  // Troca de breakpoint nos dois sentidos: o bloco nunca fica sem foto
+  for (const [from, to] of [[DESKTOP_VPS[2], MOBILE_VPS[2]], [MOBILE_VPS[2], DESKTOP_VPS[2]]]) {
+    await open(url("/"), from)
+    await waitReady(pick1(from.w))
+    await send("Emulation.setDeviceMetricsOverride", { width: to.w, height: to.h, deviceScaleFactor: 1, mobile: !!to.mobile })
+    await js(`document.querySelector("#starlink").scrollIntoView({ behavior: "instant" })`)
+    const s = await waitReady(pick1(to.w))
+    const p = await js(PHOTO("#starlink"))
+    check(`resize ${from.tag} → ${to.tag}: foto troca para o arquivo do novo breakpoint e segue visível`, s.every((x) => x.ok && x.src === pick1(to.w)) && p.opacity > 0.9 && p.size[1] > 150 && p.covered.length === 0, JSON.stringify({ s, p }))
+  }
+  // Falha real de rede: sem ícone de imagem quebrada (alt vazio) e o céu em CSS por baixo, layout intacto
+  await send("Network.setBlockedURLs", { urls: ["*starlink-ceu-noturno*"] })
+  for (const vp of [MOBILE_VPS[2], DESKTOP_VPS[2]]) {
+    await open(url("/"), vp)
+    const f = await js(`(() => { const i = document.querySelector("#starlink [data-starlink-photo]"); const sky = i.closest("[data-starlink-sky]"); return { failed: i.complete && i.naturalWidth === 0, alt: i.getAttribute("alt"), skyBg: getComputedStyle(sky).backgroundColor, h: Math.round(document.querySelector("#starlink").getBoundingClientRect().height) } })()`)
+    check(`${vp.tag} foto bloqueada: sem ícone quebrado (alt vazio), céu de reserva visível, bloco íntegro`, f.failed && f.alt === "" && f.skyBg !== "rgba(0, 0, 0, 0)" && f.h > 600, JSON.stringify(f))
+  }
+  await send("Network.setBlockedURLs", { urls: [] })
+
+  // 1b'. Demonstrações sem deslocamento de layout: altura constante ao longo das etapas (conteúdo abaixo não "pula")
+  for (const vp of [...MOBILE_VPS.filter((v) => v.w !== 375), DESKTOP_VPS[2]]) {
+    await open(url("/"), vp)
+    const hs = await js(`(async () => {
+      const out = {}
+      for (const [name, sel] of [["Starlink", "#starlink [data-focus-demo]"], ["Central", "#monitoramento [data-focus-demo]"]]) {
+        const el = document.querySelector(sel)
+        el.scrollIntoView({ block: "start", behavior: "instant" })
+        const seen = new Set(), steps = new Set()
+        const t0 = performance.now()
+        while (performance.now() - t0 < 16000 && steps.size < 5) {
+          seen.add(Math.round(el.getBoundingClientRect().height)); steps.add(el.dataset.starlinkStep ?? el.dataset.demoStep)
+          await new Promise((r) => setTimeout(r, 200))
+        }
+        out[name] = { heights: [...seen], steps: [...steps] }
+      }
+      return out
+    })()`)
+    const stable = Object.values(hs).every((d) => d.steps.length >= 4 && Math.max(...d.heights) - Math.min(...d.heights) <= 1)
+    check(`${vp.tag} demos Starlink e Central com altura constante entre as etapas (sem CLS)`, stable, JSON.stringify(hs))
+  }
+
+  // 1c. Soluções na Home: mobile = exatamente as 4, nesta ordem, CTA logo depois; desktop = todas
+  const SEG = `(() => {
+    const vis = (e) => e.getBoundingClientRect().height > 0
+    const items = [...document.querySelectorAll("#segmentos ul[aria-label='Segmentos'] > li")]
+    const shown = items.filter(vis)
+    const cta = [...document.querySelectorAll("#segmentos [data-section-cta]")].find(vis)
+    const last = shown.at(-1)?.getBoundingClientRect()
+    return { total: items.length, shown: shown.map((li) => li.querySelector("span span").textContent), gap: cta && last ? Math.round(cta.getBoundingClientRect().top - last.bottom) : null, ctaText: cta?.textContent.trim() }
+  })()`
+  const FOUR = ["Construtoras e Engenharia", "Arquitetos e Designers de Interiores", "Empresas e Escritórios", "Casas e Condomínios"]
+  for (const vp of MOBILE_VPS) {
+    await open(url("/"), vp)
+    const s = await js(SEG)
+    check(`${vp.tag} Home: Soluções mostra só as 4 (ordem certa, sem a 5ª) e "Ver todas as soluções" logo depois`, JSON.stringify(s.shown) === JSON.stringify(FOUR) && s.total > 4 && s.gap !== null && s.gap >= 0 && s.gap <= 64 && /Ver todas as soluções/.test(s.ctaText ?? ""), JSON.stringify(s))
+  }
+  for (const vp of [{ tag: "834x1112", w: 834, h: 1112 }, DESKTOP_VPS[2]]) {
+    await open(url("/"), vp)
+    const s = await js(SEG)
+    check(`${vp.tag} Home: Soluções mantém a lista completa (${s.total})`, s.shown.length === s.total && s.total > 4, JSON.stringify(s.shown))
+  }
+
   for (const vp of MOBILE_VPS) {
     // 2. Serviços: todas as categorias FECHADAS ao carregar; cada uma abre e fecha
     await open(url("/"), vp)

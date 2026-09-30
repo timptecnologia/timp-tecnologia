@@ -18,7 +18,9 @@ const MOBILE_MEDIA = "(max-width: 47.99rem)"
  * foto aparecer onde estão antena, céu e cidade; a base funde com o fundo da seção para a
  * demonstração entrar sem corte. Céu em CSS por baixo, só como fundo enquanto a foto carrega.
  * `strong`: reforço extra de leitura (abertura da página, texto longo sobre a cidade).
- * `priority`: foto acima da dobra (abertura da página Starlink) → preload + eager.
+ * `priority`: foto acima da dobra (abertura da página Starlink) → preload + prioridade alta; sem
+ * ela, a foto é pedida já na carga da página com prioridade baixa (nunca lazy — ver
+ * docs/MACROFASE-2-SITE-PUBLICO.md §6.4).
  * Decorativo (aria-hidden, alt vazio).
  */
 export function StarlinkBackdrop({ priority = false, strong = false, className }: { priority?: boolean; strong?: boolean; className?: string }) {
@@ -36,9 +38,11 @@ export function StarlinkBackdrop({ priority = false, strong = false, className }
           width={STARLINK_SKY.mobileSize[0]}
           height={STARLINK_SKY.mobileSize[1]}
           alt=""
-          decoding="async"
-          loading={priority ? "eager" : "lazy"}
-          fetchPriority={priority ? "high" : "auto"}
+          // SEMPRE eager (nunca lazy): com lazy a foto só era pedida ao chegar na seção, com prioridade
+          // baixa — o bloco aparecia com o céu em CSS por 1,5–2,5 s (ou mais no 4G) e parecia sem foto.
+          // Fora da dobra, "low" não disputa banda com o conteúdo inicial; o <picture> baixa UM arquivo.
+          loading="eager"
+          fetchPriority={priority ? "high" : "low"}
           data-starlink-photo=""
           className={cn(
             // Mobile: foto vertical na proporção natural, ancorada na BASE — o céu fica atrás do

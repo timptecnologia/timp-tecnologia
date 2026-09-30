@@ -10,10 +10,11 @@ import { Ecosystems } from "@/components/sections/home/ecosystems"
 import { HeroRj45 } from "@/components/sections/home/hero-rj45"
 import { Monitoring } from "@/components/sections/home/monitoring"
 import { Process } from "@/components/sections/home/process"
-import { Segments } from "@/components/sections/home/segments"
+import { HOME_MOBILE_SEGMENTS, Segments } from "@/components/sections/home/segments"
 import { Starlink } from "@/components/sections/home/starlink"
 import { StarlinkBackdrop } from "@/components/sections/starlink/starlink-backdrop"
 import { STARLINK_SKY } from "@/lib/content/starlink-demo"
+import { SEGMENTS } from "@/lib/home/content"
 import { DEMO_FOCUS_ENTER, DEMO_FOCUS_EXIT, nextDemoFocus, viewportShare } from "@/lib/hooks/use-demo-focus"
 
 /**
@@ -32,7 +33,13 @@ describe("fotografia Starlink", () => {
     expect(html).toContain(`<source media="(min-width: 48rem)" srcSet="${STARLINK_SKY.desktop}"`)
     expect(html).toMatch(new RegExp(`<img[^>]*src="${STARLINK_SKY.mobile}"[^>]*data-starlink-photo`))
     expect(html).not.toContain("/_next/image")
-    expect(html).toContain('loading="lazy"')
+  })
+
+  it("nunca lazy: a foto é pedida na carga da página (prioridade baixa fora da dobra)", () => {
+    const html = renderToStaticMarkup(<StarlinkBackdrop />)
+    expect(html).not.toContain('loading="lazy"')
+    expect(html).toContain('loading="eager"')
+    expect(html).toMatch(/fetchPriority="low"/i)
   })
 
   it("abertura da página (priority): eager + fetchpriority alta", () => {
@@ -62,6 +69,22 @@ describe("mobile: CTA no FIM das seções narrativas (desktop preservado)", () =
     const desktop = ctas.find((c) => c.cls.split(" ").includes(wide))
     expect(mobile && desktop).toBeTruthy()
     expect(mobile!.at).toBeGreaterThan(html.lastIndexOf(content))
+  })
+})
+
+describe("Soluções na Home mobile: só 4, CTA logo depois", () => {
+  it("as 4 soluções, nesta ordem, são as 4 primeiras da lista", () => {
+    expect(SEGMENTS.slice(0, 4).map((s) => s.name)).toEqual(["Construtoras e Engenharia", "Arquitetos e Designers de Interiores", "Empresas e Escritórios", "Casas e Condomínios"])
+    expect(SEGMENTS.slice(0, 4).map((s) => s.key)).toEqual([...HOME_MOBILE_SEGMENTS])
+  })
+
+  it("todas continuam no HTML (desktop/tablet); a partir da 5ª, ocultas só abaixo de 768", () => {
+    const html = renderToStaticMarkup(<Segments />)
+    const items = [...html.matchAll(/<li( data-home-mobile="")? class="([^"]*)"/g)].map((m) => ({ mobile: Boolean(m[1]), cls: m[2]!.split(" ") }))
+    expect(items).toHaveLength(SEGMENTS.length)
+    expect(items.slice(0, 4).every((i) => i.mobile && !i.cls.includes("max-tablet:hidden"))).toBe(true)
+    expect(items.slice(4).every((i) => !i.mobile && i.cls.includes("max-tablet:hidden") && !i.cls.includes("hidden"))).toBe(true)
+    for (const s of SEGMENTS) expect(html).toContain(s.name)
   })
 })
 

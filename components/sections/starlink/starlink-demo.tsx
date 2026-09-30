@@ -3,6 +3,7 @@
 import { useId } from "react"
 
 import { usePassiveSequence } from "@/components/home/use-passive-sequence"
+import { DemoPauseButton } from "@/components/ui/demo-pause-button"
 import { STARLINK_STAGES, type StarlinkStage } from "@/lib/content/starlink-demo"
 import { PALETTE as P } from "@/lib/design/palette"
 import { cn } from "@/lib/utils"
@@ -21,6 +22,8 @@ import { cn } from "@/lib/utils"
  *   Sem JS / reduced motion: etapa final (recuperação), estática, e a lista completa.
  */
 const STEP_MS = 3600
+/** Perguntas das etapas, sem repetição (reserva de espaço do cabeçalho). */
+const CONTEXTS = [...new Set(STARLINK_STAGES.map((s) => s.context))]
 const HOLD_MS = 5200
 
 type Layout = "wide" | "tall"
@@ -313,19 +316,35 @@ export function StarlinkDemo({ variant = "full" }: { variant?: "full" | "compact
         ))}
       </ol>
 
+      {/* Cabeçalho da etapa: textos e chips variam por etapa — todas as variantes ocupam a MESMA
+          célula (só a atual visível), então largura e altura não mudam quando a demo avança (sem CLS) */}
       <div aria-hidden="true" className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div className="flex min-w-0 flex-col gap-1">
           <span className="font-mono text-[11px] tracking-[0.08em] text-blue-300">
             VEJA COMO FUNCIONA · {n(step)}/{n(last)}
           </span>
-          <p className="m-0 text-[clamp(19px,1.8vw,24px)] leading-[1.2] font-bold tracking-[-0.015em] text-white">{st.context}</p>
+          <p className="m-0 grid text-[clamp(19px,1.8vw,24px)] leading-[1.2] font-bold tracking-[-0.015em] text-white">
+            {CONTEXTS.map((c) => (
+              <span key={c} className={cn("col-start-1 row-start-1", c === st.context ? "visible" : "invisible")}>
+                {c}
+              </span>
+            ))}
+          </p>
         </div>
         <span className="flex flex-wrap gap-1.5">
-          <span className={cn("rounded-[3px] border px-2 py-[3px] font-mono text-[11px] tracking-[0.06em] transition-colors duration-500", fiberTone)}>
-            FIBRA · {st.fiber === "fail" ? "FALHA" : st.fiber === "active" ? "EM USO" : "—"}
+          <span className={cn("grid rounded-[3px] border px-2 py-[3px] font-mono text-[11px] tracking-[0.06em] transition-colors duration-500", fiberTone)}>
+            {(["active", "fail", "none"] as const).map((f) => (
+              <span key={f} className={cn("col-start-1 row-start-1", f === st.fiber ? "visible" : "invisible")}>
+                FIBRA · {f === "fail" ? "FALHA" : f === "active" ? "EM USO" : "—"}
+              </span>
+            ))}
           </span>
-          <span className={cn("rounded-[3px] border px-2 py-[3px] font-mono text-[11px] tracking-[0.06em] transition-colors duration-500", slTone)}>
-            STARLINK · {st.starlink === "active" ? "EM USO" : st.starlink === "standby" ? "PRONTIDÃO" : "SINAL"}
+          <span className={cn("grid rounded-[3px] border px-2 py-[3px] font-mono text-[11px] tracking-[0.06em] transition-colors duration-500", slTone)}>
+            {(["active", "standby", "idle"] as const).map((s) => (
+              <span key={s} className={cn("col-start-1 row-start-1", s === st.starlink ? "visible" : "invisible")}>
+                STARLINK · {s === "active" ? "EM USO" : s === "standby" ? "PRONTIDÃO" : "SINAL"}
+              </span>
+            ))}
           </span>
         </span>
       </div>
@@ -355,16 +374,7 @@ export function StarlinkDemo({ variant = "full" }: { variant?: "full" | "compact
               <span key={s.title} className={cn("h-1 flex-1 rounded-[1px] transition-colors duration-300", i <= step ? "bg-blue-500" : "bg-g-700")} />
             ))}
           </span>
-          {animated && (
-            <button
-              type="button"
-              onClick={() => setPaused((p) => !p)}
-              aria-pressed={paused}
-              className="h-11 cursor-pointer rounded-sm border border-g-600 px-3.5 text-[13px] font-semibold text-g-100 hover:border-g-400"
-            >
-              {paused ? "Retomar demonstração" : "Pausar demonstração"}
-            </button>
-          )}
+          <DemoPauseButton animated={animated} paused={paused} onToggle={() => setPaused((p) => !p)} />
         </div>
       </div>
 
