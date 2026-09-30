@@ -80,7 +80,7 @@ export function PageIntro({
           className={cn(
             "grid items-center gap-x-[clamp(32px,5vw,80px)] gap-y-8",
             photoLeft
-              ? "desktop:grid-cols-[minmax(0,1fr)_minmax(0,min(660px,46vw))] desktop:items-start"
+              ? "desktop:grid-cols-[minmax(0,1fr)_minmax(0,min(640px,44vw))] desktop:items-start"
               : aside && "desktop:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
           )}
         >
@@ -97,7 +97,7 @@ export function PageIntro({
                   // Abertura com foto (Starlink): mobile, tamanho fluido e quebra "pretty"; desktop, sem o
                   // limite de 18ch (feito para o diagrama ao lado) — título em ~3 linhas cheias
                   photoLeft &&
-                    "max-tablet:text-[clamp(28px,8.4vw,34px)] max-tablet:text-pretty desktop:max-w-none desktop:text-[clamp(36px,2.95vw,44px)] desktop:leading-[1.06]",
+                    "max-tablet:text-[clamp(28px,8.4vw,34px)] max-tablet:text-pretty desktop:max-w-none desktop:text-[clamp(34px,2.8vw,42px)] desktop:leading-[1.06]",
                 )}
               >
                 {title}

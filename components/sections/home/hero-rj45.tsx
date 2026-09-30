@@ -39,12 +39,15 @@ export function HeroRj45() {
         <div
           aria-hidden="true"
           data-hero-art-mobile=""
-          className="pointer-events-none relative -z-10 -mx-5 -mt-[calc(153.85vw+clamp(118px,38vw,164px))] -mb-2 [mask-image:linear-gradient(to_bottom,rgb(0_0_0/0.3)_0%,rgb(0_0_0/0.42)_48%,rgb(0_0_0/0.62)_64%,rgb(0_0_0/0.9)_74%,black_80%)] tablet:hidden"
+          className="pointer-events-none relative -z-10 -mx-5 -mt-[calc(153.85vw+clamp(118px,38vw,164px))] -mb-[calc(10.26vw+8px)] [mask-image:linear-gradient(to_bottom,rgb(0_0_0/0.3)_0%,rgb(0_0_0/0.42)_48%,rgb(0_0_0/0.62)_64%,rgb(0_0_0/0.9)_74%,black_80%)] tablet:hidden"
         >
           <div className="aspect-[390/600]" />
-          <div className="aspect-[390/300]">
+          <div data-hero-scene-mobile="" className="aspect-[390/300]">
             <HeroScene variant="m" />
           </div>
+          {/* Cabo de saída OPERAÇÃO (desce até y 340 da cena): área reservada para ele aparecer inteiro;
+              a margem negativa equivalente mantém os CTAs exatamente no mesmo lugar */}
+          <div className="aspect-[390/40]" />
         </div>
         {/* Mobile: dois CTAs lado a lado, mesma altura; empilha só abaixo de 340 px */}
         <div data-hero-cta="" className="grid grid-cols-1 gap-2.5 min-[340px]:grid-cols-[1.1fr_1fr] tablet:flex tablet:flex-wrap tablet:gap-3">

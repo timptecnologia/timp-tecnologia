@@ -101,9 +101,10 @@ export const HERO_GEO: Record<HeroVariant, HeroGeometry> = {
  * que atravessam o Hero inteiro — desktop: nascem fora da tela à ESQUERDA, sobem/descem atrás
  * do texto e chegam na horizontal aos 4 RJ45; mobile: nascem no TOPO do Hero, descem atrás do
  * texto e chegam na vertical aos 4 plugues. Cada cabo termina no MESMO ponto e com a mesma
- * tangente do cabo oficial que substitui (a conexão ao RJ45 é idêntica); o uplink "OPERAÇÃO"
- * sai (só os 4 cabos). O restante da cena (switch, portas, plugues, LEDs, brilho) segue a
- * geometria oficial — tests/unit/home-art.test.tsx. Tablet: cena oficial inalterada.
+ * tangente do cabo oficial que substitui (a conexão ao RJ45 é idêntica). O cabo de SAÍDA
+ * "OPERAÇÃO" segue com a geometria oficial e recebe o sinal dos 4 conectores. O restante da cena
+ * (switch, portas, plugues, LEDs, brilho) também é o oficial — tests/unit/home-art.test.tsx.
+ * Tablet: cena oficial inalterada.
  * Coordenadas da própria cena (overflow visível): x < 0 fica à esquerda da cena, y < 0 acima.
  */
 export const HERO_CABLES: Partial<Record<HeroVariant, { cables: readonly string[]; widths: readonly number[] }>> = {
@@ -149,10 +150,10 @@ function signalOut(variant: "d" | "m", port: number, G: HeroGeometry): string {
   const { sw } = G
   if (variant === "d") {
     const upY = G.upY ?? 385
-    return `M ${sw.x + 6} ${port} H ${sw.x + sw.w - 34} C ${sw.x + sw.w - 16} ${port} ${sw.x + sw.w - 16} ${upY} ${sw.x + sw.w - 4} ${upY} H ${sw.x + sw.w + 96}`
+    return `M ${sw.x + 6} ${port} H ${sw.x + sw.w - 34} C ${sw.x + sw.w - 16} ${port} ${sw.x + sw.w - 16} ${upY} ${sw.x + sw.w - 4} ${upY} H 860`
   }
   const cx = sw.x + sw.w / 2
-  return `M ${port} ${sw.y + 4} V ${sw.y + sw.h - 18} C ${port} ${sw.y + sw.h - 6} ${cx} ${sw.y + sw.h - 10} ${cx} ${sw.y + sw.h} V ${sw.y + sw.h + 20}`
+  return `M ${port} ${sw.y + 4} V ${sw.y + sw.h - 18} C ${port} ${sw.y + sw.h - 6} ${cx} ${sw.y + sw.h - 10} ${cx} ${sw.y + sw.h} V 340`
 }
 
 /** Pulso do sinal: traço com halo; `out` = trecho interno (módulo → OPERAÇÃO). */
@@ -222,12 +223,10 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
         </radialGradient>
       </defs>
       <circle cx={G.glow[0]} cy={G.glow[1]} r={G.glow[2]} fill={`url(#${gradId})`} />
-      {!own && (
-        <>
-          <path d={G.up} fill="none" stroke={ART.cable} strokeWidth={G.vert ? 6 * ps : 8} strokeLinecap="round" />
-          <DataPulse d={G.up} w={G.vert ? 4 : 6} dur="1.8s" delay={1.6} />
-        </>
-      )}
+      {/* Cabo de SAÍDA (OPERAÇÃO), geometria oficial: continuidade física do sistema. Com os 4 cabos
+          longos, o sinal de cada conector segue por ele (SignalPulse "out"); na cena oficial, pulso próprio */}
+      <path d={G.up} data-hero-output="" fill="none" stroke={ART.cable} strokeWidth={G.vert ? 6 * ps : 8} strokeLinecap="round" />
+      {!own && <DataPulse d={G.up} w={G.vert ? 4 : 6} dur="1.8s" delay={1.6} />}
       {cables.map((d, i) => {
         const drawStyle = { "--draw-delay": `${0.1 + i * 0.12}s` } as Vars
         return (
@@ -281,7 +280,7 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
           ))}
         </>
       )}
-      {/* Sinal segue do conector, pelo LED, até OPERAÇÃO (só luz; sem linha fixa extra) */}
+      {/* Sinal segue do conector, pelo LED, até a porta OPERAÇÃO e por todo o cabo de saída */}
       {own && (variant === "d" || variant === "m") && G.ports.map((port, i) => <SignalPulse key={`out-${port}`} d={signalOut(variant, port, G)} w={G.vert ? 3 : 4} i={i} out />)}
     </svg>
   )

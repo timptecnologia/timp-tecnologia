@@ -928,6 +928,34 @@ if (PARTS.has("visual")) {
     if (["390x844", "1440x900"].includes(vp.tag)) await shot(`energia-solar-${vp.tag}`)
   }
 
+  // 1a0. Starlink desktop (Home e página): cena completa no topo — onde o satélite e a ponta da antena caem
+  // na imagem RENDERIZADA (object-fit/position calculados): satélite dentro da foto visível, abaixo do
+  // breadcrumb, sem texto por cima; ponta da antena antes da coluna de texto.
+  const SCENE = (scope) => `(() => {
+    const img = document.querySelector(${JSON.stringify(scope)} + " [data-backdrop-photo]")
+    img.scrollIntoView({ block: "start", behavior: "instant" })
+    const r = img.getBoundingClientRect(), cs = getComputedStyle(img)
+    const clip = img.closest("[data-backdrop]").getBoundingClientRect()
+    const s = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight)
+    const rw = img.naturalWidth * s, rh = img.naturalHeight * s
+    const [px, py] = cs.objectPosition.split(" ").map((v) => parseFloat(v) / 100)
+    const at = (fx, fy) => ({ x: r.left + (r.width - rw) * px + rw * fx, y: r.top + (r.height - rh) * py + rh * fy })
+    const sat = at(0.114, 0.087), tip = at(0.5, 0.32)
+    const inside = (p) => p.x >= Math.max(r.left, clip.left) + 20 && p.x <= Math.min(r.right, clip.right) && p.y >= Math.max(r.top, clip.top) + 20 && p.y <= Math.min(r.bottom, clip.bottom)
+    const sec = img.closest("section")
+    const texts = [...sec.querySelectorAll("h1, h2, p, a, li, nav, figure, span")].filter((e) => e.getBoundingClientRect().height > 0 && !e.closest("[data-starlink-demo]") && !e.closest("[aria-hidden='true']"))
+    const hit = (p, pad) => texts.filter((e) => { const b = e.getBoundingClientRect(); return p.x > b.left - pad && p.x < b.right + pad && p.y > b.top - pad && p.y < b.bottom + pad }).map((e) => e.tagName)
+    const col = [...sec.querySelectorAll("h1, h2")][0].getBoundingClientRect().left
+    return { sat: [Math.round(sat.x), Math.round(sat.y)], satInside: inside(sat), satCovered: hit(sat, 30), tip: Math.round(tip.x), textCol: Math.round(col) }
+  })()`
+  for (const vp of DESKTOP_VPS) {
+    for (const [path, scope] of [["/", "#starlink"], ["/servicos/instalacao-starlink/", "section[aria-labelledby='pagina-titulo']"]]) {
+      await open(url(path), vp)
+      const sc = await js(SCENE(scope))
+      check(`${vp.tag} ${path} Starlink: satélite e feixe visíveis no topo (sem corte, sem texto por cima), antena antes do texto`, sc.satInside && sc.satCovered.length === 0 && sc.tip < sc.textCol, JSON.stringify(sc))
+    }
+  }
+
   // 1a'. Starlink desktop (Home e página): nenhum texto por cima da antena (coluna esquerda livre)
   for (const vp of DESKTOP_VPS) {
     await open(url("/servicos/instalacao-starlink/"), vp)
@@ -961,6 +989,8 @@ if (PARTS.has("visual")) {
       const z = (el) => { for (let e = el; e && e !== document.body; e = e.parentElement) { const z = getComputedStyle(e).zIndex; if (z !== "auto") return Number(z) } return 0 }
       return {
         cables: cables.length, extra: hero.querySelectorAll("[data-hero-ambient]").length,
+        // Cabo de saída OPERAÇÃO visível e além da borda do módulo (continuidade física)
+        output: [...hero.querySelectorAll("[data-hero-output]")].filter((o) => o.getBoundingClientRect().width + o.getBoundingClientRect().height > 20).length,
         fromLeft: u.left <= sec.left + 1, fromTop: u.top <= sec.top + 1, behindH1: u.top < h1.bottom && u.bottom > h1.top && u.left < h1.right,
         below: cables.every((c) => z(c) < z(document.getElementById("hero-titulo"))),
         pulses: cables.flatMap((c) => [...c.querySelectorAll(".timp-sig")]).filter((p) => getComputedStyle(p).animationName === "timp-sig").length,
@@ -968,7 +998,7 @@ if (PARTS.has("visual")) {
       }
     })()`)
     const origin = vp.w < 768 ? h.fromTop : h.fromLeft
-    check(`${vp.tag} Hero: exatamente 4 cabos (${vp.w < 768 ? "do topo" : "da esquerda"}), atrás do texto e do H1, pulsos animados, sem overflow`, h.cables === 4 && h.extra === 0 && origin && h.behindH1 && h.below && h.pulses === 8 && !h.hscroll, JSON.stringify(h))
+    check(`${vp.tag} Hero: exatamente 4 cabos (${vp.w < 768 ? "do topo" : "da esquerda"}) + cabo de saída OPERAÇÃO, atrás do texto e do H1, pulsos animados, sem overflow`, h.cables === 4 && h.extra === 0 && h.output === 1 && origin && h.behindH1 && h.below && h.pulses === 8 && !h.hscroll, JSON.stringify(h))
   }
   // Sinal sincronizado: por cabo, a cabeça do pulso chega ao RJ45 → o LED daquele conector acende → o
   // pulso segue pelo módulo até OPERAÇÃO. Medido em tempo real (amostras de 25 ms, ~16 s), desktop e mobile.
@@ -1201,7 +1231,8 @@ if (PARTS.has("visual")) {
     const hero = await js(`(() => {
       const sec = document.querySelector("section[aria-labelledby='hero-titulo']")
       const p = sec.querySelector("h1 + p").getBoundingClientRect()
-      const art = sec.querySelector("[data-hero-art-mobile]").getBoundingClientRect()
+      // A cena (switch + conectores); o wrapper inclui o céu acima e o cabo de saída abaixo
+      const art = (sec.querySelector("[data-hero-scene-mobile]") ?? sec.querySelector("[data-hero-art-mobile]")).getBoundingClientRect()
       const cta = sec.querySelector("[data-hero-cta]").getBoundingClientRect()
       const extra = [...sec.querySelectorAll("svg")].filter((s) => s.getBoundingClientRect().height > 0 && !s.closest("[data-hero-art-mobile]")).length
       return { behindText: art.top < p.bottom, beforeCta: art.bottom <= cta.top + 12 && art.top < cta.top, height: Math.round(sec.getBoundingClientRect().height), extraScenes: extra }

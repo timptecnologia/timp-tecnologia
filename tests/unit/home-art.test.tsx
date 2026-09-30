@@ -50,10 +50,10 @@ describe("Hero RJ45 = assets/home/hero", () => {
   it.each([
     ["d", "hero-rj45-desktop-1440.svg"],
     ["m", "hero-rj45-mobile-390.svg"],
-  ] as const)("variante %s = %s, exceto os cabos (4 novos, mesmos pontos de conexão)", (variant, file) => {
+  ] as const)("variante %s = %s, exceto os 4 cabos de entrada (novos, mesmos pontos de conexão); saída oficial mantida", (variant, file) => {
     const official = HERO_GEO[variant]
     const own = HERO_CABLES[variant]!
-    const oldCables = new Set([...official.cables, official.up].map((d) => `path ${d}`))
+    const oldCables = new Set(official.cables.map((d) => `path ${d}`))
     const newCables = new Set(own.cables.map((d) => `path ${d}`))
     const scene = renderToStaticMarkup(<HeroScene variant={variant as HeroVariant} />)
     // Sinal interno (conector → LED → OPERAÇÃO) é só luz animada (sem linha fixa): fora da comparação
@@ -67,7 +67,8 @@ describe("Hero RJ45 = assets/home/hero", () => {
     expect(own.cables.map(endOf)).toEqual(official.cables.map(endOf))
     const html = renderToStaticMarkup(<HeroScene variant={variant as HeroVariant} />)
     expect(html.match(/data-hero-cable="/g)).toHaveLength(4)
-    expect(html).not.toContain(`d="${official.up}"`)
+    // Cabo de saída OPERAÇÃO presente, com a geometria oficial (continuidade física do sistema)
+    expect(html).toMatch(new RegExp(`<path d="${official.up}" data-hero-output=""`))
   })
 
   it("mantém o texto técnico (Timp, OPERAÇÃO, P1–P4 no desktop)", () => {

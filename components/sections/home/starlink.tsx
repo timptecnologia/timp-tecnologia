@@ -37,12 +37,14 @@ export function Starlink() {
   )
   return (
     <section id="starlink" aria-labelledby="starlink-titulo" className="relative overflow-hidden border-b border-g-800 bg-g-975">
-      <div className="relative">
+      {/* Desktop: a área da foto tem no mínimo a proporção da própria foto (2:1) — sem corte no topo:
+          satélite, feixe e antena inteiros */}
+      <div className="relative desktop:min-h-[50vw]">
         <StarlinkBackdrop side="right" />
         <div className={cn(S.container, S.padTop, "relative")}>
           {/* Desktop: a coluna esquerda é a FOTO (antena livre, sem texto por cima); todo o texto,
               chips e CTAs ficam à direita, sobre o escurecimento. Tablet/mobile: empilhado. */}
-          <div className="grid items-start gap-x-[clamp(32px,4vw,64px)] gap-y-5 desktop:grid-cols-[minmax(0,1fr)_minmax(0,620px)]">
+          <div className="grid items-start gap-x-[clamp(32px,4vw,64px)] gap-y-5 desktop:grid-cols-[minmax(0,1fr)_minmax(0,min(620px,44vw))]">
             <div aria-hidden="true" data-starlink-antenna-area="" className="hidden desktop:block" />
             <div className="flex flex-col gap-5">
               <span className={cn(S.eyebrow, "text-blue-400")}>Starlink + infraestrutura Timp</span>
