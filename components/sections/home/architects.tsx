@@ -8,10 +8,21 @@ const TOPICS = ["Conectividade e Wi-Fi", "Automação", "Segurança", "Cabeament
 
 /**
  * Arquitetos e Designers de Interiores — solução estratégica, logo abaixo de
- * Construtoras e Engenharia. Faixa compacta: texto e ações | temas do apoio técnico.
+ * Construtoras e Engenharia. Faixa compacta: texto e ações | temas do apoio técnico
+ * (coluna única <1280: texto → temas → ações).
  * Parceria citada de forma genérica (sem comissão, percentual ou programa comercial).
  */
 export function Architects() {
+  const ctas = (className: string) => (
+    <div data-section-cta="" className={cn("grid grid-cols-1 gap-3 pt-1 tablet:flex tablet:flex-wrap", className)}>
+      <a href={requiredHref("arquitetos")} className={cn(S.btnPrimary, "justify-center")}>
+        Conhecer a parceria <span aria-hidden="true">→</span>
+      </a>
+      <WhatsAppLink context="arquitetos" className="px-4">
+        Conversar pelo WhatsApp
+      </WhatsAppLink>
+    </div>
+  )
   return (
     <section id="arquitetos" aria-labelledby="arquitetos-titulo" className="border-b border-g-800 bg-g-900">
       <div className={cn(S.container, S.padTight, "grid items-center gap-x-[clamp(32px,5vw,72px)] gap-y-7 desktop:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]")}>
@@ -24,14 +35,7 @@ export function Architects() {
             Infraestrutura tecnológica integrada ao projeto, com apoio técnico para automação, conectividade, segurança e soluções que precisam ser previstas antes da
             execução.
           </p>
-          <div className="grid grid-cols-1 gap-3 pt-1 tablet:flex tablet:flex-wrap">
-            <a href={requiredHref("arquitetos")} className={cn(S.btnPrimary, "justify-center")}>
-              Conhecer a parceria <span aria-hidden="true">→</span>
-            </a>
-            <WhatsAppLink context="arquitetos" className="px-4">
-              Conversar pelo WhatsApp
-            </WhatsAppLink>
-          </div>
+          {ctas("max-desktop:hidden")}
         </div>
         <ul aria-label="Apoio técnico ao projeto" className="m-0 grid list-none grid-cols-2 gap-2 p-0">
           {TOPICS.map((t) => (
@@ -40,6 +44,7 @@ export function Architects() {
             </li>
           ))}
         </ul>
+        {ctas("desktop:hidden")}
       </div>
     </section>
   )

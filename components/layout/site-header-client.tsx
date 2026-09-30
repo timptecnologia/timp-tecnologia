@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation"
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react"
 
 import { WhatsAppLink } from "@/components/ui/whatsapp-link"
+import { useDemoFocus } from "@/lib/hooks/use-demo-focus"
 import { ECOSYSTEMS, SEGMENTS, SERVICE_CATEGORIES, STRATEGIC_FRONT, TOP_LINKS, ecosystemHref } from "@/lib/home/content"
 import { SITE } from "@/lib/site/constants"
 import { PROJECT_CTA, requiredHref } from "@/lib/site/routes"
@@ -17,6 +18,8 @@ import { cn } from "@/lib/utils"
  * - tablet 768–1279: CTA + botão Menu → drawer 440 px; mobile <768: menu em tela cheia.
  *   Serviços e Soluções são accordions com "Ver todos…" em destaque.
  * Esc fecha tudo; foco volta ao gatilho; rolagem do body travada com o drawer aberto.
+ * Mobile: recolhe (transform, sem CLS) enquanto uma demonstração está em foco
+ * (lib/hooks/use-demo-focus); volta ao sair dela, ao rolar para cima ou com foco de teclado.
  */
 
 type Menu = "serv" | "solu" | null
@@ -53,6 +56,7 @@ export function SiteHeaderClient({ logo }: { logo: ReactNode }) {
   const drawerRef = useRef<HTMLDivElement>(null)
   const ids = { serv: useId(), solu: useId(), drawer: useId(), accServ: useId(), accSolu: useId() }
   const wa = waContextForPath(usePathname() ?? "/")
+  const collapsed = useDemoFocus(drawer)
 
   const closeDrawer = useCallback((restoreFocus = false) => {
     setDrawer(false)
@@ -162,7 +166,15 @@ export function SiteHeaderClient({ logo }: { logo: ReactNode }) {
 
   return (
     <>
-      <header onMouseLeave={() => setMenu(null)} className="sticky top-0 z-(--z-header) border-b border-g-800 bg-g-950/90 backdrop-blur-[14px]">
+      <header
+        onMouseLeave={() => setMenu(null)}
+        data-collapsed={collapsed ? "" : undefined}
+        className={cn(
+          "sticky top-0 z-(--z-header) border-b border-g-800 bg-g-950/90 backdrop-blur-[14px] transition-transform duration-280 ease-standard motion-reduce:transition-none",
+          // Demonstração em foco (mobile): recolhe; foco de teclado dentro do header o traz de volta
+          collapsed && "-translate-y-full focus-within:translate-y-0",
+        )}
+      >
         <div className="mx-auto flex h-(--header-height) max-w-[1440px] items-center justify-between gap-6 px-[clamp(20px,3.5vw,56px)]">
           <a href={requiredHref("home")} aria-label={`${SITE.name} — início`} className="flex flex-none items-center rounded-xs" onMouseEnter={() => setMenu(null)}>
             {logo}

@@ -303,7 +303,7 @@ export function StarlinkDemo({ variant = "full" }: { variant?: "full" | "compact
   const fiberTone = st.fiber === "fail" ? "border-crit text-crit-fg" : st.fiber === "active" ? "border-ok text-ok-fg" : "border-g-700 text-g-400"
   const slTone = st.starlink === "active" ? "border-blue-500 text-blue-300" : st.starlink === "standby" ? "border-g-500 text-g-200" : "border-blue-500/50 text-blue-300"
   return (
-    <div ref={ref} data-starlink-demo={variant} data-starlink-step={step} data-fiber={st.fiber} data-starlink={st.starlink} className="flex flex-col gap-4">
+    <div ref={ref} data-focus-demo="" data-hide-sticky-cta="" data-starlink-demo={variant} data-starlink-step={step} data-fiber={st.fiber} data-starlink={st.starlink} className="flex flex-col gap-4">
       {/* Leitores de tela: a explicação completa, sem depender da animação */}
       <ol className="sr-only">
         {STARLINK_STAGES.map((s, i) => (
@@ -336,13 +336,18 @@ export function StarlinkDemo({ variant = "full" }: { variant?: "full" | "compact
       </div>
 
       <div className="grid items-start gap-x-8 gap-y-4 tablet:grid-cols-[minmax(0,1fr)_auto]">
-        {/* Legenda da etapa: espaço reservado para 3 linhas (sem deslocamento entre etapas) */}
-        <div aria-hidden="true" className="flex min-h-[7.5em] flex-col gap-1 tablet:min-h-[5.5em]">
-          <span className="text-[17px] font-semibold text-white">
-            <span className="mr-2 font-mono text-[12px] text-blue-300">{n(step)}</span>
-            {st.title}
-          </span>
-          <span className="text-[15px] leading-[1.55] text-g-300">{st.text}</span>
+        {/* Legenda da etapa: todas as legendas na MESMA célula, só a atual visível — a altura é a da
+            mais longa em qualquer largura (sem deslocamento de layout entre etapas) */}
+        <div aria-hidden="true" className="grid">
+          {STARLINK_STAGES.map((s, i) => (
+            <div key={s.title} className={cn("col-start-1 row-start-1 flex flex-col gap-1", i === step ? "visible" : "invisible")}>
+              <span className="text-[17px] font-semibold text-white">
+                <span className="mr-2 font-mono text-[12px] text-blue-300">{n(i)}</span>
+                {s.title}
+              </span>
+              <span className="text-[15px] leading-[1.55] text-g-300">{s.text}</span>
+            </div>
+          ))}
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <span aria-hidden="true" className="flex w-[168px] gap-1">

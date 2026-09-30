@@ -34,5 +34,5 @@ export default async function ServicoPage({ params }: PageProps<"/servicos/[slug
   const key = bySlug.get((await params).slug)
   if (!key) notFound()
   const x = EXTRAS[key]
-  return <ServicePage s={SERVICES[key]} lead={x?.lead && <x.lead />} extra={x?.extra && <x.extra />} hideHiring={x?.hideHiring} backdrop={key === "starlink" ? <StarlinkBackdrop /> : undefined} />
+  return <ServicePage s={SERVICES[key]} lead={x?.lead && <x.lead />} extra={x?.extra && <x.extra />} hideHiring={x?.hideHiring} backdrop={key === "starlink" ? <StarlinkBackdrop priority strong /> : undefined} />
 }

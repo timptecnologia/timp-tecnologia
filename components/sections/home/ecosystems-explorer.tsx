@@ -11,7 +11,9 @@ import { cn } from "@/lib/utils"
 /**
  * Explorador de ecossistemas (Home.dc.html §02):
  * - desktop ≥1280: abas verticais + painel; tablet: abas horizontais roláveis + painel;
- * - mobile: accordion.
+ *   no desktop a coluna de abas acompanha a altura do painel (abas distribuídas, sem vazio
+ *   abaixo delas);
+ * - mobile: accordion, TODAS as categorias fechadas ao carregar.
  * O HTML de TODOS os ecossistemas é renderizado no servidor (seo-geo.md: abas e
  * accordions não dependem de JS para existir); painéis inativos usam `hidden`.
  * Cada serviço leva à sua entrada em /servicos/ (ou à página, quando publicada).
@@ -75,7 +77,8 @@ function Panel({ eco }: { eco: Ecosystem }) {
 
 export function EcosystemsExplorer() {
   const [active, setActive] = useState(0)
-  const [open, setOpen] = useState(0)
+  // Mobile: todas as categorias começam FECHADAS (sem categoria aberta por padrão)
+  const [open, setOpen] = useState(-1)
   const base = useId()
   const tabs = useRef<(HTMLButtonElement | null)[]>([])
   const orientation = useTabOrientation()
@@ -95,13 +98,13 @@ export function EcosystemsExplorer() {
   return (
     <>
       {/* Tablet / desktop: abas + painel */}
-      <div className="hidden items-start gap-5 tablet:grid desktop:grid-cols-[minmax(300px,4fr)_minmax(0,7fr)] desktop:gap-10">
+      <div className="hidden items-start gap-5 tablet:grid desktop:grid-cols-[minmax(300px,4fr)_minmax(0,7fr)] desktop:items-stretch desktop:gap-10">
         <div
           role="tablist"
           aria-label="Ecossistemas"
           aria-orientation={orientation}
           onKeyDown={onKey}
-          className="flex overflow-x-auto desktop:flex-col desktop:overflow-visible desktop:border-t desktop:border-g-800"
+          className="flex overflow-x-auto desktop:flex-col desktop:overflow-visible desktop:rounded-md desktop:border desktop:border-g-800"
         >
           {ECOSYSTEMS.map((eco, i) => {
             const on = i === active
@@ -120,7 +123,7 @@ export function EcosystemsExplorer() {
                 onClick={() => setActive(i)}
                 className={cn(
                   "flex flex-none cursor-pointer flex-col items-start gap-1.5 border-b border-g-800 px-[18px] pt-3.5 pb-4 text-left transition-colors duration-120 hover:text-white",
-                  "desktop:flex-row desktop:items-center desktop:gap-[18px] desktop:px-5 desktop:py-[22px]",
+                  "desktop:min-h-[72px] desktop:flex-1 desktop:flex-row desktop:items-center desktop:gap-[18px] desktop:px-5 desktop:py-[18px] desktop:last:border-b-0",
                   on
                     ? "text-white shadow-[inset_0_-2px_0_var(--color-blue-500)] desktop:bg-g-950 desktop:shadow-[inset_3px_0_0_var(--color-blue-500)]"
                     : "bg-transparent text-g-400",

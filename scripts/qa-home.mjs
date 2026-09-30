@@ -8,7 +8,7 @@
  * Uso:  npm run build && npm run start -- -p 3100   (em outro terminal)
  *       npm run qa:home -- http://localhost:3100/
  * Env:  CHROME_PATH (padrão: Chrome no Windows/macOS/Linux) · QA_OUT (pasta de capturas)
- *       QA_PART=home,site,extra (partes a rodar; padrão: todas) · QA_VP=1440x900,390x844
+ *       QA_PART=home,site,extra,visual (partes a rodar; padrão: todas) · QA_VP=1440x900,390x844
  *       (só essas viewports) — para rodar em lotes e limitar memória · QA_FORM=1 (envio real)
  *
  * Mede a POSIÇÃO REAL do destino (getBoundingClientRect), não apenas location.hash.
@@ -208,7 +208,7 @@ const SITE_VIEWPORTS = [
   { tag: "924x540", w: 924, h: 540 },
 ]
 
-const PARTS = new Set((process.env.QA_PART ?? "home,site,extra").split(","))
+const PARTS = new Set((process.env.QA_PART ?? "home,site,extra,visual").split(","))
 const VP_ONLY = process.env.QA_VP ? new Set(process.env.QA_VP.split(",")) : null
 const pick = (list) => (VP_ONLY ? list.filter((v) => VP_ONLY.has(v.tag)) : list)
 /** Viewports da demonstração da Central. */
@@ -847,6 +847,151 @@ for (const vp of [
   check(`${vp.tag}: experiências no fluxo, conteúdo e demonstração completos`, info.modes.every((p) => p !== "sticky") && info.riseDots === 0 && info.demoDone, JSON.stringify(info))
 }
 
+}
+
+// Revisão visual pós-d1777ab: foto Starlink, accordions, CTA no fim (mobile), Hero mobile, header nas demos
+if (PARTS.has("visual")) {
+  const MOBILE_VPS = [
+    { tag: "360x640", w: 360, h: 640, mobile: true },
+    { tag: "375x667", w: 375, h: 667, mobile: true },
+    { tag: "390x844", w: 390, h: 844, mobile: true },
+    { tag: "430x932", w: 430, h: 932, mobile: true },
+  ]
+  const DESKTOP_VPS = [
+    { tag: "1280x680", w: 1280, h: 680 },
+    { tag: "1366x768", w: 1366, h: 768 },
+    { tag: "1440x900", w: 1440, h: 900 },
+    { tag: "1920x1080", w: 1920, h: 1080 },
+  ]
+  const SKY = { desktop: ["/home/starlink/starlink-ceu-noturno-desktop.webp", 1774, 887], mobile: ["/home/starlink/starlink-ceu-noturno-mobile.webp", 1024, 1536] }
+
+  // 1. Fotografia Starlink: arquivo certo por breakpoint, HTTP 200, carregada, visível e não coberta
+  const PHOTO = (scope) => `(async () => {
+    const root = document.querySelector(${JSON.stringify(scope)})
+    const img = root?.querySelector("[data-starlink-photo]")
+    if (!img) return { missing: true }
+    img.scrollIntoView({ block: "center", behavior: "instant" })
+    for (let i = 0; i < 100 && !(img.complete && img.naturalWidth > 0); i++) await new Promise((r) => setTimeout(r, 100))
+    const src = new URL(img.currentSrc || img.src).pathname
+    const head = await fetch(img.currentSrc, { method: "HEAD" })
+    let opacity = 1
+    for (let el = img; el && el !== document.body; el = el.parentElement) { const cs = getComputedStyle(el); if (cs.display === "none" || cs.visibility === "hidden") opacity = 0; opacity *= Number(cs.opacity) }
+    const r = img.getBoundingClientRect()
+    // "Coberta": algum elemento com fundo SÓLIDO acima da foto no centro dela (overlays são gradientes translúcidos).
+    // O fundo é decorativo (pointer-events: none) e elementsFromPoint o ignoraria: liberado só durante a medição
+    // (via CSSOM — a CSP bloqueia <style> injetado).
+    const sky = [img.closest("[data-starlink-sky]"), ...img.closest("[data-starlink-sky]").querySelectorAll("*")]
+    for (const el of sky) el.style.pointerEvents = "auto"
+    const stack = document.elementsFromPoint(Math.min(innerWidth - 2, r.left + r.width / 2), Math.max(1, Math.min(innerHeight - 2, r.top + r.height * 0.75)))
+    for (const el of sky) el.style.pointerEvents = ""
+    const above = stack.slice(0, Math.max(0, stack.indexOf(img)))
+    const solid = above.filter((el) => { const m = getComputedStyle(el).backgroundColor.match(/[\\d.]+/g); return m && (m.length < 4 || Number(m[3]) >= 0.95) && !/^(HTML|BODY)$/.test(el.tagName) && el.getBoundingClientRect().width > r.width * 0.5 })
+    const loaded = performance.getEntriesByType("resource").map((e) => new URL(e.name).pathname).filter((p) => p.includes("starlink-ceu"))
+    return { src, status: head.status, natural: [img.naturalWidth, img.naturalHeight], size: [Math.round(r.width), Math.round(r.height)], opacity, inStack: stack.includes(img), covered: solid.map((e) => e.tagName + "." + String(e.className).slice(0, 40)), loaded: [...new Set(loaded)] }
+  })()`
+  for (const [path, scope] of [["/", "#starlink"], ["/servicos/instalacao-starlink/", "section[aria-labelledby='pagina-titulo']"]]) {
+    for (const vp of [...MOBILE_VPS, ...DESKTOP_VPS]) {
+      events.length = 0
+      await open(url(path), vp)
+      const p = await js(PHOTO(scope))
+      const [file, nw, nh] = vp.w < 768 ? SKY.mobile : SKY.desktop
+      const other = (vp.w < 768 ? SKY.desktop : SKY.mobile)[0]
+      check(
+        `${vp.tag} ${path} foto Starlink ${vp.w < 768 ? "mobile" : "desktop"}: arquivo certo, 200, carregada, visível, não coberta, sem baixar a outra`,
+        !p.missing && p.src === file && p.status === 200 && p.natural[0] === nw && p.natural[1] === nh && p.size[0] > 200 && p.size[1] > 150 && p.opacity > 0.9 && p.inStack && p.covered.length === 0 && !p.loaded.includes(other) && !events.some((e) => /starlink-ceu/.test(e)),
+        JSON.stringify(p),
+      )
+      if (path === "/" && ["390x844", "1440x900"].includes(vp.tag)) await shot(`starlink-foto-${vp.tag}`)
+    }
+  }
+
+  for (const vp of MOBILE_VPS) {
+    // 2. Serviços: todas as categorias FECHADAS ao carregar; cada uma abre e fecha
+    await open(url("/"), vp)
+    const acc = await js(`[...document.querySelectorAll("#ecossistemas h3 > button[aria-expanded]")].filter((b) => b.offsetParent).map((b) => ({ name: b.textContent.replace(/\\d+ serviços|frente estratégica|[+−]/g, "").trim(), expanded: b.getAttribute("aria-expanded"), panelHidden: document.getElementById(b.getAttribute("aria-controls")).hidden }))`)
+    check(`${vp.tag} Serviços: ${acc.length} categorias, todas fechadas ao carregar`, acc.length === 5 && acc.every((a) => a.expanded === "false" && a.panelHidden), JSON.stringify(acc))
+    const opened = []
+    for (let i = 0; i < acc.length; i++) {
+      await clickAt(`[...document.querySelectorAll("#ecossistemas h3 > button[aria-expanded]")].filter((b) => b.offsetParent)[${i}]`)
+      await pause(120)
+      opened.push(await js(`(() => { const b = [...document.querySelectorAll("#ecossistemas h3 > button[aria-expanded]")].filter((b) => b.offsetParent)[${i}]; const p = document.getElementById(b.getAttribute("aria-controls")); return b.getAttribute("aria-expanded") === "true" && !p.hidden && p.getBoundingClientRect().height > 40 })()`))
+      await clickAt(`[...document.querySelectorAll("#ecossistemas h3 > button[aria-expanded]")].filter((b) => b.offsetParent)[${i}]`)
+      await pause(80)
+    }
+    check(`${vp.tag} Serviços: cada categoria abre ao toque`, opened.length === 5 && opened.every(Boolean), JSON.stringify(opened))
+
+    // 3. CTA no FIM das seções narrativas (mobile): conteúdo principal antes do CTA visível
+    await open(url("/"), vp)
+    const order = await js(`(() => {
+      const last = (sel) => { const all = [...document.querySelectorAll(sel)].filter((e) => e.getBoundingClientRect().height > 0); return all[all.length - 1] }
+      const rows = [["ecossistemas", "#ecossistemas h3"], ["segmentos", "#segmentos ul"], ["starlink", "#starlink [data-starlink-demo]"], ["processo", "#processo [data-timeline-step]"], ["construtoras", "#construtoras [data-timeline-step]"], ["arquitetos", "#arquitetos ul"], ["monitoramento", "#monitoramento [data-focus-demo]"]]
+      return rows.map(([id, sel]) => {
+        const ctas = [...document.querySelectorAll("#" + id + " [data-section-cta]")].filter((e) => e.getBoundingClientRect().height > 0)
+        const content = last(sel)?.getBoundingClientRect()
+        const cta = ctas[0]?.getBoundingClientRect()
+        return { id, visibleCtas: ctas.length, after: !!cta && !!content && cta.top >= content.bottom - 1, fits: !!cta && cta.left >= 0 && cta.right <= innerWidth + 0.5 && [...ctas[0].querySelectorAll("a")].concat(ctas[0].tagName === "A" ? [ctas[0]] : []).every((a) => a.getBoundingClientRect().right <= innerWidth + 0.5) }
+      })
+    })()`)
+    check(`${vp.tag} Home: CTA ao FINAL de Serviços, Soluções, Starlink, Processo, Construtoras, Arquitetos e Monitoramento`, order.every((o) => o.visibleCtas === 1 && o.after && o.fits), JSON.stringify(order.filter((o) => !(o.visibleCtas === 1 && o.after && o.fits))))
+
+    // 4. Hero mobile: peça única — cabos atrás da descrição, conectores antes dos CTAs, altura contida
+    const hero = await js(`(() => {
+      const sec = document.querySelector("section[aria-labelledby='hero-titulo']")
+      const p = sec.querySelector("h1 + p").getBoundingClientRect()
+      const art = sec.querySelector("[data-hero-art-mobile]").getBoundingClientRect()
+      const cta = sec.querySelector("[data-hero-cta]").getBoundingClientRect()
+      const extra = [...sec.querySelectorAll("svg")].filter((s) => s.getBoundingClientRect().height > 0 && !s.closest("[data-hero-art-mobile]")).length
+      return { behindText: art.top < p.bottom, beforeCta: art.bottom <= cta.top + 12 && art.top < cta.top, height: Math.round(sec.getBoundingClientRect().height), extraScenes: extra }
+    })()`)
+    check(`${vp.tag} Hero mobile integrado: cabos atrás do texto, conectores antes dos CTAs, sem cena extra abaixo`, hero.behindText && hero.beforeCta && hero.extraScenes === 0 && hero.height <= Math.max(vp.h * 1.3, 880), JSON.stringify(hero))
+    if (vp.tag === "390x844") await shot(`hero-mobile-${vp.tag}`)
+  }
+
+  // 5. Header recolhe com a demonstração em foco (mobile), volta ao rolar para cima e ao sair; foco o traz de volta
+  // mainTop: posição do conteúdo no documento — o header recolhe só com transform, sem empurrar nada (sem CLS)
+  const HEADER = `(() => { const h = document.querySelector("header"); const r = h.getBoundingClientRect(); return { collapsed: h.hasAttribute("data-collapsed"), bottom: Math.round(r.bottom), height: Math.round(r.height), mainTop: Math.round(document.querySelector("main").getBoundingClientRect().top + scrollY) } })()`
+  const frames = `new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(r, 380))))`
+  for (const vp of [MOBILE_VPS[0], MOBILE_VPS[2]]) {
+    for (const [name, sel] of [["Starlink", "#starlink [data-focus-demo]"], ["Central", "#monitoramento [data-focus-demo]"]]) {
+      await open(url("/"), vp)
+      const top = await js(`document.querySelector(${JSON.stringify(sel)}).getBoundingClientRect().top + scrollY`)
+      const before = await js(HEADER)
+      // Entra rolando em passos de 24 px (como o usuário): registra alternâncias
+      const walk = await js(`(async () => {
+        const target = ${top} - 8, states = []
+        for (let y = Math.max(0, target - 700); y <= target; y += 24) { scrollTo({ top: y, behavior: "instant" }); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); states.push(document.querySelector("header").hasAttribute("data-collapsed")) }
+        let flips = 0; for (let i = 1; i < states.length; i++) if (states[i] !== states[i - 1]) flips++
+        return { flips }
+      })()`)
+      await js(frames)
+      const inDemo = await js(HEADER)
+      await js(`scrollBy({ top: -60, behavior: "instant" })`)
+      await js(frames)
+      const peek = await js(HEADER)
+      await js(`scrollBy({ top: 90, behavior: "instant" })`)
+      await js(frames)
+      const again = await js(HEADER)
+      await js(`[...document.querySelectorAll("header button")].find((b) => /Menu/.test(b.textContent)).focus()`)
+      await js(frames)
+      const focused = await js(HEADER)
+      await js(`document.activeElement.blur()`)
+      await js(`scrollTo({ top: document.querySelector(${JSON.stringify(sel)}).getBoundingClientRect().bottom + scrollY + 200, behavior: "instant" })`)
+      await js(frames)
+      const out = await js(HEADER)
+      await js(`scrollTo({ top: 0, behavior: "instant" })`)
+      await js(frames)
+      const topAgain = await js(HEADER)
+      const ok =
+        !before.collapsed && walk.flips <= 1 && inDemo.collapsed && inDemo.bottom <= 1 && !peek.collapsed && peek.bottom === peek.height && again.collapsed &&
+        focused.bottom === focused.height && !out.collapsed && !topAgain.collapsed && inDemo.mainTop === before.mainTop && again.mainTop === before.mainTop && inDemo.height === before.height
+      check(`${vp.tag} header recolhe na demo ${name}, volta ao rolar p/ cima, ao sair e com foco; sem piscar nem CLS`, ok, JSON.stringify({ before, walk, inDemo, peek, again, focused, out, topAgain }))
+    }
+  }
+  // Desktop: o header nunca recolhe
+  await open(url("/"), { w: 1440, h: 900 })
+  await js(`document.querySelector("#starlink [data-focus-demo]").scrollIntoView({ block: "start", behavior: "instant" })`)
+  await js(frames)
+  check("1440x900 header fixo no desktop mesmo com a demo em foco", !(await js(HEADER)).collapsed)
 }
 
 writeFileSync(join(OUT, "report.json"), JSON.stringify(results, null, 2))

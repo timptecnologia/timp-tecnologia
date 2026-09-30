@@ -77,12 +77,13 @@ export const STARLINK_STAGES: readonly StarlinkStage[] = [
 ]
 
 /**
- * Imagem de fundo noturna (Home e página Starlink). NÃO copiar as imagens do site
- * oficial: asset original ou licenciado, com a antena apontada para um céu noturno amplo.
- * Os arquivos são detectados no build; sem eles, fica o céu desenhado em código.
+ * Fotografia noturna (Home e página Starlink): assets FINAIS aprovados, em public/ —
+ * não substituir, recomprimir nem copiar imagens do site oficial. URLs públicas diretas.
  */
 export const STARLINK_SKY = {
-  desktop: "/home/starlink/starlink-ceu-noturno-desktop.webp", // 2400×1200
-  mobile: "/home/starlink/starlink-ceu-noturno-mobile.webp", // 1080×1620
+  desktop: "/home/starlink/starlink-ceu-noturno-desktop.webp",
+  desktopSize: [1774, 887],
+  mobile: "/home/starlink/starlink-ceu-noturno-mobile.webp",
+  mobileSize: [1024, 1536],
   alt: "Antena Starlink instalada sob céu noturno",
 } as const

@@ -13,9 +13,25 @@ import { S } from "./ui"
  * engenheiros, arquitetos e gestores — vocabulário de projeto, planejamento e entrega.
  * Desktop: texto | painel de camadas com a MESMA altura (as camadas se distribuem na
  * coluna, sem bloco flutuando no topo). Abaixo, a progressão animada das 9 etapas.
+ * Mobile: ações no FIM da seção (depois das camadas e da progressão).
  */
 export function Builders() {
   const solutionHref = href("construtoras", { section: HOME_ANCHORS.construtoras })
+  const ctas = (className: string) => (
+    <div data-section-cta="" className={cn("grid grid-cols-1 gap-3 pt-1 tablet:flex tablet:flex-wrap", className)}>
+      {solutionHref && (
+        <a
+          href={solutionHref}
+          className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-sm bg-white px-[22px] py-2 text-center text-[16px] leading-tight font-semibold text-blue-900 no-underline hover:bg-g-200 hover:text-blue-900"
+        >
+          Conhecer a solução <span aria-hidden="true">→</span>
+        </a>
+      )}
+      <WhatsAppLink context="construtoras" variant="onBlue" className="px-4">
+        Falar sobre um projeto
+      </WhatsAppLink>
+    </div>
+  )
   return (
     <section id="construtoras" aria-labelledby="construtoras-titulo" className="bg-blue-900">
       <div className={cn(S.container, S.pad, "flex flex-col gap-[clamp(32px,4vw,56px)]")}>
@@ -32,19 +48,7 @@ export function Builders() {
             <p className={cn(S.lead, "max-w-[36em] text-g-300")}>
               A Timp atua junto a construtoras, engenheiros, arquitetos e gestores desde a fase de planejamento até a entrega da infraestrutura tecnológica.
             </p>
-            <div className="grid grid-cols-1 gap-3 pt-1 tablet:flex tablet:flex-wrap">
-              {solutionHref && (
-                <a
-                  href={solutionHref}
-                  className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-sm bg-white px-[22px] py-2 text-center text-[16px] leading-tight font-semibold text-blue-900 no-underline hover:bg-g-200 hover:text-blue-900"
-                >
-                  Conhecer a solução <span aria-hidden="true">→</span>
-                </a>
-              )}
-              <WhatsAppLink context="construtoras" variant="onBlue" className="px-4">
-                Falar sobre um projeto
-              </WhatsAppLink>
-            </div>
+            {ctas("max-desktop:hidden")}
           </div>
           <div className="flex flex-col gap-4 rounded-md border border-blue-300/20 bg-ink/25 p-[clamp(20px,2.4vw,32px)]">
             <span className="font-mono text-[11px] tracking-[0.1em] text-blue-300">CAMADAS PREVISTAS NO PROJETO</span>
@@ -62,6 +66,8 @@ export function Builders() {
           <span className="font-mono text-[11px] tracking-[0.1em] text-blue-300">DA PLANTA À OPERAÇÃO</span>
           <ProgressTimeline steps={BUILDER_STEPS} label="Etapas, do planejamento à manutenção" />
         </div>
+        {/* Mobile: as ações fecham a seção, depois das camadas e da progressão */}
+        {ctas("desktop:hidden")}
       </div>
     </section>
   )

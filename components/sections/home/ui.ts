@@ -3,12 +3,16 @@
  * 1440, margens clamp(20–64), eyebrow mono 12/.1em, H2 em duas escalas.
  * Ritmo vertical revisto na rodada pós-2A (docs/MACROFASE-2A-HOME.md §7.8): o respiro do
  * protótipo, clamp(64–128) por lado, somava até 256 px entre seções; Macrofase 2 final:
- * clamp(40–72) — 40 px no mobile, 72 px em 1440 — e `padTight` para faixas curtas.
+ * clamp(40–72); revisão visual pós-d1777ab (mais agressiva): clamp(32–52) — 32 px no mobile,
+ * 52 px em 1440, ~104 px entre duas seções comuns — e `padTight` clamp(28–40) para faixas curtas.
+ * `padTop`/`padBottom`: as mesmas medidas, por lado (seções com abertura/fechamento próprios).
  */
 export const S = {
   container: "mx-auto w-full max-w-[1440px] px-[clamp(20px,5vw,64px)]",
-  pad: "py-[clamp(40px,5vw,72px)]",
-  padTight: "py-[clamp(32px,3.5vw,48px)]",
+  pad: "py-[clamp(32px,3.6vw,52px)]",
+  padTop: "pt-[clamp(32px,3.6vw,52px)]",
+  padBottom: "pb-[clamp(32px,3.6vw,52px)]",
+  padTight: "py-[clamp(28px,2.8vw,40px)]",
   /** Título que acompanha a rolagem ao lado de uma lista longa (a coluna nunca fica vazia). */
   stickyHead: "desktop:sticky desktop:top-[calc(var(--header-height)+32px)] desktop:self-start",
   eyebrow: "font-mono text-[12px] tracking-[0.1em]",

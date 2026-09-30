@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 /**
  * CTA fixo mobile (components-states.md): oculto no Hero, visível após o Hero,
  * oculto no CTA final / formulário ([data-final-cta]) e enquanto uma zona
- * [data-hide-sticky-cta] está na tela (experiências Starlink/Infraestrutura, para nunca
+ * [data-hide-sticky-cta] está na tela (demonstrações Starlink e Central, Infraestrutura, para nunca
  * cobrir o quadro fixo; footer, para não cobrir a assinatura). Também some enquanto um campo de
  * formulário está em foco (teclado virtual). Não ocupa espaço no layout (sem CLS);
  * entra com transform/opacity.

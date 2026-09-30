@@ -81,6 +81,8 @@ export function PageIntro({
           </div>
           {aside && <div className="min-w-0">{aside}</div>}
         </div>
+        {/* Mobile com fundo fotográfico: janela no fim da abertura, onde a foto aparece sem nada por cima */}
+        {backdrop && <div aria-hidden="true" data-backdrop-window="" className="h-[clamp(220px,66vw,300px)] tablet:hidden" />}
         {children}
       </div>
     </section>

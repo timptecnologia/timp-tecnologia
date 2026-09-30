@@ -45,7 +45,7 @@ export function MonitoringDemo({ headingLevel = "h3" }: { headingLevel?: "h2" | 
   const closed = step === LAST
 
   return (
-    <div ref={rootRef} data-demo-step={step} className="flex flex-col gap-3">
+    <div ref={rootRef} data-focus-demo="" data-hide-sticky-cta="" data-demo-step={step} className="flex flex-col gap-3">
       {/* Enquadramento didático: o que o visitante está vendo */}
       <div className="flex flex-col gap-1.5">
         <Heading className="m-0 text-[clamp(19px,1.6vw,22px)] leading-[1.2] font-bold tracking-[-0.015em] text-white">Veja como funciona a Central de Monitoramento Timp</Heading>
@@ -164,8 +164,13 @@ export function MonitoringDemo({ headingLevel = "h3" }: { headingLevel?: "h2" | 
       </div>
 
       <div className="flex min-h-11 items-center justify-between gap-4">
-        <p className="m-0 text-[14px] leading-normal text-g-300" aria-hidden="true">
-          {ev.narration}
+        {/* Narração: todas na mesma célula, só a atual visível (altura da mais longa; sem deslocamento) */}
+        <p className="m-0 grid text-[14px] leading-normal text-g-300" aria-hidden="true">
+          {MON_DEMO_STEPS.map((s, i) => (
+            <span key={s.narration} className={cn("col-start-1 row-start-1", i === step ? "visible" : "invisible")}>
+              {s.narration}
+            </span>
+          ))}
         </p>
         {animated && (
           <button
