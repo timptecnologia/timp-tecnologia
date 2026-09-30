@@ -14,7 +14,8 @@ import { S } from "./ui"
  *
  * Composição: a fotografia noturna ocupa a abertura (texto + uma janela onde antena e
  * cidade aparecem) e funde com o fundo antes da demonstração.
- * - desktop: título | chips e CTAs alinhados ao TOPO (sem vazio no canto superior direito);
+ * - desktop (fechamento visual): foto e ANTENA livres à esquerda; título, texto, chips e CTAs
+ *   numa coluna à direita, onde o overlay escurece (StarlinkBackdrop side="right");
  * - mobile: eyebrow → título → texto → chips → foto → demonstração → CTAs (CTA no fim).
  */
 export function Starlink() {
@@ -34,20 +35,22 @@ export function Starlink() {
   return (
     <section id="starlink" aria-labelledby="starlink-titulo" className="relative overflow-hidden border-b border-g-800 bg-g-975">
       <div className="relative">
-        <StarlinkBackdrop />
+        <StarlinkBackdrop side="right" />
         <div className={cn(S.container, S.padTop, "relative")}>
-          <div className="grid items-start gap-x-[clamp(32px,5vw,80px)] gap-y-5 desktop:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]">
+          {/* Desktop: a coluna esquerda é a FOTO (antena livre, sem texto por cima); todo o texto,
+              chips e CTAs ficam à direita, sobre o escurecimento. Tablet/mobile: empilhado. */}
+          <div className="grid items-start gap-x-[clamp(32px,4vw,64px)] gap-y-5 desktop:grid-cols-[minmax(0,1fr)_minmax(0,540px)]">
+            <div aria-hidden="true" data-starlink-antenna-area="" className="hidden desktop:block" />
             <div className="flex flex-col gap-5">
               <span className={cn(S.eyebrow, "text-blue-400")}>Starlink + infraestrutura Timp</span>
-              <h2 id="starlink-titulo" className={S.h2Lg}>
+              {/* Mobile: tamanho acompanha a largura e quebra "pretty" (linhas cheias, sem mancha) */}
+              <h2 id="starlink-titulo" className={cn(S.h2Lg, "max-tablet:text-[clamp(28px,8.4vw,34px)] max-tablet:text-pretty")}>
                 Instalação profissional de Starlink onde você precisar de conexão.
               </h2>
               <p className={cn(S.lead18, "max-w-[34em] text-g-200")}>
                 A Timp instala e integra Starlink à sua infraestrutura para ampliar a conectividade, atender locais remotos e criar caminhos de contingência quando a
                 rede terrestre não for suficiente.
               </p>
-            </div>
-            <div className="flex flex-col gap-5 desktop:pt-[38px]">
               <ul aria-label="Onde se aplica" className="m-0 flex list-none flex-wrap gap-2 p-0">
                 {STARLINK_APPLICATIONS.map((a) => (
                   <li key={a} className={S.chip}>
@@ -59,7 +62,7 @@ export function Starlink() {
             </div>
           </div>
           {/* Janela da fotografia: antena, cidade e céu aparecem entre o texto e a demonstração */}
-          <div aria-hidden="true" data-starlink-window="" className="h-[clamp(230px,72vw,320px)] tablet:h-[clamp(96px,12vw,190px)]" />
+          <div aria-hidden="true" data-starlink-window="" className="h-[clamp(230px,72vw,320px)] tablet:h-[clamp(96px,12vw,190px)] desktop:h-[clamp(24px,3vw,56px)]" />
         </div>
       </div>
       {/* Base mais curta: a legenda da demonstração já reserva altura (3 linhas) antes do fim */}

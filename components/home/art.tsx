@@ -96,6 +96,37 @@ export const HERO_GEO: Record<HeroVariant, HeroGeometry> = {
   },
 }
 
+/**
+ * Fechamento visual (pedido do responsável): desktop e mobile têm SÓ 4 cabos, um por conector,
+ * que atravessam o Hero inteiro — desktop: nascem fora da tela à ESQUERDA, sobem/descem atrás
+ * do texto e chegam na horizontal aos 4 RJ45; mobile: nascem no TOPO do Hero, descem atrás do
+ * texto e chegam na vertical aos 4 plugues. Cada cabo termina no MESMO ponto e com a mesma
+ * tangente do cabo oficial que substitui (a conexão ao RJ45 é idêntica); o uplink "OPERAÇÃO"
+ * sai (só os 4 cabos). O restante da cena (switch, portas, plugues, LEDs, brilho) segue a
+ * geometria oficial — tests/unit/home-art.test.tsx. Tablet: cena oficial inalterada.
+ * Coordenadas da própria cena (overflow visível): x < 0 fica à esquerda da cena, y < 0 acima.
+ */
+export const HERO_CABLES: Partial<Record<HeroVariant, { cables: readonly string[]; widths: readonly number[] }>> = {
+  d: {
+    cables: [
+      "M -1500 170 C -1050 110 -720 330 -380 260 S 180 280 510 280",
+      "M -1500 430 C -1080 480 -760 300 -420 370 S 160 350 510 350",
+      "M -1500 620 C -1060 570 -740 700 -400 590 S 170 420 510 420",
+      "M -1500 780 C -1100 720 -760 840 -420 720 S 150 490 510 490",
+    ],
+    widths: [9, 7, 10, 8],
+  },
+  m: {
+    cables: [
+      "M 16 -620 C 8 -420 76 -300 64 -170 S 128 60 128 184",
+      "M 110 -640 C 104 -440 160 -330 150 -190 S 173 40 173 184",
+      "M 280 -640 C 286 -440 230 -330 240 -190 S 217 40 217 184",
+      "M 374 -620 C 382 -420 314 -300 326 -170 S 262 60 262 184",
+    ],
+    widths: [6, 5, 5, 6],
+  },
+}
+
 /** Pulso de dados: halo blue-500 a 35 % + núcleo blue-300 (motion-spec §1). */
 function DataPulse({ d, w, dur, delay, nonScaling }: { d: string; w: number; dur: string; delay: number; nonScaling?: boolean }) {
   const style: Vars = { "--dash-dur": dur, "--dash-delay": `${delay}s` }
@@ -133,6 +164,9 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
   const G = HERO_GEO[variant]
   const { sw, ps } = G
   const gradId = `timpHeroGlow-${variant}`
+  const own = HERO_CABLES[variant]
+  const cables = own?.cables ?? G.cables
+  const widths = own?.widths ?? G.widths
   return (
     <svg viewBox={G.vb} preserveAspectRatio={G.par} width="100%" height="100%" focusable="false" aria-hidden="true" className={cn("block", className)} style={{ overflow: "visible", ...style }}>
       <defs>
@@ -142,15 +176,20 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
         </radialGradient>
       </defs>
       <circle cx={G.glow[0]} cy={G.glow[1]} r={G.glow[2]} fill={`url(#${gradId})`} />
-      <path d={G.up} fill="none" stroke={ART.cable} strokeWidth={G.vert ? 6 * ps : 8} strokeLinecap="round" />
-      <DataPulse d={G.up} w={G.vert ? 4 : 6} dur="1.8s" delay={1.6} />
-      {G.cables.map((d, i) => {
+      {!own && (
+        <>
+          <path d={G.up} fill="none" stroke={ART.cable} strokeWidth={G.vert ? 6 * ps : 8} strokeLinecap="round" />
+          <DataPulse d={G.up} w={G.vert ? 4 : 6} dur="1.8s" delay={1.6} />
+        </>
+      )}
+      {cables.map((d, i) => {
         const drawStyle = { "--draw-delay": `${0.1 + i * 0.12}s` } as Vars
         return (
-          <g key={d}>
-            <path className="timp-draw" d={d} pathLength={100} fill="none" stroke={ART.cable} strokeWidth={G.widths[i]} strokeLinecap="round" style={drawStyle} />
+          <g key={d} data-hero-cable={i + 1}>
+            <path className="timp-draw" d={d} pathLength={100} fill="none" stroke={ART.cable} strokeWidth={widths[i]} strokeLinecap="round" style={drawStyle} />
             <path className="timp-draw" d={d} pathLength={100} fill="none" stroke={ART.cableSheen} strokeWidth={1.2} strokeLinecap="round" style={drawStyle} />
-            <DataPulse d={d} w={G.widths[i] ?? 6} dur="3.6s" delay={1.4 + i * 0.9} />
+            {/* Cabos longos: pulso macio (7,2 s = 2 ciclos do LED de 3,6 s); oficiais: pulso original */}
+            {own ? <GlidePulse d={d} w={widths[i] ?? 6} dur={7.2} delay={1.4 + i * 1.8} /> : <DataPulse d={d} w={widths[i] ?? 6} dur="3.6s" delay={1.4 + i * 0.9} />}
           </g>
         )
       })}
@@ -197,6 +236,23 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
         </>
       )}
     </svg>
+  )
+}
+
+// ============================================================ Hero RJ45 — pulso dos cabos longos
+
+/**
+ * Pulso de ambiente (fechamento visual): traço mais longo e macio que o DataPulse, entra e sai
+ * em fade (`.timp-glide`, styles/motion.css) — fluxo de dados evidente sem piscar. Halo discreto.
+ * Reduced motion / sem animação: invisível (os cabos ficam estáticos).
+ */
+function GlidePulse({ d, w, dur, delay }: { d: string; w: number; dur: number; delay: number }) {
+  const style: Vars = { "--glide-dur": `${dur}s`, "--glide-delay": `${delay}s` }
+  return (
+    <g>
+      <path className="timp-glide" d={d} pathLength={100} fill="none" strokeLinecap="round" vectorEffect="non-scaling-stroke" stroke={P.blue500} strokeOpacity={0.28} strokeWidth={w + 6} style={style} />
+      <path className="timp-glide" d={d} pathLength={100} fill="none" strokeLinecap="round" vectorEffect="non-scaling-stroke" stroke={P.blue300} strokeWidth={Math.max(1.6, w * 0.32)} style={style} />
+    </g>
   )
 }
 

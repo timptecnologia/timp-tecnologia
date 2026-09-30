@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 
 import { MonitoringExtras, MonitoringLead, SecurityLead, StarlinkExtras, StarlinkLead } from "@/components/sections/services/extras"
+import { SolarBackdrop } from "@/components/sections/services/solar-backdrop"
 import { StarlinkBackdrop } from "@/components/sections/starlink/starlink-backdrop"
 import { ServicePage } from "@/components/templates/service-page"
 import { SERVICES } from "@/lib/content/services"
@@ -30,9 +31,15 @@ const EXTRAS: Partial<Record<ServiceKey, { lead?: () => React.ReactElement; extr
   segurancaEletronica: { lead: SecurityLead },
 }
 
+/** Fundo fotográfico da abertura (assets finais em public/home/…). */
+const BACKDROPS: Partial<Record<ServiceKey, React.ReactElement>> = {
+  starlink: <StarlinkBackdrop priority strong side="right" />,
+  energiaSolar: <SolarBackdrop />,
+}
+
 export default async function ServicoPage({ params }: PageProps<"/servicos/[slug]">) {
   const key = bySlug.get((await params).slug)
   if (!key) notFound()
   const x = EXTRAS[key]
-  return <ServicePage s={SERVICES[key]} lead={x?.lead && <x.lead />} extra={x?.extra && <x.extra />} hideHiring={x?.hideHiring} backdrop={key === "starlink" ? <StarlinkBackdrop priority strong /> : undefined} />
+  return <ServicePage s={SERVICES[key]} lead={x?.lead && <x.lead />} extra={x?.extra && <x.extra />} hideHiring={x?.hideHiring} backdrop={BACKDROPS[key]} photoLeft={key === "starlink"} />
 }

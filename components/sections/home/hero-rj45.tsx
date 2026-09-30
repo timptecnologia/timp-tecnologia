@@ -12,8 +12,12 @@ import { HeroParallax } from "./hero-parallax"
  * - mobile (revisão visual pós-d1777ab): peça única — eyebrow → H1 → descrição → cabos
  *   saindo de trás da descrição → conectores RJ45 → CTAs → trilha; cena 390:300 full-bleed
  *   recolhida sob o texto (não um bloco separado abaixo).
+ * Fechamento visual: SÓ 4 cabos (HERO_CABLES), um por RJ45 — desktop, nascem fora da tela à
+ * esquerda e passam atrás do texto até os conectores (a cena desenha além da própria caixa);
+ * mobile, nascem no topo do Hero e descem atrás do texto até os plugues. Pulsos longos e macios
+ * (.timp-glide). Switch, portas, plugues e LEDs seguem a geometria oficial.
  * Cena SVG inline (decorativa, aria-hidden): cabos desenham, pulsos percorrem,
- * LEDs acendem. Sem JS / reduced motion → estado final estático.
+ * LEDs acendem. Sem JS / reduced motion → estado final estático (pulsos ocultos).
  */
 export function HeroRj45() {
   return (
@@ -29,14 +33,18 @@ export function HeroRj45() {
         <p className="m-0 max-w-[34em] text-[clamp(16px,1.35vw,19px)] leading-[1.55] text-pretty text-g-300 desktop:max-w-[30em]">
           Infraestrutura, redes, Wi-Fi, segurança eletrônica, automação e suporte de TI para empresas em todo o Rio de Janeiro. Do projeto à implantação e manutenção.
         </p>
-        {/* Mobile: a cena integra o bloco de texto — os cabos nascem atrás da descrição (máscara
-            controla o contraste; ficam no fundo, -z) e os conectores chegam ANTES dos CTAs. */}
+        {/* Mobile: os 4 cabos da cena nascem no topo do Hero (desenhados acima da caixa 390:300, na
+            área reservada de 390:600), descem atrás do texto e chegam aos 4 conectores — ANTES dos
+            CTAs. Máscara única: discreta atrás do H1 e da descrição, plena nos conectores (-z). */}
         <div
           aria-hidden="true"
           data-hero-art-mobile=""
-          className="pointer-events-none relative -z-10 -mx-5 -mt-[clamp(118px,38vw,164px)] -mb-2 aspect-[390/300] [mask-image:linear-gradient(to_bottom,transparent_0%,rgb(0_0_0/0.28)_30%,rgb(0_0_0/0.8)_52%,black_64%)] tablet:hidden"
+          className="pointer-events-none relative -z-10 -mx-5 -mt-[calc(153.85vw+clamp(118px,38vw,164px))] -mb-2 [mask-image:linear-gradient(to_bottom,rgb(0_0_0/0.3)_0%,rgb(0_0_0/0.42)_48%,rgb(0_0_0/0.62)_64%,rgb(0_0_0/0.9)_74%,black_80%)] tablet:hidden"
         >
-          <HeroScene variant="m" />
+          <div className="aspect-[390/600]" />
+          <div className="aspect-[390/300]">
+            <HeroScene variant="m" />
+          </div>
         </div>
         {/* Mobile: dois CTAs lado a lado, mesma altura; empilha só abaixo de 340 px */}
         <div data-hero-cta="" className="grid grid-cols-1 gap-2.5 min-[340px]:grid-cols-[1.1fr_1fr] tablet:flex tablet:flex-wrap tablet:gap-3">

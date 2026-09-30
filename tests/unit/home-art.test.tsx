@@ -4,7 +4,7 @@ import { join } from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it } from "vitest"
 
-import { HeroScene, PlaneArt, type HeroVariant } from "@/components/home/art"
+import { HERO_CABLES, HERO_GEO, HeroScene, PlaneArt, type HeroVariant } from "@/components/home/art"
 
 /**
  * A arte inline da Home precisa ser a MESMA dos assets oficiais exportados pelo
@@ -38,13 +38,32 @@ function expectSameGeometry(generated: string, official: string) {
   expect(unique(geometry(generated))).toEqual(unique(geometry(official)))
 }
 
+/** Ponto final de um path "… x y" (onde o cabo encontra o RJ45). */
+const endOf = (d: string) => d.trim().split(/\s+/).slice(-2).join(" ")
+
 describe("Hero RJ45 = assets/home/hero", () => {
+  it("variante t (tablet) = hero-rj45-tablet-834.svg (inalterada)", () => {
+    expectSameGeometry(renderToStaticMarkup(<HeroScene variant="t" />), read("home/hero/hero-rj45-tablet-834.svg"))
+  })
+
+  // Fechamento visual: desktop e mobile trocam SÓ os cabos (4 longos, sem uplink); o resto é o oficial
   it.each([
     ["d", "hero-rj45-desktop-1440.svg"],
-    ["t", "hero-rj45-tablet-834.svg"],
     ["m", "hero-rj45-mobile-390.svg"],
-  ] as const)("variante %s = %s", (variant, file) => {
-    expectSameGeometry(renderToStaticMarkup(<HeroScene variant={variant as HeroVariant} />), read(`home/hero/${file}`))
+  ] as const)("variante %s = %s, exceto os cabos (4 novos, mesmos pontos de conexão)", (variant, file) => {
+    const official = HERO_GEO[variant]
+    const own = HERO_CABLES[variant]!
+    const oldCables = new Set([...official.cables, official.up].map((d) => `path ${d}`))
+    const newCables = new Set(own.cables.map((d) => `path ${d}`))
+    const generated = unique(geometry(renderToStaticMarkup(<HeroScene variant={variant as HeroVariant} />)))
+    const expected = unique(geometry(read(`home/hero/${file}`))).filter((g) => !oldCables.has(g))
+    expect(generated.filter((g) => !newCables.has(g))).toEqual(expected)
+    // Exatamente 4 cabos, cada um terminando no mesmo ponto do cabo oficial (o RJ45)
+    expect(own.cables).toHaveLength(4)
+    expect(own.cables.map(endOf)).toEqual(official.cables.map(endOf))
+    const html = renderToStaticMarkup(<HeroScene variant={variant as HeroVariant} />)
+    expect(html.match(/data-hero-cable="/g)).toHaveLength(4)
+    expect(html).not.toContain(`d="${official.up}"`)
   })
 
   it("mantém o texto técnico (Timp, OPERAÇÃO, P1–P4 no desktop)", () => {

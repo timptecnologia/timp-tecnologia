@@ -3,6 +3,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 
 import { PlaneArt } from "@/components/home/art"
+import { usePassiveSequence } from "@/components/home/use-passive-sequence"
 import { prefersReducedMotion, useScrollTrack } from "@/components/home/use-scroll-track"
 import { DEPTH_LAYERS } from "@/lib/home/content"
 import { useHydrated, usePauseOffscreen, useReducedMotion, useViewportKey } from "@/lib/hooks/use-client-state"
@@ -17,7 +18,22 @@ import { cn } from "@/lib/utils"
  * Reduced motion / sem JS / flat: pilha aberta (--idp 1), todas as camadas visíveis
  * e descrições completas (mobile mostra a descrição só da ativa quando há JS).
  * Geometria sticky/flat reservada no HTML (variante track-sticky) e confirmada por medição.
+ *
+ * Progressão luminosa (fechamento visual): independente da rolagem, as camadas se ENERGIZAM
+ * em sequência cumulativa — 01, depois 01+02… até as 5 acesas (infraestrutura operacional),
+ * que ficam assim por alguns segundos antes de recomeçar suavemente. Camada energizada: borda
+ * e plano azuis, brilho discreto, arte ativa, rótulo e número em destaque; os conectores
+ * verticais se energizam até a camada mais alta acesa. A camada SELECIONADA (rolagem/clique)
+ * continua marcando a explicação na lista. Sequência passiva (usePassiveSequence): só roda
+ * visível; HTML inicial, sem JS e reduced motion → todas acesas, estático.
  */
+
+/** Camadas energizadas no passo `step` da progressão (cumulativo: 0..step acesas). */
+export function energized(step: number, count = DEPTH_LAYERS.length): boolean[] {
+  return Array.from({ length: count }, (_, i) => i <= step)
+}
+const ENERGY_STEP_MS = 1100
+const ENERGY_HOLD_MS = 3400
 
 interface StageMetrics {
   stage: number
@@ -70,6 +86,9 @@ export function DepthExperience() {
     return stageMetrics(w ?? 1440, h ?? 900, listHeight)
   }, [viewport, listHeight])
   const activeRef = useRef(0)
+  // Progressão luminosa: passo final (todas acesas) no servidor, sem JS e com reduced motion
+  const { ref: energyRef, step: energyStep } = usePassiveSequence<HTMLDivElement>({ length: DEPTH_LAYERS.length, stepMs: ENERGY_STEP_MS, holdMs: ENERGY_HOLD_MS })
+  const lit = energized(energyStep)
 
   // Altura real da lista (define o palco no tablet) — medida antes da primeira pintura,
   // para a primeira confirmação de modo já ver o palco adaptado
@@ -128,16 +147,19 @@ export function DepthExperience() {
           )}
         >
           {/* Pilha isométrica (decorativa: a informação está na lista) */}
-          <div aria-hidden="true" data-track-measure="" className="relative order-1 w-full desktop:order-2" style={{ height: m.stage }}>
+          <div ref={energyRef} aria-hidden="true" data-track-measure="" data-energy-step={energyStep} className="relative order-1 w-full desktop:order-2" style={{ height: m.stage }}>
             {DEPTH_LAYERS.map((layer, i) => {
               const on = i === active
-              const reached = allLit || i <= active
+              const hot = lit[i]!
               return (
                 <div
                   key={layer.n}
+                  data-energized={hot ? "" : undefined}
                   className={cn(
-                    "absolute left-1/2 rounded-[6px] border bg-[linear-gradient(rgb(52_62_75/0.35)_1px,transparent_1px),linear-gradient(90deg,rgb(52_62_75/0.35)_1px,transparent_1px)] transition-[opacity,border-color,background-color] duration-320",
-                    on ? "border-blue-500 bg-blue-800/60" : "border-g-600 bg-g-900/94",
+                    "absolute left-1/2 rounded-[6px] border bg-[linear-gradient(rgb(52_62_75/0.35)_1px,transparent_1px),linear-gradient(90deg,rgb(52_62_75/0.35)_1px,transparent_1px)] transition-[opacity,border-color,background-color,box-shadow] duration-500",
+                    on ? "border-blue-400 bg-blue-800/60" : hot ? "border-blue-500/70 bg-blue-900/45" : "border-g-600 bg-g-900/94",
+                    // Brilho discreto só no tablet/desktop (mobile simplificado)
+                    hot && "tablet:shadow-[0_0_28px_rgb(59_130_246/0.28)]",
                   )}
                   style={{
                     top: `calc(50% + ${2 - i} * (${g}))`,
@@ -147,18 +169,18 @@ export function DepthExperience() {
                     marginTop: -m.size / 2,
                     transform: "rotateX(60deg) rotateZ(-45deg)",
                     zIndex: i + 1,
-                    opacity: reached ? 1 : 0.35,
+                    opacity: hot ? 1 : 0.4,
                     backgroundSize: `${m.size / 10}px ${m.size / 10}px`,
                   }}
                 >
                   <span
-                    className={cn("absolute top-2 left-2.5 font-mono tracking-[0.08em] whitespace-nowrap", on ? "text-blue-300" : "text-g-400")}
+                    className={cn("absolute top-2 left-2.5 font-mono tracking-[0.08em] whitespace-nowrap transition-colors duration-500", on || hot ? "text-blue-300" : "text-g-400")}
                     style={{ fontSize: m.mobile ? 8 : 10 }}
                   >
                     {layer.tag}
                   </span>
                   <div className="absolute inset-[16%]">
-                    <PlaneArt index={i} active={on} />
+                    <PlaneArt index={i} active={on || hot} />
                   </div>
                 </div>
               )
@@ -166,9 +188,15 @@ export function DepthExperience() {
             {[-0.354, 0, 0.354].map((o, i) => (
               <span
                 key={o}
-                className="absolute z-10 w-px bg-blue-400/55"
+                className="absolute z-10 w-px bg-blue-400/30"
                 style={{ left: `calc(50% + ${Math.round(o * m.size)}px)`, top: `calc(50% - 2 * (${g}))`, height: `calc(4 * (${g}))` }}
               >
+                {/* Linha energizada: da base até a camada mais alta acesa */}
+                <span
+                  data-energy-line=""
+                  className="absolute inset-x-0 bottom-0 bg-blue-300 shadow-[0_0_8px_var(--color-blue-500)] transition-[height] duration-500 ease-out"
+                  style={{ height: `${(Math.max(0, energyStep) / (DEPTH_LAYERS.length - 1)) * 100}%` }}
+                />
                 <span className="timp-rise absolute inset-0" style={{ "--rise-delay": `${i * 1.05}s` } as CSSProperties}>
                   <span className="absolute -bottom-[3px] -left-[2.5px] size-1.5 rounded-full bg-blue-300 shadow-[0_0_10px_var(--color-blue-500)]" />
                 </span>
@@ -195,7 +223,7 @@ export function DepthExperience() {
                       on ? "text-white" : i < active ? "text-g-200" : "text-g-400",
                     )}
                   >
-                    <span className={cn("font-mono text-[12px]", on ? "text-blue-400" : "text-g-400")}>{layer.n}</span>
+                    <span className={cn("font-mono text-[12px] transition-colors duration-500", on || lit[i] ? "text-blue-400" : "text-g-400")}>{layer.n}</span>
                     <span className="text-[16px] leading-[1.25] font-semibold tracking-[-0.01em] tablet:text-[19px] desktop:text-[22px]">{layer.name}</span>
                     {showDesc && (
                       <span

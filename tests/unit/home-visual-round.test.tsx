@@ -4,7 +4,6 @@ import { join } from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it } from "vitest"
 
-import { Architects } from "@/components/sections/home/architects"
 import { Builders } from "@/components/sections/home/builders"
 import { Ecosystems } from "@/components/sections/home/ecosystems"
 import { HeroRj45 } from "@/components/sections/home/hero-rj45"
@@ -31,7 +30,7 @@ describe("fotografia Starlink", () => {
   it("<picture> com URL pública direta: source desktop ≥48rem, img mobile; sem otimizador nem fallback silencioso", () => {
     const html = renderToStaticMarkup(<StarlinkBackdrop />)
     expect(html).toContain(`<source media="(min-width: 48rem)" srcSet="${STARLINK_SKY.desktop}"`)
-    expect(html).toMatch(new RegExp(`<img[^>]*src="${STARLINK_SKY.mobile}"[^>]*data-starlink-photo`))
+    expect(html).toMatch(new RegExp(`<img[^>]*src="${STARLINK_SKY.mobile}"[^>]*data-backdrop-photo="starlink"`))
     expect(html).not.toContain("/_next/image")
   })
 
@@ -57,7 +56,6 @@ describe("mobile: CTA no FIM das seções narrativas (desktop preservado)", () =
     ["Starlink", <Starlink key="st" />, "max-desktop:hidden", "desktop:hidden", "data-starlink-demo"],
     ["Processo", <Process key="p" />, "max-desktop:hidden", "desktop:hidden", "data-timeline-step"],
     ["Construtoras", <Builders key="b" />, "max-desktop:hidden", "desktop:hidden", "data-timeline-step"],
-    ["Arquitetos", <Architects key="a" />, "max-desktop:hidden", "desktop:hidden", 'aria-label="Apoio técnico ao projeto"'],
     ["Monitoramento", <Monitoring key="m" />, "max-desktop:hidden", "desktop:hidden", "data-focus-demo"],
   ] as const
 

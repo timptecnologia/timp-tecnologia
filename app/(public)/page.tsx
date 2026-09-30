@@ -1,8 +1,6 @@
 import { JsonLd } from "@/components/seo/json-ld"
-import { Architects } from "@/components/sections/home/architects"
 import { Builders } from "@/components/sections/home/builders"
 import { Ecosystems } from "@/components/sections/home/ecosystems"
-import { FeaturedArticle } from "@/components/sections/home/featured-article"
 import { HeroRj45 } from "@/components/sections/home/hero-rj45"
 import { InfrastructureDepth } from "@/components/sections/home/infrastructure-depth"
 import { Monitoring } from "@/components/sections/home/monitoring"
@@ -19,8 +17,10 @@ export const metadata = buildMetadata(PAGE_SEO.home)
 /**
  * Home pública (docs/MACROFASE-2-SITE-PUBLICO.md), comercial e objetiva:
  * Hero RJ45 → Serviços (ecossistemas) → Soluções (segmentos) → Starlink → Processo →
- * Infraestrutura em profundidade → Construtoras → Arquitetos e Designers → Monitoramento 24h →
- * (Projetos, só com cases reais) → 1 artigo do Blog → Footer.
+ * Infraestrutura em profundidade → Construtoras → Monitoramento 24h → (Projetos, só com cases
+ * reais) → Footer. Fechamento visual: sem bloco "Blog · Em destaque" e sem bloco exclusivo de
+ * Arquitetos (a solução segue em /solucoes/, na página própria, menus, footer e nas 4 soluções
+ * do mobile; o Blog segue em /blog/, sitemap, menu e footer).
  * Sem bloco institucional e sem CTA final: Empresa e Contato têm páginas próprias.
  * Processo fica entre Starlink e Infraestrutura: nunca duas experiências sticky seguidas
  * (motion-spec §4) e funciona como respiro.
@@ -37,10 +37,8 @@ export default function HomePage() {
       <Process />
       <InfrastructureDepth />
       <Builders />
-      <Architects />
       <Monitoring />
       <Projects />
-      <FeaturedArticle />
     </>
   )
 }

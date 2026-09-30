@@ -119,7 +119,13 @@ async function settle(noJs = false) {
   if (!noJs) return js(SETTLE)
   let last = "", stable = 0
   for (let i = 0; i < 200 && stable < 10; i++) {
-    const sig = await js("document.documentElement.scrollHeight + \":\" + Math.round(scrollY)")
+    // Durante a troca de documento (navegação sem JS) documentElement pode ainda ser null: amostra vazia
+    const sig = await js("document.documentElement ? document.documentElement.scrollHeight + \":\" + Math.round(scrollY) : \"\"")
+    if (!sig) {
+      stable = 0
+      await pause(50)
+      continue
+    }
     stable = sig === last ? stable + 1 : 0
     last = sig
     await pause(50)
@@ -868,7 +874,7 @@ if (PARTS.has("visual")) {
   // 1. Fotografia Starlink: arquivo certo por breakpoint, HTTP 200, carregada, visível e não coberta
   const PHOTO = (scope) => `(async () => {
     const root = document.querySelector(${JSON.stringify(scope)})
-    const img = root?.querySelector("[data-starlink-photo]")
+    const img = root?.querySelector("[data-backdrop-photo]")
     if (!img) return { missing: true }
     img.scrollIntoView({ block: "center", behavior: "instant" })
     for (let i = 0; i < 100 && !(img.complete && img.naturalWidth > 0); i++) await new Promise((r) => setTimeout(r, 100))
@@ -880,13 +886,13 @@ if (PARTS.has("visual")) {
     // "Coberta": algum elemento com fundo SÓLIDO acima da foto no centro dela (overlays são gradientes translúcidos).
     // O fundo é decorativo (pointer-events: none) e elementsFromPoint o ignoraria: liberado só durante a medição
     // (via CSSOM — a CSP bloqueia <style> injetado).
-    const sky = [img.closest("[data-starlink-sky]"), ...img.closest("[data-starlink-sky]").querySelectorAll("*")]
+    const sky = [img.closest("[data-backdrop]"), ...img.closest("[data-backdrop]").querySelectorAll("*")]
     for (const el of sky) el.style.pointerEvents = "auto"
     const stack = document.elementsFromPoint(Math.min(innerWidth - 2, r.left + r.width / 2), Math.max(1, Math.min(innerHeight - 2, r.top + r.height * 0.75)))
     for (const el of sky) el.style.pointerEvents = ""
     const above = stack.slice(0, Math.max(0, stack.indexOf(img)))
     const solid = above.filter((el) => { const m = getComputedStyle(el).backgroundColor.match(/[\\d.]+/g); return m && (m.length < 4 || Number(m[3]) >= 0.95) && !/^(HTML|BODY)$/.test(el.tagName) && el.getBoundingClientRect().width > r.width * 0.5 })
-    const loaded = performance.getEntriesByType("resource").map((e) => new URL(e.name).pathname).filter((p) => p.includes("starlink-ceu"))
+    const loaded = performance.getEntriesByType("resource").map((e) => new URL(e.name).pathname).filter((p) => p.includes("/home/starlink/") || p.includes("/home/energia-solar/"))
     return { src, status: head.status, natural: [img.naturalWidth, img.naturalHeight], size: [Math.round(r.width), Math.round(r.height)], opacity, inStack: stack.includes(img), covered: solid.map((e) => e.tagName + "." + String(e.className).slice(0, 40)), loaded: [...new Set(loaded)] }
   })()`
   for (const [path, scope] of [["/", "#starlink"], ["/servicos/instalacao-starlink/", "section[aria-labelledby='pagina-titulo']"]]) {
@@ -905,9 +911,114 @@ if (PARTS.has("visual")) {
     }
   }
 
+  // 1a. Fechamento visual — Energia Solar: foto da abertura por breakpoint (mesmas exigências da Starlink)
+  const SOLAR = { desktop: ["/home/energia-solar/energia-solar-hero-desktop.webp", 2400, 1200], mobile: ["/home/energia-solar/energia-solar-hero-mobile.webp", 1080, 1620] }
+  for (const vp of [...MOBILE_VPS, ...DESKTOP_VPS]) {
+    events.length = 0
+    await open(url("/servicos/energia-solar/"), vp)
+    const p = await js(PHOTO("section[aria-labelledby='pagina-titulo']"))
+    const [file, nw, nh] = vp.w < 768 ? SOLAR.mobile : SOLAR.desktop
+    const other = (vp.w < 768 ? SOLAR.desktop : SOLAR.mobile)[0]
+    const hscroll = await js("document.documentElement.scrollWidth > innerWidth")
+    check(
+      `${vp.tag} /servicos/energia-solar/ foto ${vp.w < 768 ? "mobile" : "desktop"}: arquivo certo, 200, carregada, visível, não coberta, sem baixar a outra, sem overflow`,
+      !p.missing && p.src === file && p.status === 200 && p.natural[0] === nw && p.natural[1] === nh && p.size[1] > 150 && p.opacity > 0.9 && p.inStack && p.covered.length === 0 && !p.loaded.includes(other) && !hscroll && !events.some((e) => /energia-solar|http 4/.test(e)),
+      JSON.stringify({ ...p, hscroll, events: events.slice(0, 3) }),
+    )
+    if (["390x844", "1440x900"].includes(vp.tag)) await shot(`energia-solar-${vp.tag}`)
+  }
+
+  // 1a'. Starlink desktop (Home e página): nenhum texto por cima da antena (coluna esquerda livre)
+  for (const vp of DESKTOP_VPS) {
+    await open(url("/servicos/instalacao-starlink/"), vp)
+    const pg = await js(`(() => {
+      const area = document.querySelector("[data-photo-area]").getBoundingClientRect()
+      const sec = document.querySelector("section[aria-labelledby='pagina-titulo']")
+      const texts = [...sec.querySelectorAll("h1, p, a, figure")].filter((e) => e.getBoundingClientRect().height > 0 && !e.closest("nav"))
+      const overlap = texts.filter((e) => { const r = e.getBoundingClientRect(); return r.left < area.right - 1 && r.bottom > area.top && r.top < area.bottom })
+      return { areaW: Math.round(area.width), overlap: overlap.map((e) => e.tagName) }
+    })()`)
+    check(`${vp.tag} página Starlink: coluna da antena livre de texto (${pg.areaW}px)`, pg.areaW > 300 && pg.overlap.length === 0, JSON.stringify(pg))
+    await open(url("/"), vp)
+    const a = await js(`(() => {
+      const area = document.querySelector("[data-starlink-antenna-area]").getBoundingClientRect()
+      const texts = [...document.querySelectorAll("#starlink h2, #starlink p, #starlink ul, #starlink [data-section-cta]")].filter((e) => e.getBoundingClientRect().height > 0 && !e.closest("[data-starlink-demo]"))
+      const overlap = texts.filter((e) => { const r = e.getBoundingClientRect(); return r.left < area.right - 1 && r.bottom > area.top && r.top < area.bottom })
+      return { areaW: Math.round(area.width), overlap: overlap.map((e) => e.tagName) }
+    })()`)
+    check(`${vp.tag} Starlink: coluna da antena livre de texto (${a.areaW}px)`, a.areaW > 300 && a.overlap.length === 0, JSON.stringify(a))
+  }
+
+  // 1a''. Hero: SÓ 4 cabos visíveis (sem camada extra), nascendo à esquerda (desktop) / no topo (mobile), atrás do texto
+  for (const vp of [MOBILE_VPS[0], MOBILE_VPS[2], MOBILE_VPS[3], DESKTOP_VPS[1], DESKTOP_VPS[2], DESKTOP_VPS[3]]) {
+    await open(url("/"), vp)
+    await pause(1600)
+    const h = await js(`(() => {
+      const hero = document.querySelector("section[aria-labelledby='hero-titulo']")
+      const cables = [...hero.querySelectorAll("[data-hero-cable]")].filter((g) => g.getBoundingClientRect().width > 0)
+      const u = cables.map((g) => g.getBoundingClientRect()).reduce((a, r) => ({ left: Math.min(a.left, r.left), top: Math.min(a.top, r.top), right: Math.max(a.right, r.right), bottom: Math.max(a.bottom, r.bottom) }), { left: 1e9, top: 1e9, right: -1e9, bottom: -1e9 })
+      const h1 = document.getElementById("hero-titulo").getBoundingClientRect(), sec = hero.getBoundingClientRect()
+      const z = (el) => { for (let e = el; e && e !== document.body; e = e.parentElement) { const z = getComputedStyle(e).zIndex; if (z !== "auto") return Number(z) } return 0 }
+      return {
+        cables: cables.length, extra: hero.querySelectorAll("[data-hero-ambient]").length,
+        fromLeft: u.left <= sec.left + 1, fromTop: u.top <= sec.top + 1, behindH1: u.top < h1.bottom && u.bottom > h1.top && u.left < h1.right,
+        below: cables.every((c) => z(c) < z(document.getElementById("hero-titulo"))),
+        pulses: cables.flatMap((c) => [...c.querySelectorAll(".timp-glide")]).filter((p) => getComputedStyle(p).animationName === "timp-glide").length,
+        hscroll: document.documentElement.scrollWidth > innerWidth,
+      }
+    })()`)
+    const origin = vp.w < 768 ? h.fromTop : h.fromLeft
+    check(`${vp.tag} Hero: exatamente 4 cabos (${vp.w < 768 ? "do topo" : "da esquerda"}), atrás do texto e do H1, pulsos animados, sem overflow`, h.cables === 4 && h.extra === 0 && origin && h.behindH1 && h.below && h.pulses === 8 && !h.hscroll, JSON.stringify(h))
+  }
+  await open(url("/"), { ...MOBILE_VPS[2], reduced: true })
+  const hr = await js(`[...document.querySelectorAll(".timp-glide")].map((p) => getComputedStyle(p).animationName + ":" + getComputedStyle(p).opacity)`)
+  check("reduced motion: pulsos dos cabos do Hero parados e ocultos", hr.length > 0 && hr.every((x) => x === "none:0"), JSON.stringify(hr.slice(0, 3)))
+
+  // 1a'''. Camadas: progressão luminosa cumulativa, estado final aceso, recomeço; reduced motion estático
+  for (const vp of [MOBILE_VPS[2], DESKTOP_VPS[2]]) {
+    await open(url("/"), vp)
+    const e = await js(`(async () => {
+      const stage = document.querySelector("[data-energy-step]")
+      stage.scrollIntoView({ block: "center", behavior: "instant" })
+      const seen = [], bad = []
+      const t0 = performance.now()
+      while (performance.now() - t0 < 11000) {
+        const s = Number(stage.dataset.energyStep)
+        const lit = [...stage.querySelectorAll(":scope > [data-energized]")].length
+        if (lit !== s + 1) bad.push(s + ":" + lit)
+        if (seen.at(-1) !== s) seen.push(s)
+        await new Promise((r) => setTimeout(r, 120))
+      }
+      return { seen, bad }
+    })()`)
+    const cyc = e.seen.join()
+    check(`${vp.tag} camadas: acendem cumulativamente 1→5, seguram acesas e recomeçam`, /0,1,2,3,4,0/.test(cyc) && e.bad.length === 0, JSON.stringify(e))
+  }
+  await open(url("/"), { ...DESKTOP_VPS[2], reduced: true })
+  await js(`document.querySelector("[data-energy-step]").scrollIntoView({ block: "center", behavior: "instant" })`)
+  await pause(2500)
+  const er = await js(`({ step: document.querySelector("[data-energy-step]").dataset.energyStep, lit: document.querySelectorAll("[data-energy-step] > [data-energized]").length })`)
+  check("reduced motion: camadas no estado final estático (5 acesas)", er.step === "4" && er.lit === 5, JSON.stringify(er))
+
+  // 1a''''. Favicon: HTML aponta só para os ícones novos, todos 200 com o tipo certo; nada antigo
+  await open(url("/"), DESKTOP_VPS[2])
+  const fav = await js(`[...document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"], link[rel="manifest"]')].map((l) => l.rel + " " + new URL(l.href).pathname)`)
+  const favStatus = []
+  for (const f of fav) {
+    const p = f.split(" ").at(-1)
+    const r = await fetch(url(p))
+    favStatus.push(`${p} ${r.status} ${r.headers.get("content-type")}`)
+  }
+  const oldIcons = await Promise.all(["/icons/icon-32x32.png", "/icons/apple-touch-icon.png"].map((p) => fetch(url(p)).then((r) => r.status)))
+  check(
+    "favicon: links para favicon.ico + timp-simbolo-* (apple 180) + manifest, todos 200; ícones antigos 404",
+    fav.some((f) => /^icon \/favicon\.ico/.test(f)) && fav.some((f) => f === "apple-touch-icon /icons/timp-simbolo-apple-180x180.png") && fav.filter((f) => f.startsWith("icon ")).every((f) => /favicon\.ico|timp-simbolo-/.test(f)) && favStatus.every((s) => / 200 /.test(s)) && oldIcons.every((s) => s === 404),
+    JSON.stringify({ favStatus, oldIcons }),
+  )
+
   // 1b. Causa raiz do bug intermitente (lazy): a foto precisa estar CARREGADA antes de o visitante
   // chegar à seção — sem rolar até ela — e continuar em reload, ida e volta por link e troca de breakpoint.
-  const READY = `(() => [...document.querySelectorAll("[data-starlink-photo]")].map((i) => ({ src: new URL(i.currentSrc || "about:blank").pathname, ok: i.complete && i.naturalWidth > 0, loading: i.loading })))()`
+  const READY = `(() => [...document.querySelectorAll("[data-backdrop-photo]")].map((i) => ({ src: new URL(i.currentSrc || "about:blank").pathname, ok: i.complete && i.naturalWidth > 0, loading: i.loading })))()`
   const waitReady = async (want) => {
     let s = []
     for (let i = 0; i < 40; i++) {
@@ -955,7 +1066,7 @@ if (PARTS.has("visual")) {
   await send("Network.setBlockedURLs", { urls: ["*starlink-ceu-noturno*"] })
   for (const vp of [MOBILE_VPS[2], DESKTOP_VPS[2]]) {
     await open(url("/"), vp)
-    const f = await js(`(() => { const i = document.querySelector("#starlink [data-starlink-photo]"); const sky = i.closest("[data-starlink-sky]"); return { failed: i.complete && i.naturalWidth === 0, alt: i.getAttribute("alt"), skyBg: getComputedStyle(sky).backgroundColor, h: Math.round(document.querySelector("#starlink").getBoundingClientRect().height) } })()`)
+    const f = await js(`(() => { const i = document.querySelector("#starlink [data-backdrop-photo]"); const sky = i.closest("[data-backdrop]"); return { failed: i.complete && i.naturalWidth === 0, alt: i.getAttribute("alt"), skyBg: getComputedStyle(sky).backgroundColor, h: Math.round(document.querySelector("#starlink").getBoundingClientRect().height) } })()`)
     check(`${vp.tag} foto bloqueada: sem ícone quebrado (alt vazio), céu de reserva visível, bloco íntegro`, f.failed && f.alt === "" && f.skyBg !== "rgba(0, 0, 0, 0)" && f.h > 600, JSON.stringify(f))
   }
   await send("Network.setBlockedURLs", { urls: [] })
@@ -1003,6 +1114,15 @@ if (PARTS.has("visual")) {
     check(`${vp.tag} Home: Soluções mantém a lista completa (${s.total})`, s.shown.length === s.total && s.total > 4, JSON.stringify(s.shown))
   }
 
+  // 1d. Fechamento visual: Home sem "Blog · Em destaque" e sem bloco exclusivo de Arquitetos (o site mantém os dois)
+  for (const vp of [MOBILE_VPS[2], DESKTOP_VPS[2]]) {
+    await open(url("/"), vp)
+    const h = await js(`({ blog: document.body.innerText.includes("BLOG · EM DESTAQUE") || !!document.getElementById("blog-destaque-titulo"), arq: !!document.getElementById("arquitetos"), arqNas4: [...document.querySelectorAll("#segmentos li")].filter((l) => l.getBoundingClientRect().height > 0).some((l) => l.textContent.includes("Arquitetos e Designers")), last: [...document.querySelectorAll("main > section")].at(-1)?.id })`)
+    const blog = await fetch(url("/blog/")).then((r) => r.status)
+    const arqPage = await fetch(url("/solucoes/arquitetos-e-designers-de-interiores/")).then((r) => r.status)
+    check(`${vp.tag} Home sem Blog em destaque e sem bloco de Arquitetos; /blog/ e página de Arquitetos 200; Arquitetos nas soluções`, !h.blog && !h.arq && h.arqNas4 && blog === 200 && arqPage === 200, JSON.stringify({ ...h, blog, arqPage }))
+  }
+
   for (const vp of MOBILE_VPS) {
     // 2. Serviços: todas as categorias FECHADAS ao carregar; cada uma abre e fecha
     await open(url("/"), vp)
@@ -1022,7 +1142,7 @@ if (PARTS.has("visual")) {
     await open(url("/"), vp)
     const order = await js(`(() => {
       const last = (sel) => { const all = [...document.querySelectorAll(sel)].filter((e) => e.getBoundingClientRect().height > 0); return all[all.length - 1] }
-      const rows = [["ecossistemas", "#ecossistemas h3"], ["segmentos", "#segmentos ul"], ["starlink", "#starlink [data-starlink-demo]"], ["processo", "#processo [data-timeline-step]"], ["construtoras", "#construtoras [data-timeline-step]"], ["arquitetos", "#arquitetos ul"], ["monitoramento", "#monitoramento [data-focus-demo]"]]
+      const rows = [["ecossistemas", "#ecossistemas h3"], ["segmentos", "#segmentos ul"], ["starlink", "#starlink [data-starlink-demo]"], ["processo", "#processo [data-timeline-step]"], ["construtoras", "#construtoras [data-timeline-step]"], ["monitoramento", "#monitoramento [data-focus-demo]"]]
       return rows.map(([id, sel]) => {
         const ctas = [...document.querySelectorAll("#" + id + " [data-section-cta]")].filter((e) => e.getBoundingClientRect().height > 0)
         const content = last(sel)?.getBoundingClientRect()
@@ -1030,7 +1150,7 @@ if (PARTS.has("visual")) {
         return { id, visibleCtas: ctas.length, after: !!cta && !!content && cta.top >= content.bottom - 1, fits: !!cta && cta.left >= 0 && cta.right <= innerWidth + 0.5 && [...ctas[0].querySelectorAll("a")].concat(ctas[0].tagName === "A" ? [ctas[0]] : []).every((a) => a.getBoundingClientRect().right <= innerWidth + 0.5) }
       })
     })()`)
-    check(`${vp.tag} Home: CTA ao FINAL de Serviços, Soluções, Starlink, Processo, Construtoras, Arquitetos e Monitoramento`, order.every((o) => o.visibleCtas === 1 && o.after && o.fits), JSON.stringify(order.filter((o) => !(o.visibleCtas === 1 && o.after && o.fits))))
+    check(`${vp.tag} Home: CTA ao FINAL de Serviços, Soluções, Starlink, Processo, Construtoras e Monitoramento`, order.every((o) => o.visibleCtas === 1 && o.after && o.fits), JSON.stringify(order.filter((o) => !(o.visibleCtas === 1 && o.after && o.fits))))
 
     // 4. Hero mobile: peça única — cabos atrás da descrição, conectores antes dos CTAs, altura contida
     const hero = await js(`(() => {

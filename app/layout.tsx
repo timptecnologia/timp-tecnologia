@@ -10,13 +10,15 @@ export const metadata: Metadata = {
   title: { default: SITE.name, template: `%s | ${SITE.name}` },
   applicationName: SITE.name,
   formatDetection: { telephone: false, email: false, address: false },
-  // Favicon: logo oficial sem o texto "TECNOLOGIA" (legível em 16/32 px) — app/favicon.ico + public/icons/
+  // Favicon: versão preparada pelo responsável — círculo azul com "timp" (public/brand/favicon/,
+  // gerado por scripts/build-favicon.mjs), legível em 16/32 px. Nomes novos (timp-simbolo-*) para
+  // nenhum navegador reaproveitar o ícone antigo em cache.
   icons: {
     icon: [
-      { url: "/icons/icon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/timp-simbolo-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/timp-simbolo-192x192.png", sizes: "192x192", type: "image/png" },
     ],
-    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/icons/timp-simbolo-apple-180x180.png", sizes: "180x180", type: "image/png" }],
   },
 }
 

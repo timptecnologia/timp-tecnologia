@@ -611,9 +611,6 @@ export const ARTICLES: readonly Article[] = [
   },
 ]
 
-/** Destaque da Home: o conteúdo mais ligado ao serviço central. */
-export const FEATURED_ARTICLE_SLUG = "o-que-e-cabeamento-estruturado"
-
 export function getArticle(slug: string): Article | undefined {
   return ARTICLES.find((a) => a.slug === slug)
 }

@@ -203,12 +203,13 @@ describe("decisões da Macrofase 2", () => {
     }
   })
 
-  it("Home sem formulário, sem bloco institucional, sem CTA final e com 1 artigo clicável", () => {
+  it("Home sem formulário, sem bloco institucional, sem CTA final e sem artigo em destaque (Blog no menu/footer)", () => {
     expect(home).not.toMatch(/<form/)
     expect(home).not.toMatch(/QUEM É|Conheça a Timp/)
     expect(home).not.toContain('id="cta-final-titulo"')
-    expect(home.match(/aspect-\[16\/10\]/g)?.length).toBe(1)
-    expect(home).toContain(`href="${articlePath("o-que-e-cabeamento-estruturado")}"`)
+    // Fechamento visual: o bloco "Blog · Em destaque" saiu da Home; o Blog segue acessível
+    expect(home.match(/aspect-\[16\/10\]/g)).toBeNull()
+    expect(home).not.toContain(`href="${articlePath("o-que-e-cabeamento-estruturado")}"`)
     expect(home).toContain('href="/blog/"')
   })
 
@@ -265,23 +266,33 @@ describe("decisões da Macrofase 2", () => {
     expect(home).toMatch(/href="\/solucoes\/"[^>]*>Conhecer soluções</)
   })
 
-  it("Home: Serviços sem 'cinco frentes', Starlink nomeada no H2, Arquitetos logo após Construtoras", () => {
+  it("Home: Serviços sem 'cinco frentes', Starlink nomeada no H2, Monitoramento logo após Construtoras", () => {
     expect(home).toContain("Tecnologia em várias frentes, do jeito que a sua operação precisar.")
     expect(home).not.toMatch(/[Cc]inco frentes/)
     expect(home).toMatch(/<h2[^>]*>Instalação profissional de Starlink/)
-    const order = ["id=\"construtoras\"", "id=\"arquitetos\"", "id=\"monitoramento\""].map((m) => home.indexOf(m))
+    const order = ["id=\"construtoras\"", "id=\"monitoramento\""].map((m) => home.indexOf(m))
     expect(order.every((v, i) => v > 0 && (i === 0 || v > order[i - 1]!))).toBe(true)
     expect(home).toContain("Falar sobre um projeto")
     expect(home).not.toContain("Falar sobre uma obra")
   })
 
   it("Construtoras: camadas sem sala técnica e com energia solar; timeline completa sem JS e sem controles", () => {
-    const b = home.slice(home.indexOf('id="construtoras"'), home.indexOf('id="arquitetos"'))
+    const b = home.slice(home.indexOf('id="construtoras"'), home.indexOf('id="monitoramento"'))
     expect(b).toContain("Energia solar")
     expect(b).not.toContain("Sala técnica")
     const tl = b.slice(b.indexOf("data-timeline-step"))
     expect(tl.match(/data-done=""/g)?.length).toBe(9)
     expect(tl.slice(0, tl.indexOf("</ol>"))).not.toMatch(/<button|tabindex=/)
+  })
+
+  it("Home sem Blog em destaque e sem bloco exclusivo de Arquitetos; Blog e Arquitetos seguem no site", () => {
+    expect(home).not.toContain("BLOG · EM DESTAQUE")
+    expect(home).not.toContain('id="arquitetos"')
+    expect(home).not.toContain("A tecnologia que o seu projeto prevê")
+    // Arquitetos segue nas 4 soluções do mobile; Blog e Arquitetos seguem nas páginas próprias e no footer
+    expect(home).toMatch(/data-home-mobile=""[^>]*>[\s\S]{0,600}Arquitetos e Designers de Interiores/)
+    expect(html[ROUTES.blog.path]).toBeTruthy()
+    expect(html[ROUTES.arquitetos.path]).toBeTruthy()
   })
 
   it("Conhecer a Central Timp leva à página de Monitoramento 24h (nunca à própria Home)", () => {

@@ -24,6 +24,7 @@ export function ServicePage({
   extra,
   hideHiring,
   backdrop,
+  photoLeft,
 }: {
   s: ServiceContent
   lead?: ReactNode
@@ -31,6 +32,8 @@ export function ServicePage({
   hideHiring?: boolean
   /** Fundo decorativo da abertura (Starlink: céu noturno). */
   backdrop?: ReactNode
+  /** Desktop: foto livre à esquerda, texto e diagrama à direita (PageIntro). */
+  photoLeft?: boolean
 }) {
   const path = ROUTES[s.key].path
   return (
@@ -53,6 +56,7 @@ export function ServicePage({
           </>
         }
         backdrop={backdrop}
+        photoLeft={photoLeft}
         aside={<FlowFigure title={s.flow.title} steps={s.flow.steps} hl={s.flow.hl} caption={s.flow.caption} />}
       />
 
