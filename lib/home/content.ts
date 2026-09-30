@@ -1,5 +1,5 @@
 import { SITE } from "@/lib/site/constants"
-import { HOME_ANCHORS, PROJECT_CTA, entryId, href, requiredHref, ROUTES, type RouteKey } from "@/lib/site/routes"
+import { PROJECT_CTA, entryId, href, requiredHref, ROUTES, type RouteKey } from "@/lib/site/routes"
 
 /**
  * Conteúdo público do site (Home, header, footer e páginas-hub).
@@ -8,8 +8,9 @@ import { HOME_ANCHORS, PROJECT_CTA, entryId, href, requiredHref, ROUTES, type Ro
  * SiteFooter.dc.html e Conhecimento.dc.html — com as decisões de produto da rodada
  * pós-2A (docs/MACROFASE-2A-HOME.md §7): marca escrita "Timp" no texto público, "e" no
  * lugar de "&", sem numeração de seções, "Conhecimento" → "Blog". Não inventar conteúdo.
- * Rótulos em caixa alta (eyebrows mono) são tipográficos: "TIMP" dentro deles é a mesma
- * palavra em versalete, não a grafia da marca.
+ * Marca: o texto público SEMPRE escreve "Timp" (nunca "TIMP"), inclusive em rótulos mono
+ * em caixa alta — nesses casos o rótulo inteiro vai em caixa normal ("Central Timp").
+ * Verificado no QA de navegador (texto renderizado, inclusive com text-transform).
  */
 
 export interface LinkItem {
@@ -37,6 +38,8 @@ export interface Flow {
   nodes: readonly string[]
   hl: number
   sep: "→" | "↔"
+  /** Nota curta sob o diagrama (o que o fluxo atende). */
+  note?: string
 }
 
 export interface Ecosystem {
@@ -48,32 +51,50 @@ export interface Ecosystem {
   flows: readonly Flow[]
   cta: string
   ctaHref: string
+  /** Página que apresenta a frente inteira (landing da categoria), quando existe. */
+  hub?: RouteKey
+  /** Frente estratégica (Energia Solar): destacada, não é uma categoria com vários serviços. */
+  strategic?: boolean
 }
 
 const svc = (key: RouteKey): ServiceEntry => ({ key, label: ROUTES[key].label })
 
-/** As cinco frentes e seus serviços (sitemap.md). Uma entrada por serviço, sem duplicatas. */
+/**
+ * Taxonomia de serviços (revisão final da Macrofase 2): quatro categorias sem
+ * duplicação conceitual — Segurança Eletrônica é a landing da categoria (não um filho
+ * de si mesma) e Monitoramento 24h é um serviço dessa categoria — e Energia Solar como
+ * frente estratégica. Uma entrada por serviço, sem duplicatas.
+ */
 export const ECOSYSTEMS: readonly Ecosystem[] = [
   {
     id: "infraestrutura-e-conectividade",
     name: "Infraestrutura e Conectividade",
-    desc: "A base física e lógica da operação: do ponto de rede ao servidor. Projeto e instalação de cabeamento, redes, Wi-Fi, fibra óptica, Starlink e servidores.",
+    desc: "A base física e lógica da operação: do ponto de rede à conexão com a internet. Projeto e instalação de cabeamento, redes, Wi-Fi, fibra óptica e Starlink.",
     services: [svc("cabeamento"), svc("redes"), svc("wifi"), svc("fibra"), svc("starlink")],
-    flows: [{ title: "CABEAMENTO ESTRUTURADO", nodes: ["Internet", "Firewall", "Switch", "Patch Panel", "Cabeamento", "Usuários · AP · CFTV · Telefonia · Acesso"], hl: 2, sep: "→" }],
-    cta: "Solicitar projeto de cabeamento",
+    flows: [
+      {
+        title: "CABEAMENTO ESTRUTURADO",
+        nodes: ["Cabeamento", "Switch", "Firewall", "Internet"],
+        hl: 1,
+        sep: "→",
+        note: "O cabeamento leva a rede a usuários, access points, câmeras, telefonia e controle de acesso.",
+      },
+    ],
+    cta: "Solicitar projeto de infraestrutura",
     ctaHref: PROJECT_CTA,
   },
   {
     id: "seguranca-eletronica",
     name: "Segurança Eletrônica",
-    desc: "Câmeras, alarmes, controle de acesso e fechaduras projetados como um sistema único, apoiado na rede e preparado para monitoramento.",
-    services: [svc("cftv"), svc("segurancaEletronica"), svc("alarmes"), svc("controleAcesso"), svc("fechaduras")],
+    desc: "Câmeras, alarmes, alarme de incêndio, controle de acesso, fechaduras e monitoramento 24h projetados como um sistema único, apoiado na rede.",
+    services: [svc("cftv"), svc("alarmes"), svc("alarmeIncendio"), svc("controleAcesso"), svc("fechaduras"), svc("monitoramento")],
     flows: [
       { title: "CFTV", nodes: ["Câmera", "PoE / Rede", "NVR", "Visualização", "Monitoramento"], hl: 2, sep: "→" },
-      { title: "CONTROLE DE ACESSO", nodes: ["Pessoa", "Identificação", "Autorização", "Porta", "Registro"], hl: 2, sep: "→" },
+      { title: "Central Timp", nodes: ["Evento", "Central Timp", "Verificação", "Protocolo", "Registro"], hl: 1, sep: "→" },
     ],
-    cta: "Solicitar projeto de CFTV",
+    cta: "Solicitar projeto de segurança",
     ctaHref: PROJECT_CTA,
+    hub: "segurancaEletronica",
   },
   {
     id: "ti-corporativa",
@@ -97,18 +118,24 @@ export const ECOSYSTEMS: readonly Ecosystem[] = [
     ctaHref: PROJECT_CTA,
   },
   {
-    id: "monitoramento-24h",
-    name: "Monitoramento 24h",
-    desc: "A Central Timp acompanha os eventos dos sistemas instalados e segue o protocolo de cada cliente, 24 horas por dia.",
-    services: [svc("monitoramento")],
-    flows: [{ title: "CENTRAL TIMP", nodes: ["Dispositivo", "Evento", "Central Timp", "Verificação", "Protocolo", "Registro"], hl: 2, sep: "→" }],
-    cta: "Conhecer a Central Timp",
-    ctaHref: HOME_ANCHORS.monitoramento,
+    id: "energia-solar",
+    name: "Energia Solar",
+    desc: "Projeto e instalação de sistemas de energia solar integrados à infraestrutura do imóvel, com avaliação técnica do local antes de qualquer proposta.",
+    services: [svc("energiaSolar")],
+    flows: [{ title: "ENERGIA SOLAR", nodes: ["Módulos solares", "Inversor", "Quadro elétrico", "Consumo do imóvel"], hl: 1, sep: "→" }],
+    cta: "Solicitar avaliação de energia solar",
+    ctaHref: PROJECT_CTA,
+    strategic: true,
   },
 ]
 
-/** Link da frente em /servicos/ (âncora da seção da frente). */
-export const ecosystemHref = (eco: Ecosystem) => `${ROUTES.servicos.path}#${eco.id}`
+/** As quatro categorias (sem a frente estratégica). */
+export const SERVICE_CATEGORIES = ECOSYSTEMS.filter((e) => !e.strategic)
+/** Frente estratégica em destaque (Energia Solar). */
+export const STRATEGIC_FRONT = ECOSYSTEMS.find((e) => e.strategic)!
+
+/** Link da frente: a landing da categoria, quando existe; senão a âncora em /servicos/. */
+export const ecosystemHref = (eco: Ecosystem) => (eco.hub ? ROUTES[eco.hub].path : `${ROUTES.servicos.path}#${eco.id}`)
 
 // ------------------------------------------------------------------ Soluções (segmentos)
 export interface Segment {
@@ -118,9 +145,18 @@ export interface Segment {
 }
 
 export const SEGMENTS: readonly Segment[] = [
-  { key: "construtoras", name: "Construtoras e Engenharia", desc: "Infraestrutura tecnológica planejada desde o projeto da obra." },
+  { key: "construtoras", name: "Construtoras e Engenharia", desc: "Infraestrutura tecnológica planejada desde o projeto do empreendimento." },
+  {
+    key: "arquitetos",
+    name: "Arquitetos e Designers de Interiores",
+    desc: "Apoio técnico para automação, conectividade e segurança previstas antes da execução.",
+  },
   { key: "empresas", name: "Empresas e Escritórios", desc: "Rede, Wi-Fi, suporte de TI e controle de acesso para o dia a dia." },
-  { key: "condominios", name: "Condomínios", desc: "CFTV, controle de acesso, fechaduras e monitoramento das áreas comuns." },
+  {
+    key: "casasCondominios",
+    name: "Casas e Condomínios",
+    desc: "CFTV, alarmes, controle de acesso, fechaduras, monitoramento e conectividade para residências e áreas comuns.",
+  },
   { key: "clinicas", name: "Clínicas", desc: "Rede estável, sistemas disponíveis e segurança no ambiente de atendimento." },
   { key: "comercio", name: "Comércio e Restaurantes", desc: "Câmeras, alarme, Wi-Fi e rede para a operação e o caixa." },
   { key: "industrias", name: "Indústrias e Galpões", desc: "Fibra, Wi-Fi de grande área, CFTV perimetral e sensores." },
@@ -137,24 +173,19 @@ export const TOP_LINKS: readonly LinkItem[] = navigable([
   { label: "Contato", href: href("contato") },
 ])
 
-export const WA_MESSAGES = {
-  home: "Olá, Timp. Vim pelo site e quero falar sobre um projeto.",
-  obra: "Olá, Timp. Sou de uma construtora e quero falar sobre a infraestrutura de uma obra.",
-} as const
-
 // ------------------------------------------------------------------ Empresa (/empresa/ + teaser da Home)
 export const COMPANY = {
   headline: "Parceira de tecnologia, infraestrutura, segurança e operação.",
-  lead: "A Timp planeja, implanta e acompanha a tecnologia que mantém empresas, condomínios e obras funcionando. Um único parceiro responsável, do projeto à manutenção.",
+  lead: "A Timp planeja, implanta e acompanha a tecnologia que mantém empresas, casas, condomínios e empreendimentos funcionando. Um único parceiro responsável, do projeto à manutenção.",
   history:
-    "A Timp Tecnologia foi fundada em 24 de fevereiro de 2016 no Rio de Janeiro. Desde então, projeta, implanta e acompanha infraestrutura, conectividade, segurança eletrônica, automação e suporte de TI para empresas, condomínios e obras.",
+    "A Timp Tecnologia foi fundada em 24 de fevereiro de 2016 no Rio de Janeiro. Desde então, projeta, implanta e acompanha infraestrutura, conectividade, segurança eletrônica, automação, energia solar e suporte de TI para empresas, casas, condomínios e empreendimentos.",
 } as const
 
 /** Diferenciais reais (decorrem do modo de trabalho descrito no handoff; sem números). */
 export const DIFFERENTIALS = [
   { t: "Um único responsável", d: "Do projeto à manutenção, o mesmo parceiro responde pela infraestrutura, pela segurança e pelo suporte." },
   { t: "Sistemas projetados juntos", d: "Rede, câmeras, alarmes, acessos e automação são pensados em conjunto, sobre a mesma infraestrutura." },
-  { t: "Projeto antes da instalação", d: "Levantamento, projeto e proposta vêm antes da execução — inclusive na fase de projeto da obra." },
+  { t: "Projeto antes da instalação", d: "Levantamento, projeto e proposta vêm antes da execução — inclusive na fase de projeto do empreendimento." },
   { t: "Documentação na entrega", d: "Pontos, equipamentos e configurações identificados e registrados." },
   { t: "Monitoramento independente de fabricante", d: "A Central Timp recebe eventos de diferentes equipamentos, com verificação por operador." },
   { t: "Atendimento no estado do Rio", d: "Todo o estado do Rio de Janeiro; projetos especiais em outras regiões sob avaliação." },
@@ -170,7 +201,7 @@ export const FACTS = [
     q: "ONDE ATENDE",
     a: "Todo o estado do Rio de Janeiro, com prioridade para a capital. Projetos especiais de grande porte em outras regiões do Brasil sob avaliação técnica e logística.",
   },
-  { q: "QUEM ATENDE", a: "Empresas, construtoras, condomínios, clínicas, comércio, indústrias e operações com várias unidades." },
+  { q: "QUEM ATENDE", a: "Empresas, construtoras, arquitetos e designers de interiores, casas e condomínios, clínicas, comércio, indústrias e operações com várias unidades." },
   { q: "COMO CONTRATAR", a: `Pelo formulário de projeto, pelo WhatsApp ${SITE.whatsappDisplay} ou por ${SITE.email}.` },
 ] as const
 
@@ -180,7 +211,7 @@ export const STARLINK_APPLICATIONS = ["Empresas", "Obras", "Áreas remotas", "Mo
 /** Legendas das 4 etapas (título, texto, tom). */
 export const STARLINK_CAPTIONS = [
   { title: "01 · CONECTIVIDADE", text: "Satélite → sinal → local. O terminal Starlink leva conectividade a endereços onde a rede terrestre não chega ou não é suficiente.", fail: false },
-  { title: "02 · INTEGRAÇÃO TIMP", text: "Starlink → firewall Dual WAN → rede Timp → Wi-Fi e dispositivos. O link entra na infraestrutura como parte do projeto.", fail: false },
+  { title: "02 · Integração Timp", text: "Starlink → firewall Dual WAN → rede Timp → Wi-Fi e dispositivos. O link entra na infraestrutura como parte do projeto.", fail: false },
   { title: "03 · CONTINGÊNCIA · OPERAÇÃO NORMAL", text: "A fibra é o link principal. O Starlink permanece disponível no firewall como caminho secundário.", fail: false },
   {
     title: "03 · CONTINGÊNCIA · FALHA DO LINK TERRESTRE",
@@ -207,22 +238,23 @@ export const DEPTH_LAYERS = [
   { n: "02", tag: "02 · CABEAMENTO", name: "Infraestrutura física", desc: "Cabeamento estruturado, fibra óptica, sala técnica e rotas planejadas." },
   { n: "03", tag: "03 · REDE", name: "Rede e Wi-Fi", desc: "Switches, firewall e Wi-Fi empresarial dimensionados para a operação." },
   { n: "04", tag: "04 · SEGURANÇA", name: "Segurança e automação", desc: "CFTV, controle de acesso, alarmes e automação apoiados na mesma rede." },
-  { n: "05", tag: "05 · OPERAÇÃO TIMP", name: "Operação Timp", desc: "Suporte, manutenção e monitoramento 24h pela Central Timp." },
+  { n: "05", tag: "05 · Operação Timp", name: "Operação Timp", desc: "Suporte, manutenção e monitoramento 24h pela Central Timp." },
 ] as const
 
 // ------------------------------------------------------------------ Construtoras
+/** Camadas previstas no projeto (Home · Construtoras). Ordem: da infraestrutura aos sistemas. */
 export const BUILD_LAYERS = [
   "Cabeamento",
   "Fibra",
   "Wi-Fi",
   "CFTV",
-  "Alarmes",
+  "Alarmes e incêndio",
   "Controle de acesso",
   "Fechaduras",
   "Automação",
-  "Sala técnica",
   "Telefonia",
   "Carregadores EV",
+  "Energia solar",
   "Infraestrutura futura",
 ] as const
 
@@ -310,6 +342,8 @@ export const FOOTER_COLUMNS = [
       { label: "Wi-Fi Empresarial", href: href("wifi") },
       { label: "Instalação de Starlink", href: href("starlink") },
       { label: "Monitoramento 24h", href: href("monitoramento") },
+      { label: "Alarme de Incêndio", href: href("alarmeIncendio") },
+      { label: "Energia Solar", href: href("energiaSolar") },
       { label: "Todos os serviços", href: requiredHref("servicos") },
     ]),
   },
@@ -318,7 +352,7 @@ export const FOOTER_COLUMNS = [
     links: navigable([...SEGMENTS.map((s) => ({ label: s.name, href: href(s.key) })), { label: "Todas as soluções", href: requiredHref("solucoes") }]),
   },
   {
-    t: "TIMP",
+    t: "Timp",
     links: navigable([
       { label: "Empresa", href: href("empresa") },
       { label: "Equipamentos e tecnologia", href: href("equipamentos") },

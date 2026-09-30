@@ -31,6 +31,7 @@ export function FlowBox({ flow, vertical }: { flow: Flow; vertical?: boolean }) 
           </span>
         ))}
       </div>
+      {flow.note && <p className="m-0 text-[13px] leading-normal text-g-400">{flow.note}</p>}
     </div>
   )
 }

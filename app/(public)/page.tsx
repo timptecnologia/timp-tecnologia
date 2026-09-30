@@ -1,4 +1,5 @@
 import { JsonLd } from "@/components/seo/json-ld"
+import { Architects } from "@/components/sections/home/architects"
 import { Builders } from "@/components/sections/home/builders"
 import { Ecosystems } from "@/components/sections/home/ecosystems"
 import { FeaturedArticle } from "@/components/sections/home/featured-article"
@@ -18,7 +19,7 @@ export const metadata = buildMetadata(PAGE_SEO.home)
 /**
  * Home pública (docs/MACROFASE-2-SITE-PUBLICO.md), comercial e objetiva:
  * Hero RJ45 → Serviços (ecossistemas) → Soluções (segmentos) → Starlink → Processo →
- * Infraestrutura em profundidade → Construtoras → Monitoramento 24h →
+ * Infraestrutura em profundidade → Construtoras → Arquitetos e Designers → Monitoramento 24h →
  * (Projetos, só com cases reais) → 1 artigo do Blog → Footer.
  * Sem bloco institucional e sem CTA final: Empresa e Contato têm páginas próprias.
  * Processo fica entre Starlink e Infraestrutura: nunca duas experiências sticky seguidas
@@ -36,6 +37,7 @@ export default function HomePage() {
       <Process />
       <InfrastructureDepth />
       <Builders />
+      <Architects />
       <Monitoring />
       <Projects />
       <FeaturedArticle />

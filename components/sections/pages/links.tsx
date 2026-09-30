@@ -1,14 +1,16 @@
 import { ArticleCover } from "@/components/sections/shared/article-cover"
 import { getArticle, articleHref } from "@/lib/content/articles"
 import { SERVICES } from "@/lib/content/services"
-import { SITE, whatsappHref } from "@/lib/site/constants"
+import { WhatsAppIcon } from "@/components/ui/whatsapp-link"
+import { SITE } from "@/lib/site/constants"
+import { waHref, type WaContext } from "@/lib/site/whatsapp"
 import { ROUTES, requiredHref, type RouteKey, type ServiceKey } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
 import { BalancedGrid } from "./blocks"
 
 /** Canais de contato SEMPRE clicáveis (WhatsApp abre a conversa; e-mail via mailto). */
-export function ContactChannels({ waText, tone = "dark", area }: { waText?: string; tone?: "dark" | "blue"; area?: string }) {
+export function ContactChannels({ wa, tone = "dark", area }: { wa: WaContext; tone?: "dark" | "blue"; area?: string }) {
   const label = tone === "blue" ? "text-blue-300" : "text-g-400"
   const border = tone === "blue" ? "border-blue-300/20" : "border-g-800"
   const link = "text-[17px] font-semibold text-white no-underline hover:text-blue-300 focus-visible:text-blue-300"
@@ -17,8 +19,8 @@ export function ContactChannels({ waText, tone = "dark", area }: { waText?: stri
       <div className={cn("flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-b py-3", border)}>
         <dt className={cn("font-mono text-[11px] tracking-[0.08em]", label)}>WHATSAPP</dt>
         <dd className="m-0">
-          <a href={whatsappHref(waText)} target="_blank" rel="noopener noreferrer" className={cn(link, "inline-flex min-h-11 items-center gap-2")}>
-            <span aria-hidden="true" className="size-2 rounded-full bg-ok" />
+          <a href={waHref(wa)} target="_blank" rel="noopener noreferrer" data-wa-context={wa} className={cn(link, "inline-flex min-h-11 items-center gap-2")}>
+            <WhatsAppIcon className="text-wa" />
             {SITE.whatsappDisplay}
           </a>
         </dd>

@@ -23,7 +23,6 @@ export interface SolutionContent {
   articles: readonly string[]
   cta: string
   ctaTitle: string
-  wa: string
   seo: { title: string; description: string }
 }
 
@@ -31,18 +30,18 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
   construtoras: {
     key: "construtoras",
     eyebrow: "SOLUÇÕES · CONSTRUTORAS E ENGENHARIA",
-    h1: "Tecnologia começa ainda no projeto da obra.",
+    h1: "Infraestrutura tecnológica prevista desde o projeto do empreendimento.",
     answer:
-      "Infraestrutura tecnológica planejada junto com o projeto: cabeamento, fibra, Wi-Fi, segurança eletrônica, automação, telefonia, sala técnica e preparação para carregadores de veículos elétricos.",
+      "Cabeamento, fibra, Wi-Fi, segurança eletrônica, alarme de incêndio, automação, telefonia, energia solar e preparação para carregadores de veículos elétricos planejados junto com o projeto, do planejamento à entrega.",
     context: {
       title: "O que é previsto no projeto não precisa ser adaptado na entrega.",
-      text: "Quando a infraestrutura entra no projeto, a obra reserva rotas, prumadas e a sala técnica no lugar certo, e evita adaptações depois da entrega. A Timp trabalha junto a engenheiros, arquitetos e gestores de obra desde o planejamento.",
+      text: "Quando a infraestrutura tecnológica é prevista desde o projeto, é possível definir rotas, prumadas, pontos técnicos e expansões com mais precisão, reduzindo adaptações futuras e retrabalho na execução. A Timp atua junto a construtoras, engenheiros, arquitetos e gestores desde a fase de planejamento até a entrega da infraestrutura tecnológica.",
     },
     pains: [
-      { t: "Cabos aparentes e canaletas improvisadas", d: "Rotas e prumadas reservadas: eletrodutos, eletrocalhas e shafts previstos para dados, fibra e segurança." },
-      { t: "Sala técnica subdimensionada", d: "Sala técnica no lugar certo: espaço, ventilação e energia dimensionados para racks e equipamentos." },
-      { t: "Retrabalho depois da entrega", d: "Sistemas integrados desde o início: CFTV, controle de acesso, alarme e automação apoiados na mesma rede." },
-      { t: "Infraestrutura que não acompanha o futuro", d: "Preparação para o futuro: infraestrutura seca para carregadores EV, expansão de pontos e novos sistemas." },
+      { t: "Cabos aparentes e soluções improvisadas", d: "Rotas e prumadas reservadas: eletrodutos, eletrocalhas e shafts previstos para dados, fibra e segurança." },
+      { t: "Espaço técnico subdimensionado", d: "Racks, energia e ventilação dimensionados no projeto, no lugar certo." },
+      { t: "Retrabalho na execução", d: "Sistemas integrados desde o início: CFTV, controle de acesso, alarmes e automação apoiados na mesma rede." },
+      { t: "Infraestrutura que não acompanha o futuro", d: "Preparação para carregadores EV, energia solar, novos pontos e novos sistemas." },
     ],
     architecture: [
       { key: "cabeamento", role: "Pontos de rede em todos os ambientes previstos." },
@@ -50,33 +49,85 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
       { key: "wifi", role: "Cobertura planejada para áreas comuns e privativas." },
       { key: "cftv", role: "Câmeras em acessos, garagem e perímetro." },
       { key: "alarmes", role: "Sensores e central preparados para monitoramento." },
+      { key: "alarmeIncendio", role: "Detecção e alerta de incêndio conforme a edificação." },
       { key: "controleAcesso", role: "Leitores, facial e catracas nos acessos." },
       { key: "fechaduras", role: "Fechaduras eletrônicas por unidade ou sala." },
       { key: "automacao", role: "Iluminação, climatização e sistemas prediais integrados." },
       { key: "telefonia", role: "Telefonia IP e PABX sobre a rede." },
-      { key: "starlink", role: "Conectividade no canteiro enquanto a rede definitiva não existe." },
+      { key: "energiaSolar", role: "Estrutura e espaço técnico previstos para geração solar." },
+      { key: "starlink", role: "Conectividade durante a execução, enquanto a rede definitiva não existe." },
     ],
     evolution:
-      "Depois da entrega, a Timp mantém os sistemas com manutenção preventiva e corretiva e pode conectar a segurança eletrônica ao monitoramento 24h da Central Timp. Rotas e capacidade reservadas no projeto permitem expandir pontos e sistemas sem obra.",
+      "Depois da entrega, a Timp mantém os sistemas com manutenção preventiva e corretiva e pode conectar a segurança eletrônica ao monitoramento 24h da Central Timp. Rotas e capacidade reservadas no projeto permitem expandir pontos e sistemas sem novas intervenções.",
     faq: [
       {
-        q: "Em que fase a Timp deve entrar na obra?",
-        a: "O ideal é na fase de projeto, antes da execução das rotas e da alvenaria. A Timp também atua em obras em andamento, com avaliação do que ainda pode ser previsto.",
+        q: "Em que fase a Timp deve entrar no empreendimento?",
+        a: "O ideal é na fase de projeto, antes da execução das rotas e da alvenaria. A Timp também atua em empreendimentos em execução, com avaliação do que ainda pode ser previsto.",
       },
       { q: "A Timp compatibiliza com os projetos de elétrica e arquitetura?", a: "Sim. As disciplinas de tecnologia são desenvolvidas em conjunto com as equipes de engenharia e arquitetura do empreendimento." },
-      { q: "Vocês atendem obras fora do Rio de Janeiro?", a: "Projetos de grande porte em outras regiões do Brasil são avaliados caso a caso, considerando porte, escopo, equipe, logística e cronograma." },
+      { q: "Vocês atendem projetos fora do Rio de Janeiro?", a: "Projetos de grande porte em outras regiões do Brasil são avaliados caso a caso, considerando porte, escopo, equipe, logística e cronograma." },
       {
-        q: "A infraestrutura para carregadores de veículos elétricos entra no projeto?",
-        a: "Sim. Pontos, rotas e reserva de carga podem ser previstos no projeto, mesmo que os carregadores sejam instalados depois.",
+        q: "Carregadores de veículos elétricos e energia solar entram no projeto?",
+        a: "Sim. Pontos, rotas, estrutura e reserva de carga podem ser previstos no projeto, mesmo que os equipamentos sejam instalados depois.",
       },
     ],
     articles: ["infraestrutura-tecnologica-para-construtoras", "o-que-e-cabeamento-estruturado"],
     cta: "Apresentar meu projeto à Timp",
     ctaTitle: "Traga a Timp para a mesa de projeto.",
-    wa: "Olá, Timp. Sou de uma construtora e quero falar sobre a infraestrutura de uma obra.",
     seo: {
       title: "Infraestrutura Tecnológica para Construtoras | Timp",
-      description: "Cabeamento, fibra, Wi-Fi, segurança eletrônica, automação, sala técnica e infraestrutura para carregadores EV planejados junto com o projeto da obra.",
+      description: "Cabeamento, fibra, Wi-Fi, segurança, alarme de incêndio, automação, energia solar e carregadores EV previstos desde o projeto do empreendimento.",
+    },
+  },
+
+  arquitetos: {
+    key: "arquitetos",
+    eyebrow: "SOLUÇÕES · ARQUITETOS E DESIGNERS DE INTERIORES",
+    h1: "Parceira técnica de arquitetos e designers de interiores.",
+    answer:
+      "Infraestrutura tecnológica integrada ao projeto, com apoio técnico para automação, conectividade, segurança e soluções que precisam ser previstas antes da execução.",
+    context: {
+      title: "A tecnologia que o cliente espera precisa caber no projeto.",
+      text: "Wi-Fi em todos os ambientes, automação de iluminação e cortinas, câmeras discretas, fechaduras eletrônicas: cada escolha depende de pontos, rotas e espaço técnico definidos antes da obra. A Timp apoia o escritório de arquitetura ou de interiores na especificação e executa a infraestrutura, sem comprometer o desenho do projeto.",
+    },
+    pains: [
+      { t: "Pontos técnicos definidos tarde demais", d: "Posição de pontos de rede, access points, câmeras e sensores resolvida junto com o layout." },
+      { t: "Equipamentos que brigam com o design", d: "Soluções discretas e locais de instalação discutidos com o projetista." },
+      { t: "Automação sem infraestrutura prevista", d: "Cabeamento, quadros e espaço técnico previstos para iluminação, climatização e cortinas." },
+      { t: "Execução sem um responsável técnico da tecnologia", d: "A Timp executa, testa e documenta a infraestrutura prevista no projeto." },
+    ],
+    architecture: [
+      { key: "automacao", role: "Iluminação, climatização, cortinas e cenas integradas." },
+      { key: "wifi", role: "Cobertura planejada ambiente por ambiente, sem pontos cegos." },
+      { key: "cabeamento", role: "Pontos de rede e rotas previstos no layout." },
+      { key: "cftv", role: "Câmeras discretas em acessos e áreas externas." },
+      { key: "fechaduras", role: "Fechaduras eletrônicas integradas ao acabamento." },
+      { key: "controleAcesso", role: "Acessos por credencial, quando o projeto prevê." },
+      { key: "redes", role: "Rede organizada para os sistemas da casa ou do escritório." },
+      { key: "energiaSolar", role: "Geração solar prevista na estrutura e no espaço técnico." },
+    ],
+    evolution:
+      "Com a infraestrutura documentada, novos sistemas entram sem quebrar acabamentos. A Timp pode seguir com a manutenção depois da entrega, e o escritório mantém um parceiro técnico para os próximos projetos.",
+    faq: [
+      {
+        q: "Em que momento a Timp deve entrar no projeto?",
+        a: "Na fase de layout e especificação, antes da execução. É quando pontos, rotas e espaço técnico ainda podem ser definidos sem retrabalho.",
+      },
+      {
+        q: "A Timp trabalha junto com o escritório de arquitetura?",
+        a: "Sim. A Timp apoia a especificação técnica, compatibiliza com o projeto e executa a infraestrutura, mantendo o arquiteto ou o designer à frente das decisões de projeto.",
+      },
+      {
+        q: "É possível indicar clientes para a Timp?",
+        a: "Sim. Arquitetos e designers podem apresentar projetos à Timp. As condições de cada parceria são conversadas diretamente com a equipe comercial.",
+      },
+    ],
+    articles: ["o-que-e-cabeamento-estruturado", "infraestrutura-tecnologica-para-construtoras"],
+    cta: "Apresentar um projeto à Timp",
+    ctaTitle: "Tecnologia prevista no projeto, executada com cuidado.",
+    seo: {
+      title: "Tecnologia para Arquitetos e Designers de Interiores | Timp",
+      description: "Parceira técnica de arquitetos e designers de interiores: automação, Wi-Fi, cabeamento, segurança e energia solar previstos no projeto e executados pela Timp.",
     },
   },
 
@@ -114,36 +165,35 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
     articles: ["o-que-e-cabeamento-estruturado", "servidor-local-cloud-ou-hibrido"],
     cta: "Solicitar um projeto",
     ctaTitle: "Organize a tecnologia do escritório.",
-    wa: "Olá, Timp. Quero falar sobre a tecnologia do meu escritório.",
     seo: {
       title: "Tecnologia para Empresas e Escritórios | Timp",
       description: "Rede, Wi-Fi, suporte de TI, controle de acesso e telefonia para empresas e escritórios no Rio de Janeiro, com um único parceiro do projeto à manutenção.",
     },
   },
 
-  condominios: {
-    key: "condominios",
-    eyebrow: "SOLUÇÕES · CONDOMÍNIOS",
-    h1: "Segurança e controle de acesso para condomínios.",
+  casasCondominios: {
+    key: "casasCondominios",
+    eyebrow: "SOLUÇÕES · CASAS E CONDOMÍNIOS",
+    h1: "Segurança e tecnologia para casas e condomínios.",
     answer:
-      "CFTV, controle de acesso, fechaduras e monitoramento das áreas comuns, planejados como um sistema para portaria, garagem, perímetro e áreas de lazer.",
+      "CFTV, alarmes, controle de acesso, fechaduras, monitoramento e conectividade para residências e áreas comuns, planejados como um sistema.",
     context: {
-      title: "Portaria, garagem e áreas comuns com regras claras.",
-      text: "Moradores, visitantes, prestadores e entregas circulam o dia todo. O condomínio precisa saber quem entrou, ter imagens das áreas críticas e um protocolo para quando algo foge do normal.",
+      title: "Casa ou condomínio, as mesmas perguntas: quem entrou, o que aconteceu, quem foi avisado.",
+      text: "Na casa, a família precisa de câmeras que mostrem o que importa, alarme que avise de verdade e Wi-Fi em todos os ambientes. No condomínio, moradores, visitantes, prestadores e entregas circulam o dia todo, e a administração precisa de registro e de um protocolo para quando algo foge do normal.",
     },
     pains: [
       { t: "Controle de visitantes e prestadores", d: "Credenciais por perfil e horário, com registro de cada passagem." },
       { t: "Chaves e tags sem controle", d: "Acesso retirado no sistema quando o morador ou prestador sai." },
       { t: "Câmeras que não mostram o que importa", d: "Cobertura planejada em acessos, garagem e perímetro." },
-      { t: "Ocorrências fora do horário", d: "Alarmes perimetrais e monitoramento com verificação por operador." },
+      { t: "Casa vazia sem acompanhamento", d: "Alarme por zona, câmeras e monitoramento com verificação por operador." },
     ],
     architecture: [
-      { key: "controleAcesso", role: "Portaria, garagem e áreas comuns com facial, tag ou cartão." },
       { key: "cftv", role: "Câmeras em acessos, garagem, perímetro e áreas de lazer." },
-      { key: "fechaduras", role: "Salas técnicas, depósitos e áreas restritas." },
-      { key: "alarmes", role: "Perímetro e áreas fechadas por zona." },
+      { key: "alarmes", role: "Perímetro e áreas fechadas por zona, na casa ou no condomínio." },
+      { key: "controleAcesso", role: "Portaria, garagem e áreas comuns com facial, tag ou cartão." },
+      { key: "fechaduras", role: "Portas de entrada, salas técnicas e áreas restritas." },
       { key: "monitoramento", role: "Eventos verificados pela Central Timp conforme o protocolo." },
-      { key: "wifi", role: "Cobertura para áreas comuns, separada da rede dos sistemas." },
+      { key: "wifi", role: "Cobertura em todos os ambientes, separada da rede dos sistemas." },
     ],
     evolution:
       "O sistema cresce por etapas: novos acessos, câmeras ou áreas monitoradas entram na mesma estrutura. A manutenção preventiva mantém câmeras, leitores e comunicação funcionando.",
@@ -153,12 +203,11 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
       { q: "O monitoramento substitui o porteiro?", a: "Não. O monitoramento acompanha os eventos dos sistemas e segue o protocolo do condomínio; a portaria é uma decisão do condomínio." },
     ],
     articles: ["controle-de-acesso-para-condominios", "como-funciona-uma-central-de-monitoramento-24h"],
-    cta: "Solicitar projeto para o condomínio",
-    ctaTitle: "Segurança do condomínio como um sistema.",
-    wa: "Olá, Timp. Quero falar sobre a segurança do meu condomínio.",
+    cta: "Solicitar um projeto",
+    ctaTitle: "Segurança da casa ou do condomínio como um sistema.",
     seo: {
-      title: "Segurança e Controle de Acesso para Condomínios | Timp",
-      description: "Controle de acesso, CFTV, fechaduras, alarmes e monitoramento para portaria, garagem e áreas comuns de condomínios no Rio de Janeiro.",
+      title: "Segurança para Casas e Condomínios no Rio | Timp",
+      description: "CFTV, alarmes, controle de acesso, fechaduras, monitoramento e Wi-Fi para residências, portaria, garagem e áreas comuns no Rio de Janeiro.",
     },
   },
 
@@ -197,7 +246,6 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
     articles: ["servidor-local-cloud-ou-hibrido", "o-que-e-cabeamento-estruturado"],
     cta: "Solicitar um projeto para a clínica",
     ctaTitle: "Sistemas disponíveis durante todo o atendimento.",
-    wa: "Olá, Timp. Quero falar sobre a tecnologia da minha clínica.",
     seo: {
       title: "Tecnologia e Segurança para Clínicas | Timp",
       description: "Rede estável, Wi-Fi separado para pacientes, proteção de dados, backup, controle de acesso e suporte de TI para clínicas e consultórios no Rio de Janeiro.",
@@ -225,6 +273,7 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
       { key: "wifi", role: "Wi-Fi para clientes isolado dos sistemas." },
       { key: "cftv", role: "Caixa, salão, estoque e acessos." },
       { key: "alarmes", role: "Zonas para a loja fechada." },
+      { key: "alarmeIncendio", role: "Detecção e alerta de incêndio no salão, na cozinha e no estoque." },
       { key: "monitoramento", role: "Eventos fora do horário verificados pela Central Timp." },
       { key: "cabeamento", role: "Pontos organizados para caixa, câmeras e APs." },
     ],
@@ -238,7 +287,6 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
     articles: ["cftv-ip-ou-analogico", "o-que-acontece-quando-um-alarme-dispara"],
     cta: "Solicitar projeto para a loja",
     ctaTitle: "Caixa conectado e loja protegida.",
-    wa: "Olá, Timp. Quero falar sobre a segurança e a rede da minha loja.",
     seo: {
       title: "Segurança e Rede para Comércio e Restaurantes | Timp",
       description: "Câmeras, alarme, monitoramento, rede para o caixa e Wi-Fi separado para clientes em lojas e restaurantes no Rio de Janeiro, com um único parceiro.",
@@ -266,6 +314,8 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
       { key: "wifi", role: "Cobertura de grandes áreas internas e externas." },
       { key: "cftv", role: "Perímetro, pátios, docas e acessos." },
       { key: "alarmes", role: "Sensores por zona em áreas críticas." },
+      { key: "alarmeIncendio", role: "Detecção e alerta de incêndio em galpões e áreas de produção." },
+      { key: "energiaSolar", role: "Geração solar em coberturas de grande área, após avaliação técnica." },
       { key: "controleAcesso", role: "Portaria e áreas restritas." },
       { key: "redes", role: "Rede segmentada para produção, escritório e segurança." },
     ],
@@ -279,7 +329,6 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
     articles: ["o-que-e-cabeamento-estruturado", "cftv-ip-ou-analogico"],
     cta: "Solicitar projeto para a operação",
     ctaTitle: "Infraestrutura na escala da sua operação.",
-    wa: "Olá, Timp. Quero falar sobre a infraestrutura de uma indústria ou galpão.",
     seo: {
       title: "Infraestrutura para Indústrias e Galpões | Timp",
       description: "Fibra entre prédios, Wi-Fi de grande área, CFTV perimetral, sensores e controle de acesso de portaria para indústrias e galpões no Rio de Janeiro.",
@@ -320,7 +369,6 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
     articles: ["servidor-local-cloud-ou-hibrido", "como-funciona-uma-central-de-monitoramento-24h"],
     cta: "Solicitar projeto para as unidades",
     ctaTitle: "Todas as unidades no mesmo padrão.",
-    wa: "Olá, Timp. Quero falar sobre a tecnologia das minhas unidades.",
     seo: {
       title: "Tecnologia para Empresas com Várias Unidades | Timp",
       description: "Padrão técnico único de rede, segurança e suporte para empresas com várias unidades, com interligação segura, documentação e monitoramento por unidade.",
@@ -331,15 +379,15 @@ export const SOLUTIONS: Record<SolutionKey, SolutionContent> = {
 /** Construtoras — conteúdo adicional do protótipo. */
 export const BUILDER_ROLES = [
   ["Construtoras", "Escopo de tecnologia definido junto com o orçamento e o cronograma da obra."],
-  ["Engenheiros", "Compatibilização de rotas, prumadas, cargas e sala técnica com as demais disciplinas."],
+  ["Engenheiros", "Compatibilização de rotas, prumadas, cargas e espaço técnico com as demais disciplinas."],
   ["Arquitetos", "Posição de pontos, câmeras, leitores e equipamentos resolvida com o layout."],
-  ["Gestores de obra", "Etapas de instalação encaixadas no cronograma de execução."],
+  ["Gestores", "Etapas de implantação encaixadas no cronograma de execução."],
 ] as const
 
 export const BUILDER_STEPS = [
   ["Planejamento", "Levantamento do empreendimento e dos sistemas desejados."],
   ["Projeto", "Projeto das disciplinas de tecnologia e compatibilização."],
-  ["Infraestrutura", "Rotas, eletrodutos e prumadas executados na obra."],
+  ["Infraestrutura", "Rotas, eletrodutos e prumadas executados conforme o projeto."],
   ["Instalação", "Cabos, equipamentos e racks instalados."],
   ["Configuração", "Rede, câmeras, acessos e sistemas configurados."],
   ["Testes", "Validação de cada sistema antes da entrega."],
@@ -361,12 +409,12 @@ export const BUILDER_LAYERS: readonly { t: string; d: string; key?: ServiceKey }
   { t: "Fibra", d: "Backbone entre pavimentos e entrada da operadora.", key: "fibra" },
   { t: "Wi-Fi", d: "Cobertura planejada para áreas comuns e privativas.", key: "wifi" },
   { t: "CFTV", d: "Câmeras em acessos, garagem e perímetro.", key: "cftv" },
-  { t: "Alarmes", d: "Sensores e central preparados para monitoramento.", key: "alarmes" },
+  { t: "Alarmes e incêndio", d: "Alarme de intrusão e alarme de incêndio, conforme a edificação.", key: "alarmeIncendio" },
   { t: "Controle de acesso", d: "Leitores, facial e catracas nos acessos.", key: "controleAcesso" },
   { t: "Fechaduras", d: "Fechaduras eletrônicas por unidade ou sala.", key: "fechaduras" },
   { t: "Automação", d: "Iluminação, climatização e sistemas prediais integrados.", key: "automacao" },
-  { t: "Sala técnica", d: "Racks, energia, climatização e organização." },
   { t: "Telefonia", d: "Telefonia IP e PABX sobre a rede.", key: "telefonia" },
   { t: "Carregadores EV", d: "Pontos e infraestrutura para veículos elétricos." },
+  { t: "Energia solar", d: "Estrutura, rotas e espaço técnico para geração solar.", key: "energiaSolar" },
   { t: "Infraestrutura futura", d: "Reserva de rotas e capacidade para expansão." },
 ]

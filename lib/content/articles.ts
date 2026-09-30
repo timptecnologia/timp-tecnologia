@@ -432,7 +432,7 @@ export const ARTICLES: readonly Article[] = [
       { q: "Dá para liberar visitantes remotamente?", a: "Quando o sistema oferece esse recurso, a liberação é registrada com quem autorizou e quando." },
     ],
     services: ["controleAcesso", "fechaduras", "cftv", "monitoramento"],
-    cta: { eyebrow: "CONDOMÍNIOS", title: "Segurança do condomínio como um sistema.", label: "Ver a solução para condomínios", to: "condominios" },
+    cta: { eyebrow: "CASAS E CONDOMÍNIOS", title: "Segurança do condomínio como um sistema.", label: "Ver a solução para casas e condomínios", to: "casasCondominios" },
     related: ["como-funciona-uma-central-de-monitoramento-24h", "cftv-ip-ou-analogico", "o-que-acontece-quando-um-alarme-dispara"],
     seo: {
       title: "Controle de acesso para condomínios: como funciona",

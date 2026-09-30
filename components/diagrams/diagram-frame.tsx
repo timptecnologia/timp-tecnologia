@@ -24,7 +24,7 @@ export function DiagramFrame({
       <div className="flex flex-wrap justify-between gap-3">
         <span className="eyebrow text-g-400">{label}</span>
         <span className="eyebrow text-g-500" aria-hidden="true">
-          TIMP · DIAGRAMA CONCEITUAL
+          Diagrama conceitual · Timp
         </span>
       </div>
       {children}

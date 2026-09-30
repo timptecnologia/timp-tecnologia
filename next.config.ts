@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
       { source: "/orcamento/", destination: "/contato/#projeto", permanent: true },
       { source: "/conhecimento/", destination: "/blog/", permanent: true },
       { source: "/conhecimento/:slug/", destination: "/blog/:slug/", permanent: true },
+      // Macrofase 2 · revisão final: Condomínios → Casas e Condomínios
+      { source: "/solucoes/condominios/", destination: "/solucoes/casas-e-condominios/", permanent: true },
     ]
   },
   async headers() {

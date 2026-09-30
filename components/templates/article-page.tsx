@@ -4,6 +4,7 @@ import { S } from "@/components/sections/home/ui"
 import { Faq, Section, SectionHead } from "@/components/sections/pages/blocks"
 import { ArticleCards } from "@/components/sections/pages/links"
 import { PageIntro } from "@/components/sections/pages/page-intro"
+import { ArticleCover } from "@/components/sections/shared/article-cover"
 import { FlowBox } from "@/components/sections/shared/flow-box"
 import { articleHref, type Article, type Block, type Inline } from "@/lib/content/articles"
 import { articleSchema, graph, organizationSchema } from "@/lib/seo/schema"
@@ -134,26 +135,29 @@ export function ArticlePage({ a }: { a: Article }) {
         title={a.title}
         lead={a.dek}
         aside={
-          <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-4 rounded-md border border-g-800 bg-g-900 p-5">
-            <div className="flex flex-col gap-1">
-              <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">AUTORIA</dt>
-              <dd className="m-0 text-[15px] text-g-100">Equipe técnica Timp</dd>
-            </div>
-            <div className="flex flex-col gap-1">
-              <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">LEITURA</dt>
-              <dd className="m-0 text-[15px] text-g-100">{readingMinutes(a)} min</dd>
-            </div>
-            <div className="col-span-2 flex flex-col gap-1">
-              <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">SERVIÇOS NESTE ARTIGO</dt>
-              <dd className="m-0 flex flex-wrap gap-x-4 gap-y-1">
-                {a.services.map((k) => (
-                  <a key={k} href={requiredHref(k)} className="inline-flex min-h-8 items-center text-[15px] font-medium text-blue-300 no-underline hover:text-white">
-                    {ROUTES[k].label}
-                  </a>
-                ))}
-              </dd>
-            </div>
-          </dl>
+          <div className="flex flex-col gap-4">
+            <ArticleCover article={a} className="w-full" />
+            <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-4 rounded-md border border-g-800 bg-g-900 p-5">
+              <div className="flex flex-col gap-1">
+                <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">AUTORIA</dt>
+                <dd className="m-0 text-[15px] text-g-100">Equipe técnica Timp</dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">LEITURA</dt>
+                <dd className="m-0 text-[15px] text-g-100">{readingMinutes(a)} min</dd>
+              </div>
+              <div className="col-span-2 flex flex-col gap-1">
+                <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">SERVIÇOS NESTE ARTIGO</dt>
+                <dd className="m-0 flex flex-wrap gap-x-4 gap-y-1">
+                  {a.services.map((k) => (
+                    <a key={k} href={requiredHref(k)} className="inline-flex min-h-8 items-center text-[15px] font-medium text-blue-300 no-underline hover:text-white">
+                      {ROUTES[k].label}
+                    </a>
+                  ))}
+                </dd>
+              </div>
+            </dl>
+          </div>
         }
       />
 
@@ -214,7 +218,7 @@ export function ArticlePage({ a }: { a: Article }) {
         <ArticleCards slugs={a.related} light />
       </Section>
 
-      <FinalCta title="Quer entender como isso funcionaria na sua operação?" text="A equipe técnica avalia o ambiente e indica o próximo passo." />
+      <FinalCta title="Quer entender como isso funcionaria na sua operação?" text="A equipe técnica avalia o ambiente e indica o próximo passo." wa="blog" />
     </>
   )
 }

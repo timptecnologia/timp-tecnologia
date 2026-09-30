@@ -24,7 +24,7 @@ export default function EquipamentosPage() {
         eyebrow="EQUIPAMENTOS E TECNOLOGIA"
         title="Os equipamentos certos, especificados no projeto."
         lead="A Timp trabalha com a tecnologia de cada frente — cabeamento, rede, Wi-Fi, segurança eletrônica, servidores, comunicação e energia — e escolhe cada equipamento para o ambiente e o uso. Não vendemos equipamentos avulsos: eles fazem parte do projeto."
-        actions={<CtaButtons />}
+        actions={<CtaButtons wa="equipamentos" />}
         aside={
           <nav aria-label="Categorias" className="flex flex-col gap-3 rounded-md border border-g-800 bg-g-900 p-5">
             <span className="font-mono text-[11px] tracking-[0.08em] text-g-400">CATEGORIAS</span>
@@ -77,7 +77,7 @@ export default function EquipamentosPage() {
           ))}
         </BalancedGrid>
       </Section>
-      <FinalCta title="Quer saber se um equipamento atende a sua operação?" text="Informe o que você já tem ou pretende usar. A equipe avalia a compatibilidade no projeto." />
+      <FinalCta title="Quer saber se um equipamento atende a sua operação?" text="Informe o que você já tem ou pretende usar. A equipe avalia a compatibilidade no projeto." wa="equipamentos" />
     </>
   )
 }

@@ -3,11 +3,12 @@ import { FinalCta } from "@/components/sections/home/final-cta"
 import { S } from "@/components/sections/home/ui"
 import { BalancedGrid, Faq, Section, SectionHead, Steps } from "@/components/sections/pages/blocks"
 import { ArticleCards } from "@/components/sections/pages/links"
+import { BuildTimeline } from "@/components/sections/home/build-timeline"
 import { PageIntro } from "@/components/sections/pages/page-intro"
+import { WhatsAppLink } from "@/components/ui/whatsapp-link"
 import { HIRING_STEPS } from "@/lib/content/services"
 import { BUILDER_LAYERS, BUILDER_REGIONS, BUILDER_ROLES, BUILDER_STEPS, type SolutionContent } from "@/lib/content/solutions"
 import { graph, organizationSchema, serviceSchema } from "@/lib/seo/schema"
-import { whatsappHref } from "@/lib/site/constants"
 import { PROJECT_CTA, ROUTES, requiredHref } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
@@ -36,10 +37,7 @@ export function SolutionPage({ s }: { s: SolutionContent }) {
             <a href={PROJECT_CTA} className={S.btnPrimary}>
               {s.cta} <span aria-hidden="true">→</span>
             </a>
-            <a href={whatsappHref(s.wa)} target="_blank" rel="noopener noreferrer" className={S.btnSecondary}>
-              <span aria-hidden="true" className="mr-2.5 size-2 rounded-full bg-ok" />
-              WhatsApp
-            </a>
+            <WhatsAppLink context={s.key} />
           </>
         }
         aside={
@@ -77,7 +75,7 @@ export function SolutionPage({ s }: { s: SolutionContent }) {
         <Section tone="alt" labelledBy="quem-titulo">
           <SectionHead
             id="quem-titulo"
-            eyebrow="QUEM TRABALHA COM A TIMP NA OBRA"
+            eyebrow="Quem trabalha com a Timp no projeto"
             title="Um interlocutor técnico para cada etapa."
             lead="A Timp entra no projeto como responsável pelas disciplinas de tecnologia e conversa com quem decide, projeta e executa."
           />
@@ -122,38 +120,36 @@ export function SolutionPage({ s }: { s: SolutionContent }) {
         </BalancedGrid>
       </Section>
 
-      <Section tone="light" labelledBy="processo-titulo">
-        <SectionHead
-          id="processo-titulo"
-          eyebrow={builders ? "DA PLANTA À OPERAÇÃO" : "PROCESSO TIMP"}
-          title={builders ? "Nove etapas, do planejamento à manutenção." : "Do levantamento ao suporte, com o mesmo parceiro."}
-          lead={s.evolution}
-          light
-        />
-        <Steps steps={builders ? BUILDER_STEPS : HIRING_STEPS} light />
-      </Section>
+      {builders ? (
+        <Section tone="blue" labelledBy="processo-titulo">
+          <SectionHead id="processo-titulo" eyebrow="DA PLANTA À OPERAÇÃO" title="Nove etapas, do planejamento à manutenção." lead={s.evolution} />
+          <BuildTimeline steps={BUILDER_STEPS} />
+        </Section>
+      ) : (
+        <Section tone="light" labelledBy="processo-titulo">
+          <SectionHead id="processo-titulo" eyebrow="Processo Timp" title="Do levantamento ao suporte, com o mesmo parceiro." lead={s.evolution} light />
+          <Steps steps={HIRING_STEPS} light />
+        </Section>
+      )}
 
       {builders && (
-        <Section tone="blue" labelledBy="regioes-titulo">
+        <Section tone="alt" labelledBy="regioes-titulo">
           <div className="grid items-start gap-x-[clamp(32px,5vw,80px)] gap-y-8 desktop:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
             <div className="flex flex-col gap-5">
-              <span className={cn(S.eyebrow, "text-blue-300")}>PROJETOS EM OUTRAS REGIÕES</span>
+              <span className={cn(S.eyebrow, "text-blue-400")}>PROJETOS EM OUTRAS REGIÕES</span>
               <h2 id="regioes-titulo" className={S.h2}>
                 {BUILDER_REGIONS.title}
               </h2>
               <p className={cn(S.lead, "text-g-200")}>{BUILDER_REGIONS.text}</p>
-              <a
-                href={PROJECT_CTA}
-                className="inline-flex min-h-[52px] items-center gap-2.5 self-start rounded-sm bg-white px-6 py-2 text-[16px] font-semibold text-blue-900 no-underline hover:bg-g-200 hover:text-blue-900"
-              >
+              <a href={PROJECT_CTA} className={cn(S.btnPrimary, "self-start")}>
                 Apresentar meu projeto à Timp <span aria-hidden="true">→</span>
               </a>
             </div>
-            <div className="flex flex-col gap-3 rounded-md border border-blue-300/25 p-5">
+            <div className="flex flex-col gap-3 rounded-md border border-g-700 bg-g-950 p-5">
               <span className="font-mono text-[11px] tracking-[0.08em] text-blue-300">CRITÉRIOS DA AVALIAÇÃO</span>
               <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
                 {BUILDER_REGIONS.criteria.map((c) => (
-                  <li key={c} className="rounded-[3px] border border-blue-300/30 px-2.5 py-1.5 text-[14px] text-white">
+                  <li key={c} className="rounded-[3px] border border-g-600 px-2.5 py-1.5 text-[14px] text-g-100">
                     {c}
                   </li>
                 ))}
@@ -165,7 +161,7 @@ export function SolutionPage({ s }: { s: SolutionContent }) {
       )}
 
       <Section tone="alt" labelledBy="faq-titulo">
-        <Faq id="faq-titulo" title={builders ? "Tecnologia na obra" : `Dúvidas sobre ${ROUTES[s.key].label.toLowerCase()}`} items={s.faq} />
+        <Faq id="faq-titulo" title={builders ? "Tecnologia no projeto" : `Dúvidas sobre ${ROUTES[s.key].label.toLowerCase()}`} items={s.faq} />
       </Section>
 
       {s.articles.length > 0 && (
@@ -185,7 +181,7 @@ export function SolutionPage({ s }: { s: SolutionContent }) {
         </Section>
       )}
 
-      <FinalCta title={s.ctaTitle} text="Conte o ambiente, o momento da operação e o que já existe. A equipe avalia e retorna com o próximo passo." primary={s.cta} waText={s.wa} />
+      <FinalCta title={s.ctaTitle} text="Conte o ambiente, o momento da operação e o que já existe. A equipe avalia e retorna com o próximo passo." primary={s.cta} wa={s.key} />
     </>
   )
 }

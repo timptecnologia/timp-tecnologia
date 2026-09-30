@@ -9,7 +9,8 @@ import { COMPANY, DIFFERENTIALS, ECOSYSTEMS, FACTS, PROCESS, SEGMENTS, ecosystem
 import { buildMetadata } from "@/lib/seo/metadata"
 import { PAGE_SEO } from "@/lib/seo/pages"
 import { graph, localBusinessSchema, organizationSchema } from "@/lib/seo/schema"
-import { SITE, whatsappHref } from "@/lib/site/constants"
+import { SITE } from "@/lib/site/constants"
+import { waHref } from "@/lib/site/whatsapp"
 import { PROJECT_CTA, requiredHref } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
@@ -27,10 +28,10 @@ export default function EmpresaPage() {
       <JsonLd data={graph(organizationSchema(), localBusinessSchema())} />
       <PageIntro
         crumbs={[{ name: "Empresa", path: PAGE_SEO.empresa.path }]}
-        eyebrow="TIMP TECNOLOGIA · DESDE 2016"
+        eyebrow="Timp Tecnologia · Desde 2016"
         title={COMPANY.headline}
         lead={COMPANY.lead}
-        actions={<CtaButtons />}
+        actions={<CtaButtons wa="empresa" />}
         aside={
           <div className="flex flex-col gap-4 rounded-md border border-g-800 bg-g-900 p-5">
             <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-4">
@@ -43,7 +44,7 @@ export default function EmpresaPage() {
                 <dd className="m-0 text-[16px] font-semibold text-g-100">Rio de Janeiro/RJ</dd>
               </div>
             </dl>
-            <ContactChannels area={SITE.areaServedText} />
+            <ContactChannels area={SITE.areaServedText} wa="empresa" />
           </div>
         }
       />
@@ -96,7 +97,7 @@ export default function EmpresaPage() {
                   formulário de projeto
                 </a>
                 , pelo WhatsApp{" "}
-                <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-300 underline decoration-blue-300/40 underline-offset-3 hover:text-white">
+                <a href={waHref("empresa")} data-wa-context="empresa" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-300 underline decoration-blue-300/40 underline-offset-3 hover:text-white">
                   {SITE.whatsappDisplay}
                 </a>{" "}
                 ou por{" "}
@@ -166,7 +167,7 @@ export default function EmpresaPage() {
         <Steps steps={PROCESS} light />
       </Section>
 
-      <FinalCta title="Vamos conversar sobre a sua operação?" text="Descreva o ambiente e o objetivo. A equipe comercial retorna com o próximo passo: visita técnica, diagnóstico ou proposta de projeto." />
+      <FinalCta title="Vamos conversar sobre a sua operação?" text="Descreva o ambiente e o objetivo. A equipe comercial retorna com o próximo passo: visita técnica, diagnóstico ou proposta de projeto." wa="empresa" />
     </>
   )
 }

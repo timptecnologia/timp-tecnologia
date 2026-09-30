@@ -45,7 +45,7 @@ export const config = {
   matcher: [
     {
       // Tudo, exceto assets estáticos, otimização de imagem e arquivos públicos com extensão.
-      source: "/((?!_next/static|_next/image|brand/|home/|starlink/|favicon.ico|robots.txt|sitemap.xml).*)",
+      source: "/((?!_next/static|_next/image|brand/|home/|starlink/|icons/|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },

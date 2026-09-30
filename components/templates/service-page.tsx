@@ -6,9 +6,9 @@ import { S } from "@/components/sections/home/ui"
 import { BalancedGrid, Faq, FlowFigure, Section, SectionHead, Steps } from "@/components/sections/pages/blocks"
 import { ArticleCards, RouteChips, ServiceCards } from "@/components/sections/pages/links"
 import { PageIntro } from "@/components/sections/pages/page-intro"
+import { WhatsAppLink } from "@/components/ui/whatsapp-link"
 import { HIRING_STEPS, type ServiceContent } from "@/lib/content/services"
 import { graph, organizationSchema, serviceSchema } from "@/lib/seo/schema"
-import { whatsappHref } from "@/lib/site/constants"
 import { PROJECT_CTA, ROUTES, requiredHref } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils"
  * SSG). Blocos: abertura + diagrama, problema e benefícios, escopo × fatores,
  * contratação, extras do serviço, relacionados e segmentos, FAQ, conteúdo, CTA.
  */
-export function ServicePage({ s, extra }: { s: ServiceContent; extra?: ReactNode }) {
+export function ServicePage({ s, lead, extra, hideHiring }: { s: ServiceContent; lead?: ReactNode; extra?: ReactNode; hideHiring?: boolean }) {
   const path = ROUTES[s.key].path
   return (
     <>
@@ -35,14 +35,13 @@ export function ServicePage({ s, extra }: { s: ServiceContent; extra?: ReactNode
             <a href={PROJECT_CTA} className={S.btnPrimary}>
               {s.cta} <span aria-hidden="true">→</span>
             </a>
-            <a href={whatsappHref(s.wa)} target="_blank" rel="noopener noreferrer" className={S.btnSecondary}>
-              <span aria-hidden="true" className="mr-2.5 size-2 rounded-full bg-ok" />
-              WhatsApp
-            </a>
+            <WhatsAppLink context={s.key} />
           </>
         }
         aside={<FlowFigure title={s.flow.title} steps={s.flow.steps} hl={s.flow.hl} caption={s.flow.caption} />}
       />
+
+      {lead}
 
       <Section labelledBy="problema-titulo">
         <SectionHead id="problema-titulo" eyebrow="POR QUE IMPORTA" title={s.problem.title} lead={s.problem.text} />
@@ -59,7 +58,7 @@ export function ServicePage({ s, extra }: { s: ServiceContent; extra?: ReactNode
       <Section tone="alt" labelledBy="escopo-titulo">
         <div className="grid gap-x-[clamp(32px,5vw,80px)] gap-y-10 tablet:grid-cols-2">
           <div className="flex flex-col gap-5">
-            <span className={cn(S.eyebrow, "text-blue-400")}>O QUE A TIMP FAZ</span>
+            <span className={cn(S.eyebrow, "text-blue-400")}>O que a Timp faz</span>
             <h2 id="escopo-titulo" className={S.h2}>
               Escopo do serviço
             </h2>
@@ -89,10 +88,12 @@ export function ServicePage({ s, extra }: { s: ServiceContent; extra?: ReactNode
         </div>
       </Section>
 
-      <Section tone="light" labelledBy="contratacao-titulo">
-        <SectionHead id="contratacao-titulo" eyebrow="COMO FUNCIONA A CONTRATAÇÃO" title="Do levantamento ao suporte, com o mesmo parceiro." light />
-        <Steps steps={HIRING_STEPS} light />
-      </Section>
+      {!hideHiring && (
+        <Section tone="light" labelledBy="contratacao-titulo">
+          <SectionHead id="contratacao-titulo" eyebrow="COMO FUNCIONA A CONTRATAÇÃO" title="Do levantamento ao suporte, com o mesmo parceiro." light />
+          <Steps steps={HIRING_STEPS} light />
+        </Section>
+      )}
 
       {extra}
 
@@ -126,7 +127,7 @@ export function ServicePage({ s, extra }: { s: ServiceContent; extra?: ReactNode
         </Section>
       )}
 
-      <FinalCta title={s.ctaTitle} text="Informe o ambiente, o objetivo e o que já existe instalado. A equipe avalia e retorna com o próximo passo." primary={s.cta} waText={s.wa} />
+      <FinalCta title={s.ctaTitle} text="Informe o ambiente, o objetivo e o que já existe instalado. A equipe avalia e retorna com o próximo passo." primary={s.cta} wa={s.key} />
     </>
   )
 }

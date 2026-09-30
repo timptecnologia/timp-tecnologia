@@ -1,11 +1,10 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 
-import { prefersReducedMotion } from "@/components/home/use-scroll-track"
+import { usePassiveSequence } from "@/components/home/use-passive-sequence"
 import { MON_CAMERAS, MON_CAMS_OPEN_STEP, MON_DEMO_STEPS, MON_PROTOCOL } from "@/lib/home/content"
-import { useReducedMotion } from "@/lib/hooks/use-client-state"
 import { cn } from "@/lib/utils"
 
 /**
@@ -36,51 +35,10 @@ const LAST = MON_DEMO_STEPS.length - 1
 const STEP_MS = 2800
 const HOLD_MS = 5600
 
-export function MonitoringDemo() {
-  const reduced = useReducedMotion()
-  const rootRef = useRef<HTMLDivElement>(null)
-  // HTML inicial = ocorrência completa (sem JS / reduced motion)
-  const [step, setStep] = useState(LAST)
-  const [started, setStarted] = useState(false)
-  const [paused, setPaused] = useState(false)
-  const [visible, setVisible] = useState(false)
+export function MonitoringDemo({ headingLevel = "h3" }: { headingLevel?: "h2" | "h3" }) {
+  const { ref: rootRef, step, animated, paused, setPaused } = usePassiveSequence<HTMLDivElement>({ length: MON_DEMO_STEPS.length, stepMs: STEP_MS, holdMs: HOLD_MS })
   const [failed, setFailed] = useState<Record<string, boolean>>({})
-
-  // Visibilidade (só anima na tela e com a aba ativa)
-  useEffect(() => {
-    const el = rootRef.current
-    if (!el) return
-    let inView = false
-    let first = true
-    const update = () => setVisible(inView && document.visibilityState === "visible")
-    const io = new IntersectionObserver(
-      ([e]) => {
-        inView = Boolean(e?.isIntersecting)
-        // Primeira vez na tela (sem reduced motion): a demonstração começa do evento
-        if (inView && first && !prefersReducedMotion()) {
-          first = false
-          setStarted(true)
-          setStep(0)
-        }
-        update()
-      },
-      { threshold: 0.35 },
-    )
-    io.observe(el)
-    document.addEventListener("visibilitychange", update)
-    return () => {
-      io.disconnect()
-      document.removeEventListener("visibilitychange", update)
-    }
-  }, [])
-
-  // Avanço automático — nunca por ação do visitante
-  const autoplay = !reduced && started && visible && !paused
-  useEffect(() => {
-    if (!autoplay) return
-    const t = window.setTimeout(() => setStep((s) => (s >= LAST ? 0 : s + 1)), step >= LAST ? HOLD_MS : STEP_MS)
-    return () => window.clearTimeout(t)
-  }, [autoplay, step])
+  const Heading = headingLevel
 
   const ev = MON_DEMO_STEPS[step]!
   const camsOpen = step >= MON_CAMS_OPEN_STEP
@@ -88,9 +46,13 @@ export function MonitoringDemo() {
 
   return (
     <div ref={rootRef} data-demo-step={step} className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
-        <span className="text-[13px] font-semibold text-g-200">Demonstração da Central Timp</span>
-        <span className="font-mono text-[10px] tracking-[0.08em] text-g-400">DADOS FICTÍCIOS · FLUXO ILUSTRATIVO</span>
+      {/* Enquadramento didático: o que o visitante está vendo */}
+      <div className="flex flex-col gap-1.5">
+        <Heading className="m-0 text-[clamp(19px,1.6vw,22px)] leading-[1.2] font-bold tracking-[-0.015em] text-white">Veja como funciona a Central de Monitoramento Timp</Heading>
+        <p className="m-0 text-[15px] leading-normal text-g-300">
+          Acompanhe uma ocorrência fictícia, do alerta inicial à verificação, protocolo e registro final.
+        </p>
+        <span className="font-mono text-[10px] tracking-[0.08em] text-g-400">Dados fictícios · fluxo ilustrativo</span>
       </div>
 
       {/* Leitores de tela: o fluxo completo, sem depender da animação */}
@@ -195,7 +157,7 @@ export function MonitoringDemo() {
 
           {/* O que a equipe já executou: indicador passivo, não é controle */}
           <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-g-800 pt-3">
-            <span className="font-mono text-[10px] tracking-[0.08em] text-g-400">OPERADOR TIMP</span>
+            <span className="font-mono text-[10px] tracking-[0.08em] text-g-400">Operador Timp</span>
             <span className={cn("text-[14px] font-semibold", closed ? "text-ok-fg" : "text-g-100")}>✓ {ev.done}</span>
           </p>
         </div>
@@ -205,7 +167,7 @@ export function MonitoringDemo() {
         <p className="m-0 text-[14px] leading-normal text-g-300" aria-hidden="true">
           {ev.narration}
         </p>
-        {started && !reduced && (
+        {animated && (
           <button
             type="button"
             onClick={() => setPaused((p) => !p)}

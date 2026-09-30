@@ -10,7 +10,7 @@ import { PALETTE as P } from "@/lib/design/palette"
  * Logo oficial sem alteração; H1 real da Home. Fonte: padrão do gerador (a Archivo
  * do site é woff2, formato não suportado pelo renderizador de OG).
  */
-export const alt = "Timp Tecnologia — Tecnologia que sustenta sua operação."
+export const alt = "Timp Tecnologia — Empresa de TI no Rio de Janeiro para manter sua operação conectada, segura e funcionando."
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -36,9 +36,11 @@ export default async function OpengraphImage() {
         {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse (Satori) só aceita <img> */}
         <img src={logoSrc} width={210} height={110} alt="" />
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <div style={{ fontSize: 22, letterSpacing: 3, color: P.g400 }}>TIMP TECNOLOGIA · RIO DE JANEIRO · DESDE 2016</div>
-          <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 1, letterSpacing: -3, maxWidth: 900 }}>Tecnologia que sustenta sua operação.</div>
-          <div style={{ fontSize: 28, color: P.g300, maxWidth: 900 }}>Infraestrutura, conectividade, segurança, automação e suporte tecnológico para empresas no Rio de Janeiro.</div>
+          <div style={{ fontSize: 22, letterSpacing: 3, color: P.g400 }}>Timp Tecnologia · Rio de Janeiro · Desde 2016</div>
+          <div style={{ fontSize: 60, fontWeight: 700, lineHeight: 1.04, letterSpacing: -2, maxWidth: 1000 }}>
+            Empresa de TI no Rio de Janeiro para manter sua operação conectada, segura e funcionando.
+          </div>
+          <div style={{ fontSize: 26, color: P.g300, maxWidth: 980 }}>Infraestrutura, redes, Wi-Fi, segurança eletrônica, automação e suporte de TI. Do projeto à manutenção.</div>
         </div>
       </div>
     ),

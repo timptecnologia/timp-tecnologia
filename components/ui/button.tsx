@@ -4,6 +4,8 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+import { WhatsAppIcon } from "./whatsapp-link"
+
 /**
  * Botão TIMP (design-system.md → Botões). Altura segue a densidade do contexto
  * (--control-h: site 52 · portal 48 · admin/central 36, nunca < 44 em toque).
@@ -34,7 +36,7 @@ const buttonVariants = cva(
           "h-auto! rounded-none border-0 border-b border-transparent px-1! text-link",
           "hover:border-b-link-hover hover:text-link-hover disabled:text-disabled-foreground",
         ],
-        whatsapp: "border-border bg-surface-1 text-foreground hover:border-ok hover:text-foreground",
+        whatsapp: "border-border bg-surface-1 text-foreground hover:border-wa hover:text-foreground [&>svg]:text-wa",
         destructive: "bg-crit text-g-950 hover:bg-crit-fg hover:text-g-950 disabled:bg-disabled disabled:text-disabled-foreground",
       },
       size: {
@@ -70,7 +72,7 @@ function Button({ className, variant, size, asChild = false, loading = false, di
         children
       ) : (
         <>
-          {variant === "whatsapp" && <span aria-hidden="true" className="size-2 rounded-full bg-ok" />}
+          {variant === "whatsapp" && <WhatsAppIcon />}
           {loading && (
             <span
               aria-hidden="true"

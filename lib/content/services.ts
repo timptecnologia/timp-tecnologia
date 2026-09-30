@@ -41,7 +41,6 @@ export interface ServiceContent {
   articles: readonly string[]
   cta: string
   ctaTitle: string
-  wa: string
   seo: { title: string; description: string }
 }
 
@@ -49,9 +48,8 @@ const INFRA = { front: "INFRAESTRUTURA E CONECTIVIDADE", frontId: "infraestrutur
 const SEG = { front: "SEGURANÇA ELETRÔNICA", frontId: "seguranca-eletronica" }
 const TI = { front: "TI CORPORATIVA", frontId: "ti-corporativa" }
 const AUTO = { front: "AUTOMAÇÃO E COMUNICAÇÃO", frontId: "automacao-e-comunicacao" }
-const MON = { front: "MONITORAMENTO 24H", frontId: "monitoramento-24h" }
+const ENERGIA = { front: "ENERGIA SOLAR", frontId: "energia-solar" }
 
-const wa = (servico: string) => `Olá, Timp. Vim pela página de ${servico} e quero um projeto.`
 
 export const SERVICES: Record<ServiceKey, ServiceContent> = {
   cabeamento: {
@@ -66,17 +64,15 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       text: "Cabos sem identificação, extensões e pontos criados às pressas tornam a rede instável e cada mudança mais demorada. Um cabeamento projetado organiza os pontos, o rack e as rotas, e já considera câmeras, Wi-Fi e telefonia sobre a mesma infraestrutura.",
     },
     flow: {
-      title: "COMO O CABEAMENTO DISTRIBUI A REDE",
-      caption: "Do link da operadora aos pontos atendidos: cada camada tem uma função e fica documentada.",
+      title: "COMO O CABEAMENTO CONECTA A OPERAÇÃO",
+      caption: "Cada ponto atendido — usuários, access points, câmeras, telefonia e controle de acesso — chega pelo cabeamento à rede e, dela, à internet.",
       steps: [
-        { label: "Internet", note: "link da operadora" },
-        { label: "Firewall", note: "proteção e regras" },
+        { label: "Cabeamento", note: "Cat6 / Cat6A até cada ponto" },
         { label: "Switch", note: "distribuição e PoE" },
-        { label: "Patch panel", note: "organização no rack" },
-        { label: "Cabeamento", note: "Cat6 / Cat6A" },
-        { label: "Pontos atendidos", note: "usuários, APs, câmeras, telefonia e acesso" },
+        { label: "Firewall", note: "proteção e regras" },
+        { label: "Internet", note: "link da operadora" },
       ],
-      hl: 2,
+      hl: 0,
     },
     scope: [
       "Levantamento e projeto de pontos de rede",
@@ -110,7 +106,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["o-que-e-cabeamento-estruturado", "cat6-ou-cat6a", "infraestrutura-tecnologica-para-construtoras"],
     cta: "Solicitar projeto de cabeamento",
     ctaTitle: "Planeje o cabeamento com quem instala.",
-    wa: wa("Cabeamento Estruturado"),
     seo: {
       title: "Cabeamento Estruturado no Rio de Janeiro | Timp",
       description: "Projeto e instalação de cabeamento estruturado Cat6/Cat6A para empresas no Rio de Janeiro: rack, patch panels, identificação, testes e documentação.",
@@ -172,7 +167,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["o-que-e-cabeamento-estruturado", "starlink-como-internet-de-backup-para-empresas"],
     cta: "Solicitar projeto de rede",
     ctaTitle: "Organize a rede antes do próximo problema.",
-    wa: wa("Infraestrutura de Redes"),
     seo: {
       title: "Infraestrutura de Redes para Empresas | Timp",
       description: "Projeto e configuração de redes corporativas no Rio de Janeiro: firewall, switches gerenciáveis, segmentação, VPN, links redundantes e documentação.",
@@ -235,7 +229,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["o-que-e-cabeamento-estruturado", "starlink-como-internet-de-backup-para-empresas"],
     cta: "Solicitar projeto de Wi-Fi",
     ctaTitle: "Wi-Fi projetado para a sua operação.",
-    wa: wa("Wi-Fi Empresarial"),
     seo: {
       title: "Wi-Fi Empresarial no Rio de Janeiro | Timp Tecnologia",
       description: "Wi-Fi corporativo com estudo de cobertura, access points, redes separadas para equipe e visitantes e gerenciamento centralizado no Rio de Janeiro.",
@@ -285,7 +278,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       { key: "cftv", why: "Câmeras em perímetros e áreas afastadas." },
       { key: "wifi", why: "Cobertura sem fio em grandes áreas." },
     ],
-    segments: ["industrias", "construtoras", "condominios", "multiplasUnidades"],
+    segments: ["industrias", "construtoras", "casasCondominios", "multiplasUnidades"],
     faq: [
       {
         q: "Fibra multimodo ou monomodo?",
@@ -297,7 +290,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["o-que-e-cabeamento-estruturado", "infraestrutura-tecnologica-para-construtoras"],
     cta: "Solicitar projeto de fibra",
     ctaTitle: "Interligue as áreas da operação com fibra.",
-    wa: wa("Fibra Óptica"),
     seo: {
       title: "Fibra Óptica Interna para Empresas | Timp Tecnologia",
       description: "Backbone de fibra óptica para interligar andares, blocos, galpões e prédios no Rio de Janeiro: lançamento, fusão, DIO, testes e documentação.",
@@ -307,7 +299,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
   starlink: {
     key: "starlink",
     ...INFRA,
-    h1: "Instalação profissional de Starlink onde você precisar de conexão",
+    h1: "Instalação profissional de Starlink no Rio de Janeiro para empresas, obras e áreas remotas",
     short: "instalação de Starlink",
     answer:
       "A Timp instala e integra antenas Starlink em empresas, residências, áreas remotas, obras, veículos e embarcações. A instalação considera obstruções, posicionamento, fixação, cabos, alimentação e a rede local, e pode usar a Starlink como conexão principal ou de contingência.",
@@ -373,10 +365,9 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["starlink-como-internet-de-backup-para-empresas", "infraestrutura-tecnologica-para-construtoras"],
     cta: "Solicitar instalação de Starlink",
     ctaTitle: "Conte onde a conexão precisa chegar.",
-    wa: "Olá, Timp. Vim pela página de Instalação de Starlink e quero uma avaliação.",
     seo: {
       title: "Instalação de Starlink no Rio de Janeiro | Timp",
-      description: "Instalação profissional e integração de Starlink para empresas, obras, áreas remotas, veículos e embarcações, como conexão principal ou de contingência.",
+      description: "Instalação profissional de Starlink no Rio de Janeiro para empresas, obras e áreas remotas: integração à rede, contingência da fibra, testes e entrega.",
     },
   },
 
@@ -423,7 +414,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       { key: "monitoramento", why: "Eventos acompanhados pela Central Timp." },
       { key: "cabeamento", why: "A base física que alimenta as câmeras." },
     ],
-    segments: ["empresas", "condominios", "comercio", "industrias"],
+    segments: ["empresas", "casasCondominios", "comercio", "industrias"],
     faq: [
       {
         q: "CFTV IP ou analógico?",
@@ -435,7 +426,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["cftv-ip-ou-analogico", "como-funciona-uma-central-de-monitoramento-24h", "o-que-acontece-quando-um-alarme-dispara"],
     cta: "Solicitar projeto de CFTV",
     ctaTitle: "Projete as câmeras como um sistema.",
-    wa: "Olá, Timp. Vim pela página de CFTV e quero um projeto de câmeras.",
     seo: {
       title: "CFTV e Câmeras de Segurança no Rio de Janeiro | Timp",
       description: "Projeto e instalação de CFTV com câmeras IP, PoE, gravação em NVR, acesso remoto seguro e integração com alarme e monitoramento 24h no Rio de Janeiro.",
@@ -445,25 +435,26 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
   segurancaEletronica: {
     key: "segurancaEletronica",
     ...SEG,
-    h1: "Segurança eletrônica integrada para empresas e condomínios",
+    h1: "Segurança eletrônica integrada para empresas, casas e condomínios",
     short: "segurança eletrônica",
     answer:
-      "A Timp projeta e instala câmeras, alarmes, controle de acesso e fechaduras eletrônicas como um sistema único, apoiado na rede e preparado para o monitoramento 24h da Central Timp. Atendimento em todo o estado do Rio de Janeiro.",
+      "A Timp projeta e instala câmeras, alarmes, alarme de incêndio, controle de acesso e fechaduras eletrônicas como um sistema único, apoiado na rede e preparado para o monitoramento 24h da Central Timp. Atendimento em todo o estado do Rio de Janeiro.",
     problem: {
       title: "Cada sistema resolve uma parte. Juntos, cobrem a operação.",
       text: "Câmeras, alarmes e acessos comprados separadamente raramente conversam entre si. Quando a integração é definida no projeto, sensores, câmeras e acessos são associados por zona: quando um evento acontece, quem verifica sabe exatamente onde olhar.",
     },
     flow: {
-      title: "UM SISTEMA, CINCO FRENTES",
-      caption: "Sistemas independentes, integrados pela rede e por zona, preparados para monitoramento.",
+      title: "UMA CATEGORIA, SEIS SERVIÇOS",
+      caption: "Sistemas que podem ser contratados separadamente, integrados pela rede e por zona quando o projeto prevê.",
       steps: [
         { label: "CFTV e câmeras", note: "imagens por zona" },
         { label: "Alarmes", note: "sensores e central" },
+        { label: "Alarme de incêndio", note: "detecção e alerta" },
         { label: "Controle de acesso", note: "quem entra e quando" },
         { label: "Fechaduras eletrônicas", note: "abertura registrada" },
         { label: "Monitoramento 24h", note: "Central Timp" },
       ],
-      hl: 4,
+      hl: 5,
     },
     scope: [
       "Projeto integrado de câmeras, alarmes e acessos",
@@ -485,7 +476,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       { key: "controleAcesso", why: "Identificação e regras por perfil e horário." },
       { key: "monitoramento", why: "Eventos verificados por operador, 24 horas por dia." },
     ],
-    segments: ["empresas", "condominios", "comercio", "industrias"],
+    segments: ["empresas", "casasCondominios", "comercio", "industrias"],
     faq: [
       { q: "Preciso contratar todos os sistemas juntos?", a: "Não. Cada sistema pode ser contratado separadamente; o projeto considera a integração futura com os demais." },
       { q: "A Timp aproveita equipamentos já instalados?", a: "Quando tecnicamente viável. A avaliação indica o que pode ser mantido, integrado ou substituído." },
@@ -494,10 +485,9 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["o-que-acontece-quando-um-alarme-dispara", "cftv-ip-ou-analogico", "controle-de-acesso-para-condominios"],
     cta: "Solicitar projeto de segurança",
     ctaTitle: "Projete a segurança como um sistema só.",
-    wa: "Olá, Timp. Vim pela página de Segurança Eletrônica e quero um projeto.",
     seo: {
       title: "Segurança Eletrônica para Empresas no Rio | Timp",
-      description: "Câmeras, alarmes, controle de acesso e fechaduras eletrônicas projetados como um sistema integrado e preparado para monitoramento 24h no Rio de Janeiro.",
+      description: "CFTV, alarmes, alarme de incêndio, controle de acesso, fechaduras e monitoramento 24h projetados como um sistema integrado no Rio de Janeiro.",
     },
   },
 
@@ -541,10 +531,10 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     related: [
       { key: "cftv", why: "Câmeras associadas às zonas para verificação." },
       { key: "monitoramento", why: "Eventos acompanhados pela Central Timp." },
-      { key: "controleAcesso", why: "Registro de quem passou pela porta." },
+      { key: "alarmeIncendio", why: "Detecção de fumaça e calor, um sistema diferente do alarme de intrusão." },
       { key: "segurancaEletronica", why: "Visão integrada de câmeras, alarmes e acessos." },
     ],
-    segments: ["comercio", "empresas", "condominios", "industrias"],
+    segments: ["comercio", "empresas", "casasCondominios", "industrias"],
     faq: [
       { q: "Qual a diferença entre alarme local e monitorado?", a: "O alarme local avisa quem está no local, com a sirene. O monitorado envia o evento para a Central, onde um operador verifica e segue o protocolo do cliente." },
       { q: "Preciso ter câmeras para ter alarme monitorado?", a: "Não é obrigatório, mas câmeras associadas às zonas permitem a verificação por vídeo e tornam a análise mais precisa." },
@@ -553,10 +543,73 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["o-que-acontece-quando-um-alarme-dispara", "como-funciona-uma-central-de-monitoramento-24h"],
     cta: "Solicitar projeto de alarme",
     ctaTitle: "Alarme com zonas, câmeras e verificação.",
-    wa: wa("Alarmes"),
     seo: {
       title: "Sistema de Alarme para Empresas no Rio | Timp",
       description: "Projeto e instalação de alarmes por zona, com sensores, central, integração com câmeras e preparação para monitoramento 24h no Rio de Janeiro.",
+    },
+  },
+
+  alarmeIncendio: {
+    key: "alarmeIncendio",
+    ...SEG,
+    h1: "Alarme de incêndio para empresas, condomínios e galpões",
+    short: "alarme de incêndio",
+    answer:
+      "Um sistema de alarme de incêndio reúne detectores, acionadores manuais, sinalização sonora e visual e uma central que indica onde o evento começou. A Timp projeta e instala o sistema integrado à infraestrutura do imóvel e aos demais sistemas de segurança, considerando as exigências aplicáveis a cada edificação.",
+    problem: {
+      title: "Quanto antes o alerta, mais tempo para agir.",
+      text: "Um princípio de incêndio percebido cedo dá tempo para evacuar o local e acionar os responsáveis. Detectores bem posicionados e uma central que identifica a área do evento reduzem o tempo entre o início do problema e a primeira ação.",
+    },
+    flow: {
+      title: "DA DETECÇÃO AO ALERTA",
+      caption: "Como um sistema de alarme de incêndio avisa as pessoas no local. A configuração de cada projeto depende da edificação.",
+      steps: [
+        { label: "Detector", note: "fumaça ou temperatura" },
+        { label: "Acionador manual", note: "acionamento por quem percebe o problema" },
+        { label: "Central de alarme", note: "identifica a área do evento" },
+        { label: "Sirene e sinalização", note: "alerta sonoro e visual" },
+        { label: "Responsáveis", note: "conforme o plano de ação do local" },
+      ],
+      hl: 2,
+    },
+    scope: [
+      "Levantamento das áreas e da ocupação do imóvel",
+      "Projeto de posicionamento de detectores e acionadores",
+      "Instalação da central, dos detectores, dos acionadores e da sinalização",
+      "Passagem e identificação do cabeamento do sistema",
+      "Testes de funcionamento na entrega",
+      "Manutenção preventiva e corretiva",
+    ],
+    factors: ["Tipo de edificação e ocupação", "Área e divisão dos ambientes", "Exigências aplicáveis à edificação", "Sistemas de segurança existentes", "Rotina de uso e horários"],
+    benefits: [
+      { t: "Alerta com local identificado", d: "A central indica em que área o evento começou." },
+      { t: "Planejado com a segurança", d: "Projetado junto ao CFTV, ao alarme e ao controle de acesso quando o imóvel tem esses sistemas." },
+      { t: "Manutenção planejada", d: "Testes e revisões periódicas mantêm o sistema pronto para funcionar." },
+    ],
+    related: [
+      { key: "alarmes", why: "Alarme de intrusão: sensores de presença, abertura e perímetro." },
+      { key: "cftv", why: "Câmeras nas áreas comuns, acessos e perímetro." },
+      { key: "cabeamento", why: "Infraestrutura organizada e identificada para os sistemas." },
+      { key: "segurancaEletronica", why: "Visão integrada da segurança do imóvel." },
+    ],
+    segments: ["industrias", "comercio", "construtoras", "casasCondominios"],
+    faq: [
+      {
+        q: "Alarme de incêndio é o mesmo que alarme de intrusão?",
+        a: "Não. O alarme de intrusão detecta presença ou abertura em áreas protegidas; o de incêndio detecta sinais de fogo, como fumaça ou calor, e alerta quem está no local. São sistemas diferentes, que podem ser planejados em conjunto.",
+      },
+      {
+        q: "O sistema atende às exigências da minha edificação?",
+        a: "As exigências variam conforme o tipo de edificação e a ocupação. Elas são levantadas na fase de projeto, com os responsáveis técnicos do imóvel, antes da definição dos equipamentos.",
+      },
+      { q: "Dá para instalar em um imóvel já ocupado?", a: "Sim. A instalação é planejada por etapas e horários para reduzir a interferência na rotina do local." },
+    ],
+    articles: [],
+    cta: "Solicitar projeto de alarme de incêndio",
+    ctaTitle: "Alerta cedo, com o local identificado.",
+    seo: {
+      title: "Alarme de Incêndio para Empresas no Rio de Janeiro | Timp",
+      description: "Projeto e instalação de alarme de incêndio com detectores, acionadores, sinalização e central, integrado à infraestrutura do imóvel no Rio de Janeiro.",
     },
   },
 
@@ -603,7 +656,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       { key: "alarmes", why: "Eventos de porta fora do horário." },
       { key: "cabeamento", why: "Leitores e controladoras conectados à rede." },
     ],
-    segments: ["condominios", "empresas", "clinicas", "industrias"],
+    segments: ["casasCondominios", "empresas", "clinicas", "industrias"],
     faq: [
       { q: "Reconhecimento facial substitui o cartão?", a: "Pode substituir ou complementar. A escolha depende do fluxo de pessoas, do ambiente e do nível de segurança desejado." },
       { q: "É possível limitar o acesso por horário?", a: "Sim. Regras por perfil e horário são configuradas na controladora ou no software de gestão." },
@@ -612,7 +665,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["controle-de-acesso-para-condominios", "o-que-acontece-quando-um-alarme-dispara"],
     cta: "Solicitar projeto de controle de acesso",
     ctaTitle: "Acessos definidos por regra, não por chave.",
-    wa: wa("Controle de Acesso"),
     seo: {
       title: "Controle de Acesso para Empresas e Condomínios | Timp",
       description: "Controle de acesso com leitores, reconhecimento facial, fechaduras e controladoras, regras por perfil e horário e integração com CFTV no Rio de Janeiro.",
@@ -662,7 +714,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       { key: "segurancaEletronica", why: "Visão integrada de câmeras, alarmes e acessos." },
       { key: "automacao", why: "Sistemas prediais integrados." },
     ],
-    segments: ["condominios", "empresas", "clinicas", "construtoras"],
+    segments: ["casasCondominios", "empresas", "clinicas", "construtoras"],
     faq: [
       { q: "E se a bateria acabar?", a: "Modelos a bateria avisam quando a carga está baixa e têm forma de abertura de emergência, conforme o fabricante. A troca faz parte da manutenção." },
       { q: "Dá para tirar o acesso de alguém?", a: "Sim. A credencial é removida no sistema e deixa de abrir a porta, sem trocar a fechadura." },
@@ -671,7 +723,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["controle-de-acesso-para-condominios"],
     cta: "Solicitar avaliação de fechaduras",
     ctaTitle: "Abertura controlada em cada porta.",
-    wa: wa("Fechaduras Eletrônicas"),
     seo: {
       title: "Fechaduras Eletrônicas para Empresas | Timp Tecnologia",
       description: "Instalação de fechaduras eletrônicas com senha, cartão, biometria ou app, cadastro de usuários, registro de aberturas e integração com controle de acesso.",
@@ -680,7 +731,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
 
   monitoramento: {
     key: "monitoramento",
-    ...MON,
+    ...SEG,
     h1: "Monitoramento 24h com verificação por operador",
     short: "monitoramento 24h",
     answer:
@@ -722,7 +773,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       { key: "controleAcesso", why: "Eventos de porta e acessos fora do horário." },
       { key: "segurancaEletronica", why: "Sistemas integrados desde o projeto." },
     ],
-    segments: ["comercio", "empresas", "condominios", "multiplasUnidades"],
+    segments: ["comercio", "empresas", "casasCondominios", "multiplasUnidades"],
     faq: [
       {
         q: "A Central aciona a polícia automaticamente?",
@@ -741,7 +792,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["como-funciona-uma-central-de-monitoramento-24h", "o-que-acontece-quando-um-alarme-dispara"],
     cta: "Solicitar avaliação de monitoramento",
     ctaTitle: "Avalie o monitoramento para sua operação.",
-    wa: "Olá, Timp. Vim pela página de Monitoramento 24h e quero uma avaliação.",
     seo: {
       title: "Monitoramento 24h no Rio de Janeiro | Central Timp",
       description: "Eventos de alarmes, câmeras e acessos verificados por operador na Central Timp, com protocolo por unidade e registro de cada ação no Rio de Janeiro.",
@@ -800,7 +850,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["servidor-local-cloud-ou-hibrido"],
     cta: "Solicitar proposta de suporte",
     ctaTitle: "Suporte contínuo para a sua equipe.",
-    wa: wa("Suporte de TI"),
     seo: {
       title: "Suporte de TI para Empresas no Rio de Janeiro | Timp",
       description: "Suporte de TI remoto e presencial para empresas no Rio de Janeiro: atendimento a usuários, manutenção preventiva, servidores, backup e documentação.",
@@ -859,7 +908,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["servidor-local-cloud-ou-hibrido"],
     cta: "Solicitar diagnóstico",
     ctaTitle: "Comece pelo diagnóstico do ambiente.",
-    wa: wa("Consultoria em TI"),
     seo: {
       title: "Consultoria em TI para Empresas | Timp Tecnologia",
       description: "Diagnóstico do ambiente de TI, mapa de riscos, plano de evolução por prioridade e acompanhamento de projetos para empresas no Rio de Janeiro.",
@@ -918,7 +966,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["servidor-local-cloud-ou-hibrido"],
     cta: "Solicitar avaliação do ambiente",
     ctaTitle: "Sistemas e dados no lugar certo.",
-    wa: wa("Servidores, Cloud e Virtualização"),
     seo: {
       title: "Servidores, Cloud e Virtualização | Timp Tecnologia",
       description: "Servidor local, cloud ou ambiente híbrido para empresas no Rio de Janeiro, com virtualização, migração, backup e testes de restauração.",
@@ -978,7 +1025,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["servidor-local-cloud-ou-hibrido"],
     cta: "Solicitar avaliação de segurança",
     ctaTitle: "Proteja dados e acessos em camadas.",
-    wa: wa("Segurança da Informação"),
     seo: {
       title: "Segurança da Informação para Empresas | Timp",
       description: "Avaliação de riscos, firewall, segmentação, políticas de acesso, autenticação em dois fatores, backup e orientação da equipe para empresas no Rio de Janeiro.",
@@ -1024,10 +1070,10 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     related: [
       { key: "controleAcesso", why: "Acessos integrados às rotinas do edifício." },
       { key: "cabeamento", why: "A infraestrutura que conecta controladores e sensores." },
-      { key: "telefonia", why: "Voz sobre a mesma infraestrutura de rede." },
+      { key: "energiaSolar", why: "Geração de energia integrada ao imóvel." },
       { key: "redes", why: "Rede segmentada para os sistemas prediais." },
     ],
-    segments: ["construtoras", "condominios", "empresas", "industrias"],
+    segments: ["construtoras", "casasCondominios", "empresas", "industrias"],
     faq: [
       { q: "Dá para automatizar um prédio já pronto?", a: "Sim. Em edificações existentes, o projeto avalia o que pode ser integrado com o menor impacto na estrutura." },
       { q: "A automação integra com o controle de acesso?", a: "Quando os equipamentos são compatíveis, a integração é definida no projeto." },
@@ -1036,7 +1082,6 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["infraestrutura-tecnologica-para-construtoras"],
     cta: "Solicitar avaliação de automação",
     ctaTitle: "Sistemas prediais funcionando em conjunto.",
-    wa: wa("Automação Predial"),
     seo: {
       title: "Automação Predial no Rio de Janeiro | Timp Tecnologia",
       description: "Automação de iluminação, climatização e acessos integrada à rede, em obras novas ou edificações existentes no Rio de Janeiro, com projeto e manutenção.",
@@ -1086,7 +1131,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       { key: "automacao", why: "Sistemas prediais sobre a mesma rede." },
       { key: "suporteTi", why: "Atendimento contínuo depois da entrega." },
     ],
-    segments: ["empresas", "clinicas", "multiplasUnidades", "condominios"],
+    segments: ["empresas", "clinicas", "multiplasUnidades", "casasCondominios"],
     faq: [
       { q: "Dá para aproveitar aparelhos antigos?", a: "Em muitos casos, com PABX híbrido ou adaptadores. A avaliação indica o que pode ser mantido." },
       { q: "O ramal pode funcionar no celular?", a: "Sim, com softphone configurado de forma segura." },
@@ -1095,10 +1140,73 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     articles: ["o-que-e-cabeamento-estruturado"],
     cta: "Solicitar projeto de telefonia",
     ctaTitle: "Voz da empresa sobre a mesma rede.",
-    wa: wa("Telefonia IP e PABX"),
     seo: {
       title: "Telefonia IP e PABX para Empresas | Timp Tecnologia",
       description: "Implantação de telefonia IP e PABX IP ou híbrido no Rio de Janeiro: ramais, grupos, atendimento automático, softphones e integração com a operadora.",
+    },
+  },
+  energiaSolar: {
+    key: "energiaSolar",
+    ...ENERGIA,
+    h1: "Energia solar para empresas e residências no Rio de Janeiro",
+    short: "energia solar",
+    answer:
+      "Um sistema de energia solar fotovoltaica converte a luz do sol em energia elétrica por meio de módulos solares e de um inversor ligado à instalação elétrica do imóvel. A Timp avalia o local, projeta e instala o sistema integrado à infraestrutura existente, com orientação clara sobre o que cada projeto envolve.",
+    problem: {
+      title: "Energia solar começa por uma avaliação técnica do local.",
+      text: "Espaço disponível, orientação, sombreamento, estrutura e instalação elétrica definem o que é viável em cada imóvel. A avaliação vem antes de qualquer proposta, e os resultados dependem do projeto, do consumo e das condições do local.",
+    },
+    flow: {
+      title: "DA LUZ DO SOL AO CONSUMO",
+      caption: "Os componentes de um sistema fotovoltaico conectado à instalação do imóvel. Cada projeto é dimensionado a partir da avaliação técnica.",
+      steps: [
+        { label: "Módulos solares", note: "captação da luz" },
+        { label: "Inversor", note: "conversão para a instalação do imóvel" },
+        { label: "Proteções e quadro elétrico", note: "integração segura" },
+        { label: "Consumo do imóvel", note: "equipamentos e sistemas" },
+      ],
+      hl: 1,
+    },
+    scope: [
+      "Visita técnica e análise do local",
+      "Levantamento do consumo e da instalação elétrica",
+      "Projeto do sistema",
+      "Instalação de módulos, inversor e proteções",
+      "Integração com o quadro elétrico do imóvel",
+      "Testes e orientações na entrega",
+    ],
+    factors: ["Consumo de energia do imóvel", "Área disponível e orientação", "Sombreamento", "Tipo de telhado ou estrutura", "Condições da instalação elétrica existente"],
+    benefits: [
+      { t: "Projeto sob medida", d: "Dimensionado a partir do consumo e das condições reais do imóvel." },
+      { t: "Integração com a infraestrutura", d: "Planejado junto à instalação elétrica e aos demais sistemas do local." },
+      { t: "Um só parceiro", d: "A mesma equipe que cuida da tecnologia do imóvel acompanha o sistema." },
+    ],
+    related: [
+      { key: "automacao", why: "Rotinas do edifício integradas ao uso de energia." },
+      { key: "cftv", why: "Segurança do imóvel planejada no mesmo projeto." },
+      { key: "starlink", why: "Conectividade para imóveis afastados." },
+    ],
+    segments: ["construtoras", "empresas", "casasCondominios", "industrias", "comercio"],
+    faq: [
+      {
+        q: "Quanto vou economizar com energia solar?",
+        a: "Depende do consumo, das condições do local, do sistema projetado e das regras da distribuidora. A Timp não trabalha com números genéricos: qualquer estimativa só é apresentada depois da avaliação técnica do imóvel.",
+      },
+      {
+        q: "Energia solar funciona em qualquer imóvel?",
+        a: "Não em todos. Área disponível, orientação, sombreamento e estrutura precisam ser avaliados. A visita técnica indica se o sistema é viável e em quais condições.",
+      },
+      {
+        q: "Dá para prever energia solar em um empreendimento ainda em projeto?",
+        a: "Sim. Quando entra na fase de projeto, estrutura, rotas e espaço para os equipamentos são previstos junto às demais disciplinas.",
+      },
+    ],
+    articles: [],
+    cta: "Solicitar avaliação de energia solar",
+    ctaTitle: "Avalie a energia solar para o seu imóvel.",
+    seo: {
+      title: "Energia Solar no Rio de Janeiro | Timp Tecnologia",
+      description: "Projeto e instalação de energia solar para empresas, residências e empreendimentos no Rio de Janeiro, com avaliação técnica do local antes da proposta.",
     },
   },
 }
@@ -1121,8 +1229,9 @@ export const SERVICE_TAGLINES: Record<ServiceKey, string> = {
   fibra: "Interligação entre andares, blocos e prédios.",
   starlink: "Conectividade via satélite, principal ou contingência.",
   cftv: "Câmeras IP alimentadas pela rede (PoE).",
-  segurancaEletronica: "Visão integrada de câmeras, alarmes, acesso e fechaduras.",
+  segurancaEletronica: "Visão integrada de câmeras, alarmes, acessos e monitoramento.",
   alarmes: "Sensores e central integrados à verificação por vídeo.",
+  alarmeIncendio: "Detecção de fumaça e calor com alerta no local.",
   controleAcesso: "Leitores e controladoras conectados à rede.",
   fechaduras: "Abertura controlada e registrada por porta.",
   monitoramento: "Eventos acompanhados pela Central Timp.",
@@ -1132,4 +1241,5 @@ export const SERVICE_TAGLINES: Record<ServiceKey, string> = {
   segurancaInformacao: "Proteção de dados e acessos em camadas.",
   automacao: "Sistemas prediais integrados.",
   telefonia: "Voz sobre a mesma infraestrutura de rede.",
+  energiaSolar: "Geração de energia planejada para o imóvel.",
 }

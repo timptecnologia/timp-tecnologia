@@ -158,7 +158,7 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
       {!G.vert ? (
         <>
           <text x={sw.x + sw.w / 2} y={sw.y + 32} textAnchor="middle" fill={P.g100} style={mono(12, 500)}>
-            TIMP
+            Timp
           </text>
           <rect x={sw.x + sw.w - 16} y={(G.upY ?? 0) - 10} width={18} height={20} rx={2} fill={P.ink} stroke={P.g700} />
           <text x={sw.x + sw.w + 16} y={(G.upY ?? 0) - 14} fill={P.g400} style={mono(9)}>
@@ -180,7 +180,7 @@ export function HeroScene({ variant, className, style }: { variant: HeroVariant;
       ) : (
         <>
           <text x={sw.x + (variant === "m" ? 7 : 14)} y={sw.y + sw.h / 2 + 4} fill={P.g100} style={mono(variant === "m" ? 9 : 11, 500)}>
-            TIMP
+            Timp
           </text>
           <text x={sw.x + sw.w / 2 + 12} y={sw.y + sw.h + 22} fill={P.g400} style={mono(9)}>
             OPERAÇÃO

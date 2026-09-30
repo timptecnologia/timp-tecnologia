@@ -1,9 +1,11 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 
+import { WhatsAppIcon } from "@/components/ui/whatsapp-link"
 import { PROJECT_CTA } from "@/lib/site/routes"
-import { whatsappHref } from "@/lib/site/constants"
+import { waContextForPath, waHref } from "@/lib/site/whatsapp"
 import { cn } from "@/lib/utils"
 
 /**
@@ -14,7 +16,9 @@ import { cn } from "@/lib/utils"
  * formulário está em foco (teclado virtual). Não ocupa espaço no layout (sem CLS);
  * entra com transform/opacity.
  */
-export function StickyCta({ waText }: { waText: string }) {
+export function StickyCta() {
+  // Mensagem do WhatsApp conforme a página de origem
+  const wa = waContextForPath(usePathname() ?? "/")
   const [heroVisible, setHeroVisible] = useState(true)
   const [finalVisible, setFinalVisible] = useState(false)
   const [typing, setTyping] = useState(false)
@@ -83,13 +87,13 @@ export function StickyCta({ waText }: { waText: string }) {
         Solicitar um projeto
       </a>
       <a
-        href={whatsappHref(waText)}
+        href={waHref(wa)}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Falar no WhatsApp"
-        className="flex h-12 flex-none items-center justify-center gap-2 rounded-sm border border-g-600 px-3.5 text-[14px] font-semibold text-g-100 no-underline"
+        data-wa-context={wa}
+        className="flex h-12 flex-none items-center justify-center gap-2 rounded-sm border border-wa bg-wa px-4 text-[15px] font-semibold text-wa-ink no-underline hover:bg-wa-strong hover:text-wa-ink"
       >
-        <span aria-hidden="true" className="size-2 rounded-full bg-ok" />
+        <WhatsAppIcon />
         WhatsApp
       </a>
     </div>

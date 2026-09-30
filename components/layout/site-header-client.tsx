@@ -1,10 +1,13 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react"
 
-import { ECOSYSTEMS, SEGMENTS, TOP_LINKS, WA_MESSAGES } from "@/lib/home/content"
-import { SITE, whatsappHref } from "@/lib/site/constants"
+import { WhatsAppLink } from "@/components/ui/whatsapp-link"
+import { ECOSYSTEMS, SEGMENTS, SERVICE_CATEGORIES, STRATEGIC_FRONT, TOP_LINKS, ecosystemHref } from "@/lib/home/content"
+import { SITE } from "@/lib/site/constants"
 import { PROJECT_CTA, requiredHref } from "@/lib/site/routes"
+import { waContextForPath } from "@/lib/site/whatsapp"
 import { cn } from "@/lib/utils"
 
 /**
@@ -18,11 +21,18 @@ import { cn } from "@/lib/utils"
 
 type Menu = "serv" | "solu" | null
 
-const MENU_GROUPS = ECOSYSTEMS.slice(0, 4)
-const MONITORING = ECOSYSTEMS[4]
-
 function LiveDot() {
   return <span aria-hidden="true" className="timp-live relative inline-block size-2 shrink-0 rounded-full bg-ok" />
+}
+
+/** Ícone da Área do Cliente (pessoa) — CTA secundário. */
+function UserIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4 flex-none">
+      <circle cx="8" cy="5.5" r="2.75" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M2.75 14c.6-2.6 2.7-4 5.25-4s4.65 1.4 5.25 4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
 }
 
 function Chevron({ open }: { open: boolean }) {
@@ -42,6 +52,7 @@ export function SiteHeaderClient({ logo }: { logo: ReactNode }) {
   const soluBtn = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
   const ids = { serv: useId(), solu: useId(), drawer: useId(), accServ: useId(), accSolu: useId() }
+  const wa = waContextForPath(usePathname() ?? "/")
 
   const closeDrawer = useCallback((restoreFocus = false) => {
     setDrawer(false)
@@ -167,9 +178,12 @@ export function SiteHeaderClient({ logo }: { logo: ReactNode }) {
               </a>
             ))}
           </nav>
-          <div className="hidden flex-none items-center gap-5 desktop:flex">
-            <a href={requiredHref("areaCliente")} className="flex items-center gap-2 text-[14px] font-semibold text-g-200 no-underline hover:text-white">
-              <span aria-hidden="true" className="size-[7px] rounded-full border-[1.5px] border-g-400" />
+          <div className="hidden flex-none items-center gap-3 desktop:flex">
+            <a
+              href={requiredHref("areaCliente")}
+              className="inline-flex h-11 items-center gap-2 rounded-sm border border-g-600 bg-g-900 px-4 text-[14px] font-semibold whitespace-nowrap text-g-100 no-underline transition-colors duration-150 hover:border-g-400 hover:bg-g-850 hover:text-white"
+            >
+              <UserIcon />
               Área do Cliente
             </a>
             <a
@@ -214,13 +228,22 @@ export function SiteHeaderClient({ logo }: { logo: ReactNode }) {
           className="absolute inset-x-0 top-full border-b border-g-700 bg-g-900 shadow-[0_24px_48px_rgb(0_0_0/0.55)]"
         >
           <div className="mx-auto grid max-w-[1440px] grid-cols-[repeat(4,minmax(0,1fr))_minmax(0,1.2fr)] gap-9 px-[clamp(20px,3.5vw,56px)] pt-8 pb-6">
-            {MENU_GROUPS.map((g) => (
+            {SERVICE_CATEGORIES.map((g) => (
               <div key={g.id} className="flex flex-col gap-3">
-                <span className="font-mono text-[11px] tracking-[0.08em] text-blue-400">{g.name.toUpperCase()}</span>
+                {g.hub ? (
+                  <a href={ecosystemHref(g)} className="font-mono text-[11px] tracking-[0.08em] text-blue-400 no-underline hover:text-blue-300">
+                    {g.name.toUpperCase()} →
+                  </a>
+                ) : (
+                  <span className="font-mono text-[11px] tracking-[0.08em] text-blue-400">{g.name.toUpperCase()}</span>
+                )}
                 <div className="flex flex-col">
                   {g.services.map((s) => (
-                    <a key={s.key} href={requiredHref(s.key)} className="flex justify-between gap-2 border-t border-g-800 py-2 text-[15px] text-g-200 no-underline hover:text-white">
-                      {s.label}
+                    <a key={s.key} href={requiredHref(s.key)} className="flex items-center justify-between gap-2 border-t border-g-800 py-2 text-[15px] text-g-200 no-underline hover:text-white">
+                      <span className="flex items-center gap-2">
+                        {s.label}
+                        {s.key === "monitoramento" && <LiveDot />}
+                      </span>
                       <span aria-hidden="true" className="text-g-400">
                         →
                       </span>
@@ -229,22 +252,17 @@ export function SiteHeaderClient({ logo }: { logo: ReactNode }) {
                 </div>
               </div>
             ))}
-            {MONITORING && (
-              <a
-                href={requiredHref("monitoramento")}
-                className="flex flex-col justify-between gap-5 rounded-md border border-g-700 bg-ink p-5 text-g-100 no-underline hover:border-blue-500 hover:text-g-100"
-              >
-                <span className="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.08em] text-blue-400">
-                  <LiveDot />
-                  MONITORAMENTO 24H
-                </span>
-                <span className="flex flex-col gap-2">
-                  <span className="text-[20px] leading-[1.15] font-bold tracking-[-0.02em]">Central Timp de Monitoramento</span>
-                  <span className="text-[14px] leading-normal text-g-300">Eventos verificados por operador e tratados conforme o protocolo de cada unidade.</span>
-                </span>
-                <span className="text-[14px] font-semibold text-blue-400">Conhecer a Central Timp →</span>
-              </a>
-            )}
+            <a
+              href={requiredHref("energiaSolar")}
+              className="flex flex-col justify-between gap-5 rounded-md border border-g-700 bg-ink p-5 text-g-100 no-underline hover:border-blue-500 hover:text-g-100"
+            >
+              <span className="font-mono text-[11px] tracking-[0.08em] text-ok-fg">FRENTE ESTRATÉGICA</span>
+              <span className="flex flex-col gap-2">
+                <span className="text-[20px] leading-[1.15] font-bold tracking-[-0.02em]">{STRATEGIC_FRONT.name}</span>
+                <span className="text-[14px] leading-normal text-g-300">{STRATEGIC_FRONT.desc}</span>
+              </span>
+              <span className="text-[14px] font-semibold text-blue-400">Conhecer energia solar →</span>
+            </a>
           </div>
           <div className="mx-auto flex max-w-[1440px] flex-wrap justify-between gap-6 border-t border-g-800 px-[clamp(20px,3.5vw,56px)] pt-4 pb-5">
             <a href={requiredHref("servicos")} className="text-[14px] font-semibold text-g-100 no-underline hover:text-white">
@@ -356,16 +374,12 @@ export function SiteHeaderClient({ logo }: { logo: ReactNode }) {
               <a href={PROJECT_CTA} className="flex h-[52px] items-center justify-center rounded-sm bg-blue-600 text-[16px] font-semibold text-white no-underline hover:text-white">
                 Solicitar um projeto
               </a>
+              <WhatsAppLink context={wa} />
               <a
-                href={whatsappHref(WA_MESSAGES.home)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-[52px] items-center justify-center gap-2.5 rounded-sm border border-g-600 text-[16px] font-semibold text-g-100 no-underline"
+                href={requiredHref("areaCliente")}
+                className="flex h-[52px] items-center justify-center gap-2.5 rounded-sm border border-g-600 bg-g-900 text-[16px] font-semibold text-g-100 no-underline hover:border-g-400 hover:text-white"
               >
-                <span aria-hidden="true" className="size-2 rounded-full bg-ok" />
-                WhatsApp {SITE.whatsappDisplay}
-              </a>
-              <a href={requiredHref("areaCliente")} className="flex h-12 items-center justify-center text-[15px] font-semibold text-g-200 no-underline">
+                <UserIcon />
                 Área do Cliente
               </a>
             </div>

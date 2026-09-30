@@ -1,7 +1,8 @@
-import { FOOTER_COLUMNS, WA_MESSAGES } from "@/lib/home/content"
+import { FOOTER_COLUMNS } from "@/lib/home/content"
 import { requiredHref } from "@/lib/site/routes"
 import { CookiePreferencesButton } from "@/components/consent/cookie-consent"
-import { SITE, whatsappHref } from "@/lib/seo/site"
+import { SITE } from "@/lib/seo/site"
+import { waHref } from "@/lib/site/whatsapp"
 
 import { FooterColumns } from "./footer-columns"
 import { Logo } from "./logo"
@@ -16,7 +17,7 @@ import { StickyCta } from "./sticky-cta"
  * footer entra na tela ([data-hide-sticky-cta]) — sem espaçador vazio no fim da página.
  */
 const CONTACTS = [
-  { k: "WHATSAPP", v: SITE.whatsappDisplay, href: whatsappHref(), external: true },
+  { k: "WHATSAPP", v: SITE.whatsappDisplay, href: waHref("geral"), external: true },
   { k: "E-MAIL", v: SITE.email, href: `mailto:${SITE.email}`, external: false },
   { k: "INSTAGRAM", v: "@timp.br", href: "https://instagram.com/timp.br", external: true },
   { k: "FACEBOOK", v: "@timp.br", href: "https://facebook.com/timp.br", external: true },
@@ -90,7 +91,7 @@ export function SiteFooter() {
           por Kinau Company
         </p>
       </footer>
-      <StickyCta waText={WA_MESSAGES.home} />
+      <StickyCta />
     </>
   )
 }

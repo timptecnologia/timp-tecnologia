@@ -6,7 +6,8 @@ import { StarlinkExperience } from "./starlink-experience"
 import { S } from "./ui"
 
 /**
- * Starlink + Infraestrutura Timp ("Conectividade onde sua operação precisar.").
+ * Starlink + Infraestrutura Timp — o H2 nomeia a Starlink (o visitante identifica o
+ * assunto na hora).
  * A Home resume; a página comercial proprietária (SEO) é /servicos/instalacao-starlink/.
  * Posicionamento: instalação + integração + infraestrutura. Sem logo Starlink e sem
  * sugerir parceria/representação oficial (seo-geo.md → cluster Starlink).
@@ -16,9 +17,9 @@ function Intro({ headingId }: { headingId?: string }) {
   const serviceHref = href("starlink", { section: HOME_ANCHORS.starlink })
   return (
     <>
-      <span className={cn(S.eyebrow, "text-blue-400")}>STARLINK + INFRAESTRUTURA TIMP</span>
+      <span className={cn(S.eyebrow, "text-blue-400")}>Starlink + infraestrutura Timp</span>
       <h2 id={headingId} className={S.h2Lg}>
-        Conectividade onde sua operação precisar.
+        Instalação profissional de Starlink onde você precisar de conexão.
       </h2>
       <p className={cn(S.lead18, "max-w-[30em] text-g-300")}>
         A Timp instala e integra Starlink à sua infraestrutura para ampliar a conectividade, atender locais remotos e criar caminhos de contingência quando a rede
@@ -31,13 +32,14 @@ function Intro({ headingId }: { headingId?: string }) {
           </li>
         ))}
       </ul>
-      <div className="flex flex-wrap gap-3 pt-1">
+      {/* Mobile: lado a lado com a mesma altura (texto quebra em 2 linhas se preciso) */}
+      <div className="grid grid-cols-1 gap-2.5 pt-1 min-[340px]:grid-cols-2 tablet:flex tablet:flex-wrap tablet:gap-3">
         {serviceHref && (
-          <a href={serviceHref} className={S.btnPrimary}>
-            Conhecer instalação Starlink <span aria-hidden="true">→</span>
+          <a href={serviceHref} className={cn(S.btnPrimary, "justify-center px-3 text-center max-tablet:text-[15px] tablet:px-[22px]")}>
+            Conhecer instalação Starlink <span aria-hidden="true" className="max-tablet:hidden">→</span>
           </a>
         )}
-        <a href={PROJECT_CTA} className={S.btnSecondary}>
+        <a href={PROJECT_CTA} className={cn(S.btnSecondary, "justify-center px-3 text-center max-tablet:text-[15px] tablet:px-[22px]")}>
           Solicitar um projeto
         </a>
       </div>

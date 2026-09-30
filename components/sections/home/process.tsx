@@ -11,7 +11,7 @@ export function Process() {
       <div className={cn(S.container, S.pad, "flex flex-col gap-[clamp(24px,3vw,40px)]")}>
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-5">
           <div className="flex max-w-[760px] flex-col gap-5">
-            <span className={cn(S.eyebrow, "text-blue-600")}>PROCESSO TIMP</span>
+            <span className={cn(S.eyebrow, "text-blue-600")}>Processo Timp</span>
             <h2 id="processo-titulo" className={S.h2}>
               Do planejamento à evolução, com o mesmo parceiro.
             </h2>

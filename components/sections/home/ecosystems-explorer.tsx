@@ -63,9 +63,11 @@ function Panel({ eco }: { eco: Ecosystem }) {
         <a href={eco.ctaHref} className="inline-flex h-[52px] items-center gap-2.5 rounded-sm bg-blue-600 px-[22px] text-[16px] font-semibold text-white no-underline hover:bg-blue-650 hover:text-white">
           {eco.cta} <span aria-hidden="true">→</span>
         </a>
-        <a href={ecosystemHref(eco)} className="text-[15px] font-semibold text-blue-400 no-underline hover:text-blue-300">
-          Ver serviços de {eco.name.toLowerCase().replace("ti ", "TI ")}
-        </a>
+        {!eco.strategic && (
+          <a href={ecosystemHref(eco)} className="text-[15px] font-semibold text-blue-400 no-underline hover:text-blue-300">
+            {eco.hub ? `Ver ${eco.name} completa` : `Ver serviços de ${eco.name.toLowerCase().replace("ti ", "TI ")}`}
+          </a>
+        )}
       </div>
     </>
   )
@@ -125,8 +127,8 @@ export function EcosystemsExplorer() {
                 )}
               >
                 <span className="text-[15px] leading-[1.2] font-semibold tracking-[-0.01em] whitespace-nowrap desktop:text-[19px] desktop:whitespace-normal">{eco.name}</span>
-                <span className="ml-auto hidden font-mono text-[11px] text-g-400 desktop:inline">
-                  {eco.services.length} {eco.services.length > 1 ? "serviços" : "serviço"}
+                <span className={cn("ml-auto hidden font-mono text-[11px] desktop:inline", eco.strategic ? "text-ok-fg" : "text-g-400")}>
+                  {eco.strategic ? "frente estratégica" : `${eco.services.length} serviços`}
                 </span>
               </button>
             )
@@ -160,14 +162,19 @@ export function EcosystemsExplorer() {
                   onClick={() => setOpen(isOpen ? -1 : i)}
                   className="flex min-h-[68px] w-full cursor-pointer items-center gap-3.5 py-3 text-left text-g-100"
                 >
-                  <span className="flex-1 text-[18px] leading-[1.25] font-semibold">{eco.name}</span>
+                  <span className="flex flex-1 flex-col gap-0.5">
+                    <span className="text-[18px] leading-[1.25] font-semibold">{eco.name}</span>
+                    <span className={cn("font-mono text-[11px]", eco.strategic ? "text-ok-fg" : "text-g-400")}>
+                      {eco.strategic ? "frente estratégica" : `${eco.services.length} serviços`}
+                    </span>
+                  </span>
                   <span aria-hidden="true" className="w-5 text-center font-mono text-[18px] text-g-400">
                     {isOpen ? "−" : "+"}
                   </span>
                 </button>
               </h3>
-              <div id={`${base}-acc-${i}`} hidden={!isOpen} className="flex flex-col gap-5 pb-6 [&[hidden]]:hidden">
-                <p className="m-0 text-[17px] leading-normal text-g-200">{eco.desc}</p>
+              <div id={`${base}-acc-${i}`} hidden={!isOpen} className="flex flex-col gap-3 pb-5 [&[hidden]]:hidden">
+                <p className="m-0 text-[16px] leading-normal text-g-300">{eco.desc}</p>
                 <div className="flex flex-col">
                   {eco.services.map((it) => (
                     <MaybeLink
@@ -183,12 +190,11 @@ export function EcosystemsExplorer() {
                     </MaybeLink>
                   ))}
                 </div>
-                {eco.flows.map((f) => (
-                  <FlowBox key={f.title} flow={f} vertical />
-                ))}
-                <a href={eco.ctaHref} className="flex h-[52px] items-center justify-center rounded-sm bg-blue-600 text-[16px] font-semibold text-white no-underline hover:text-white">
-                  {eco.cta}
-                </a>
+                {eco.hub && (
+                  <a href={ecosystemHref(eco)} className="flex min-h-12 items-center justify-between border-t border-g-800 text-[16px] font-semibold text-blue-400 no-underline">
+                    Ver {eco.name} completa <span aria-hidden="true">→</span>
+                  </a>
+                )}
               </div>
             </div>
           )

@@ -18,7 +18,7 @@ import TermosPage from "@/app/(public)/termos-de-uso/page"
 import NotFound from "@/app/not-found"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { SiteHeaderClient } from "@/components/layout/site-header-client"
-import { MonitoringExtras, SecurityExtras, StarlinkExtras } from "@/components/sections/services/extras"
+import { MonitoringExtras, MonitoringLead, SecurityLead, StarlinkExtras, StarlinkLead } from "@/components/sections/services/extras"
 import { ArticlePage } from "@/components/templates/article-page"
 import { ServicePage } from "@/components/templates/service-page"
 import { SolutionPage } from "@/components/templates/solution-page"
@@ -26,7 +26,9 @@ import { ARTICLES } from "@/lib/content/articles"
 import { SERVICES } from "@/lib/content/services"
 import { SOLUTIONS } from "@/lib/content/solutions"
 import { PUBLISHED_ROUTES } from "@/lib/seo/routes"
+import { ECOSYSTEMS } from "@/lib/home/content"
 import { SITE } from "@/lib/site/constants"
+import { WA_MESSAGES, type WaContext } from "@/lib/site/whatsapp"
 import { PROJECT_CTA, ROUTES, SERVICE_KEYS, SOLUTION_KEYS, articlePath, href, pendingRoutes, requiredHref, type RouteKey } from "@/lib/site/routes"
 
 /**
@@ -41,9 +43,25 @@ vi.mock("@/components/layout/logo", () => ({ Logo: () => null }))
 const SITEMAP = readFileSync(join(__dirname, "..", "..", "design-reference", "docs", "sitemap.md"), "utf8")
 const sitemapPaths = new Set([...SITEMAP.matchAll(/^\| (\/[^\s|]*) /gm)].map((m) => m[1]))
 /** Decisões de produto pós-handoff (docs/MACROFASE-2-SITE-PUBLICO.md): URLs novas fora do sitemap original. */
-const POST_HANDOFF_PATHS = new Set(["/solucoes/", "/blog/", "/politica-de-privacidade/", "/politica-de-cookies/", "/termos-de-uso/"])
+const POST_HANDOFF_PATHS = new Set([
+  "/solucoes/",
+  "/blog/",
+  "/politica-de-privacidade/",
+  "/politica-de-cookies/",
+  "/termos-de-uso/",
+  // Revisão final da Macrofase 2 (docs/MACROFASE-2-SITE-PUBLICO.md → taxonomia)
+  "/servicos/alarme-de-incendio/",
+  "/servicos/energia-solar/",
+  "/solucoes/casas-e-condominios/",
+  "/solucoes/arquitetos-e-designers-de-interiores/",
+])
 
-const EXTRAS: Partial<Record<string, () => ReactElement>> = { starlink: StarlinkExtras, monitoramento: MonitoringExtras, segurancaEletronica: SecurityExtras }
+/** Mesmo mapa de app/(public)/servicos/[slug]/page.tsx. */
+const EXTRAS: Partial<Record<string, { lead?: () => ReactElement; extra?: () => ReactElement; hideHiring?: boolean }>> = {
+  starlink: { lead: StarlinkLead, extra: StarlinkExtras, hideHiring: true },
+  monitoramento: { lead: MonitoringLead, extra: MonitoringExtras },
+  segurancaEletronica: { lead: SecurityLead },
+}
 
 const PAGES: Record<string, () => ReactElement> = {
   "/": () => createElement(HomePage),
@@ -58,8 +76,11 @@ const PAGES: Record<string, () => ReactElement> = {
   "/termos-de-uso/": () => createElement(TermosPage),
   ...Object.fromEntries(
     SERVICE_KEYS.map((k) => {
-      const Extra = EXTRAS[k]
-      return [ROUTES[k].path, () => createElement(ServicePage, { s: SERVICES[k], extra: Extra ? createElement(Extra) : undefined })]
+      const x = EXTRAS[k]
+      return [
+        ROUTES[k].path,
+        () => createElement(ServicePage, { s: SERVICES[k], lead: x?.lead && createElement(x.lead), extra: x?.extra && createElement(x.extra), hideHiring: x?.hideHiring }),
+      ]
     }),
   ),
   ...Object.fromEntries(SOLUTION_KEYS.map((k) => [ROUTES[k].path, () => createElement(SolutionPage, { s: SOLUTIONS[k] })])),
@@ -97,10 +118,26 @@ describe("registro de rotas", () => {
     expect(href("clientesParceiros")).toBeNull()
   })
 
-  it("redirects: /orcamento/ → formulário, /conhecimento/ → /blog/", () => {
+  it("redirects: /orcamento/ → formulário, /conhecimento/ → /blog/, Condomínios → Casas e Condomínios", () => {
     const config = readFileSync(join(__dirname, "..", "..", "next.config.ts"), "utf8")
     expect(config).toContain(`{ source: "/orcamento/", destination: "${PROJECT_CTA}", permanent: true }`)
     expect(config).toContain(`{ source: "/conhecimento/", destination: "/blog/", permanent: true }`)
+    expect(config).toContain(`{ source: "/solucoes/condominios/", destination: "${ROUTES.casasCondominios.path}", permanent: true }`)
+  })
+
+  it("taxonomia: 4 categorias + Energia Solar estratégica; sem categoria filha de si mesma e sem duplicatas", () => {
+    const categories = ECOSYSTEMS.filter((e) => !e.strategic)
+    expect(categories.map((e) => e.name)).toEqual(["Infraestrutura e Conectividade", "Segurança Eletrônica", "TI Corporativa", "Automação e Comunicação"])
+    expect(ECOSYSTEMS.filter((e) => e.strategic).map((e) => e.services.map((x) => x.key))).toEqual([["energiaSolar"]])
+    const seg = ECOSYSTEMS.find((e) => e.id === "seguranca-eletronica")!
+    expect(seg.services.map((x) => x.key)).toEqual(["cftv", "alarmes", "alarmeIncendio", "controleAcesso", "fechaduras", "monitoramento"])
+    expect(seg.hub).toBe("segurancaEletronica")
+    // Nenhuma categoria contém só a si mesma; Segurança Eletrônica é landing, não filha
+    for (const e of categories) expect(e.services.length, e.name).toBeGreaterThan(1)
+    const listed = ECOSYSTEMS.flatMap((e) => e.services.map((x) => x.key))
+    expect(new Set(listed).size).toBe(listed.length)
+    expect(listed).not.toContain("segurancaEletronica")
+    expect([...listed, "segurancaEletronica"].sort()).toEqual([...SERVICE_KEYS].sort())
   })
 })
 
@@ -145,8 +182,9 @@ describe.each(Object.keys(PAGES))("página %s", (page) => {
 
   it('texto público: marca "Timp", "e" no lugar de "&", sem numeração editorial de seção', () => {
     const text = textOf(markup)
-    const mixed = text.split("\n").filter((line) => /\bTIMP\b/.test(line) && /[a-zà-ú]/.test(line))
-    expect(mixed, mixed.join(" | ")).toEqual([])
+    // Marca sempre "Timp" no texto renderizado (nunca "TIMP", nem em rótulos em caixa alta)
+    const upper = text.split("\n").filter((line) => /\bTIMP\b/.test(line))
+    expect(upper, upper.join(" | ")).toEqual([])
     expect(markup.replace(/<script[\s\S]*?<\/script>/g, "")).not.toMatch(/\s&amp;\s/)
     expect(markup).not.toMatch(/>\s*\d{2} — [A-ZÀ-Ú]/)
   })
@@ -186,7 +224,9 @@ describe("decisões da Macrofase 2", () => {
     expect(footer).toContain("Preferências de cookies")
     // Coluna LEGAL na grade principal: [Marca] [Serviços] [Soluções] [Timp] [Legal]
     const navs = [...footer.matchAll(/<nav aria-label="([^"]+)"/g)].map((m) => m[1])
-    expect(navs.slice(0, 4)).toEqual(["SERVIÇOS", "SOLUÇÕES", "TIMP", "LEGAL"])
+    expect(navs.slice(0, 4)).toEqual(["SERVIÇOS", "SOLUÇÕES", "Timp", "LEGAL"])
+    // Novas frentes e soluções no footer
+    for (const k of ["energiaSolar", "alarmeIncendio", "casasCondominios", "arquitetos"] as const) expect(footer).toContain(`href="${ROUTES[k].path}"`)
     const legal = footer.slice(footer.indexOf('<nav aria-label="LEGAL"'))
     expect(legal.slice(0, legal.indexOf("</nav>"))).toContain("Preferências de cookies")
     const footerOnly = footer.slice(0, footer.indexOf("</footer>"))
@@ -196,7 +236,7 @@ describe("decisões da Macrofase 2", () => {
   })
 
   it("demonstração da Central: visitante não opera nada; estado final estático (sem JS) com câmeras abertas", () => {
-    const start = home.indexOf("Demonstração da Central Timp")
+    const start = home.indexOf("Veja como funciona a Central de Monitoramento Timp")
     const demo = home.slice(start, home.indexOf("</section>", start))
     expect(start).toBeGreaterThan(0)
     // Nenhum controle no HTML inicial (Pausar/Retomar só existe após iniciar a animação no cliente)
@@ -211,7 +251,75 @@ describe("decisões da Macrofase 2", () => {
     expect(demo).toMatch(/cam-07-entrada-lateral\.webp/)
     expect(demo).toMatch(/cam-08-corredor-lateral\.webp/)
     expect(demo).toContain('loading="eager"')
-    expect(demo).toContain("DADOS FICTÍCIOS · FLUXO ILUSTRATIVO")
+    expect(demo).toContain("Dados fictícios · fluxo ilustrativo")
+    expect(demo).toContain("Acompanhe uma ocorrência fictícia")
+    expect(demo).toContain(">Operador Timp<")
+  })
+
+  it("Hero: mensagem comercial/SEO e CTAs principais", () => {
+    expect(home).toMatch(/<h1[^>]*>Empresa de TI no Rio de Janeiro para manter sua operação conectada, segura e funcionando\.<\/h1>/)
+    expect(home).toContain("Timp Tecnologia · Rio de Janeiro · Desde 2016")
+    expect(home).toMatch(/href="\/contato\/#projeto"[^>]*>Solicitar um projeto/)
+    expect(home).toMatch(/href="\/solucoes\/"[^>]*>Conhecer soluções</)
+  })
+
+  it("Home: Serviços sem 'cinco frentes', Starlink nomeada no H2, Arquitetos logo após Construtoras", () => {
+    expect(home).toContain("Tecnologia em várias frentes, do jeito que a sua operação precisa.")
+    expect(home).not.toMatch(/[Cc]inco frentes/)
+    expect(home).toMatch(/<h2[^>]*>Instalação profissional de Starlink/)
+    const order = ["id=\"construtoras\"", "id=\"arquitetos\"", "id=\"monitoramento\""].map((m) => home.indexOf(m))
+    expect(order.every((v, i) => v > 0 && (i === 0 || v > order[i - 1]!))).toBe(true)
+    expect(home).toContain("Falar sobre um projeto")
+    expect(home).not.toContain("Falar sobre uma obra")
+  })
+
+  it("Construtoras: camadas sem sala técnica e com energia solar; timeline completa sem JS e sem controles", () => {
+    const b = home.slice(home.indexOf('id="construtoras"'), home.indexOf('id="arquitetos"'))
+    expect(b).toContain("Energia solar")
+    expect(b).not.toContain("Sala técnica")
+    const tl = b.slice(b.indexOf("data-timeline-step"))
+    expect(tl.match(/data-done=""/g)?.length).toBe(9)
+    expect(tl.slice(0, tl.indexOf("</ol>"))).not.toMatch(/<button|tabindex=/)
+  })
+
+  it("Conhecer a Central Timp leva à página de Monitoramento 24h (nunca à própria Home)", () => {
+    for (const markup of Object.values(html)) {
+      for (const m of markup.matchAll(/<a[^>]*href="([^"]*)"[^>]*>(?:<[^>]+>)*Conhecer a Central Timp/g)) expect(m[1]).toBe(ROUTES.monitoramento.path)
+    }
+    expect(home).toContain(`href="${ROUTES.monitoramento.path}"`)
+  })
+
+  it("Starlink: página com H1 comercial, explicação, demonstração automática (estado final sem JS) e limitações", () => {
+    const page = html[ROUTES.starlink.path]!
+    expect(page).toMatch(/<h1[^>]*>Instalação profissional de Starlink no Rio de Janeiro para empresas, obras e áreas remotas/)
+    for (const t of ["O QUE É STARLINK", "Como a Starlink entra na rede da empresa?", "O que acontece se a fibra sair do ar?", "LIMITAÇÕES REAIS", "não é representante"]) expect(page).toContain(t)
+    const demo = page.slice(page.indexOf("data-starlink-step"))
+    expect(demo).toMatch(/^data-starlink-step="6"/)
+    expect(demo.slice(0, demo.indexOf("</section>"))).not.toMatch(/<button/)
+  })
+
+  it("Monitoramento 24h: página própria com a demonstração da Central", () => {
+    const page = html[ROUTES.monitoramento.path]!
+    expect(page).toContain("Veja como funciona a Central de Monitoramento Timp")
+    expect(page).toMatch(/data-cam="CAM-07" data-cam-open=""/)
+  })
+
+  it("WhatsApp: todo CTA abre a conversa com a mensagem da origem (URL-encoded), sem número dentro do botão", () => {
+    const msg = (h: string) => decodeURIComponent(new URL(h.replaceAll("&amp;", "&")).searchParams.get("text") ?? "")
+    for (const [page, markup] of Object.entries(html)) {
+      for (const m of markup.matchAll(/<a[^>]*href="(https:\/\/wa\.me\/[^"]*)"[^>]*>([\s\S]*?)<\/a>/g)) {
+        const [tag, h, inner] = [m[0], m[1]!, m[2]!]
+        expect(msg(h).length, `${page}: ${h}`).toBeGreaterThan(10)
+        const ctx = tag.match(/data-wa-context="([^"]+)"/)?.[1] as WaContext | undefined
+        if (ctx) expect(msg(h), `${page} (${ctx})`).toBe(WA_MESSAGES[ctx])
+        // Botões (rounded-sm) não mostram o número; o número fica nas áreas de contato
+        if (/rounded-sm/.test(tag)) expect(inner.replace(/<[^>]+>/g, ""), page).not.toContain(SITE.whatsappDisplay)
+        expect(inner, `${page}: bolinha verde substituída pelo ícone`).not.toMatch(/rounded-full bg-ok/)
+      }
+    }
+    // Páginas de serviço e solução usam a mensagem do próprio contexto
+    for (const k of [...SERVICE_KEYS, ...SOLUTION_KEYS]) expect(html[ROUTES[k].path], k).toContain(`data-wa-context="${k}"`)
+    expect(WA_MESSAGES.monitoramento).toBe("Olá! Fiquei interessado na Central de Monitoramento 24h da Timp e gostaria de saber mais e solicitar um orçamento.")
   })
 
   it("404 com identidade, navegação útil e noindex", () => {

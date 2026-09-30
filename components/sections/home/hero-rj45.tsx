@@ -17,44 +17,45 @@ export function HeroRj45() {
   return (
     <section aria-labelledby="hero-titulo" className="relative overflow-hidden border-b border-g-800 bg-g-950">
       <div className="relative z-10 mx-auto flex max-w-[1440px] flex-col justify-center gap-[clamp(24px,3vw,36px)] px-5 pt-9 pb-2 tablet:px-10 tablet:pt-14 tablet:pb-3 desktop:min-h-[min(max(calc(100svh-76px),640px),880px)] desktop:px-16 desktop:pt-14 desktop:pb-[72px]">
-        <span className="font-mono text-[12px] tracking-[0.1em] text-g-400">TIMP TECNOLOGIA · RIO DE JANEIRO · DESDE 2016</span>
+        <span className="font-mono text-[12px] tracking-[0.06em] text-g-400">Timp Tecnologia · Rio de Janeiro · Desde 2016</span>
         <h1
           id="hero-titulo"
-          className="m-0 text-[clamp(42px,6.6vw,104px)] leading-[0.96] font-bold tracking-[-0.045em] text-balance tablet:max-w-[13ch] desktop:max-w-[12ch]"
+          className="m-0 text-[clamp(34px,3.9vw,56px)] leading-[1.03] font-bold tracking-[-0.035em] text-balance tablet:max-w-[19ch] desktop:max-w-[18.5ch]"
         >
-          Tecnologia que sustenta sua operação.
+          Empresa de TI no Rio de Janeiro para manter sua operação conectada, segura e funcionando.
         </h1>
-        <p className="m-0 max-w-[30em] text-[clamp(17px,1.5vw,21px)] leading-[1.55] text-pretty text-g-300">
-          Infraestrutura, conectividade, segurança, automação e suporte tecnológico para empresas no Rio de Janeiro.
+        <p className="m-0 max-w-[34em] text-[clamp(16px,1.35vw,19px)] leading-[1.55] text-pretty text-g-300 desktop:max-w-[30em]">
+          Infraestrutura, redes, Wi-Fi, segurança eletrônica, automação e suporte de TI para empresas em todo o Rio de Janeiro. Do projeto à implantação e manutenção.
         </p>
-        <div data-hero-cta="" className="flex flex-wrap gap-3">
+        {/* Mobile: dois CTAs lado a lado, mesma altura; empilha só abaixo de 340 px */}
+        <div data-hero-cta="" className="grid grid-cols-1 gap-2.5 min-[340px]:grid-cols-[1.1fr_1fr] tablet:flex tablet:flex-wrap tablet:gap-3">
           <a
             href={PROJECT_CTA}
-            className="inline-flex h-[52px] items-center gap-2.5 rounded-sm bg-blue-600 px-6 text-[16px] font-semibold whitespace-nowrap text-white no-underline shadow-primary-inset hover:bg-blue-650 hover:text-white"
+            className="inline-flex h-[52px] items-center justify-center gap-2.5 rounded-sm bg-blue-600 px-2.5 text-[14px] font-semibold whitespace-nowrap text-white no-underline shadow-primary-inset hover:bg-blue-650 hover:text-white min-[400px]:text-[15px] tablet:px-6 tablet:text-[16px]"
           >
-            Solicitar um projeto <span aria-hidden="true">→</span>
+            Solicitar um projeto <span aria-hidden="true" className="max-tablet:hidden">→</span>
           </a>
           <a
             href={requiredHref("solucoes")}
-            className="inline-flex h-[52px] items-center rounded-sm border border-g-600 bg-g-950/60 px-6 text-[16px] font-semibold whitespace-nowrap text-g-100 no-underline hover:border-g-400 hover:text-white"
+            className="inline-flex h-[52px] items-center justify-center rounded-sm border border-g-600 bg-g-950/60 px-2.5 text-[14px] font-semibold whitespace-nowrap text-g-100 no-underline hover:border-g-400 hover:text-white min-[400px]:text-[15px] tablet:px-6 tablet:text-[16px]"
           >
             Conhecer soluções
           </a>
         </div>
-        <p className="m-0 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 font-mono text-[11px] tracking-[0.1em] text-g-400">
-          <span>TIMP</span>
+        <p className="m-0 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 font-mono text-[11px] tracking-[0.06em] text-g-400">
+          <span>Timp</span>
           <span aria-hidden="true" className="text-blue-500">
             →
           </span>
-          <span>INFRAESTRUTURA</span>
+          <span>Infraestrutura</span>
           <span aria-hidden="true" className="text-blue-500">
             →
           </span>
-          <span>CONECTIVIDADE</span>
+          <span>Conectividade</span>
           <span aria-hidden="true" className="text-blue-500">
             →
           </span>
-          <span className="text-g-100">OPERAÇÃO</span>
+          <span className="text-g-100">Operação</span>
         </p>
       </div>
 

@@ -44,7 +44,7 @@ export default function BlogPage() {
         </h2>
         <ArticleCards slugs={ARTICLES.map((a) => a.slug)} light />
       </Section>
-      <FinalCta title="Tem uma dúvida sobre o seu ambiente?" text="A equipe técnica avalia o caso e indica o próximo passo." />
+      <FinalCta title="Tem uma dúvida sobre o seu ambiente?" text="A equipe técnica avalia o caso e indica o próximo passo." wa="blog" />
     </>
   )
 }

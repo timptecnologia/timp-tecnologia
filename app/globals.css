@@ -88,6 +88,10 @@
   --color-info: #287dd2;
   --color-info-fg: #8cc2ff;
   --color-mute: #8a94a3;
+  /* WhatsApp (somente nos CTAs que abrem o WhatsApp): verde da marca + variantes */
+  --color-wa: #25d366;
+  --color-wa-strong: #1faa55; /* hover do botão cheio */
+  --color-wa-ink: #062b15; /* texto sobre o verde (contraste AA) */
   /* Variantes de texto sobre fundo claro (Portal) — contraste AA sobre #fff */
   --color-ok-strong: #1a7f4b;
   --color-warn-strong: #8a5a12;

@@ -74,8 +74,13 @@ const send = (method, params = {}) =>
     waiting.set(id, r)
     ws.send(JSON.stringify({ id, method, params }))
   })
-const js = async (expression) => {
+const js = async (expression, retry = 2) => {
   const r = await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true })
+  // Contexto trocado no meio de uma navegação: tenta de novo em vez de devolver undefined
+  if (r.error && retry > 0) {
+    await pause(300)
+    return js(expression, retry - 1)
+  }
   if (r.result?.exceptionDetails) throw new Error(`${expression.slice(0, 80)} → ${r.result.exceptionDetails.exception?.description ?? r.result.exceptionDetails.text}`)
   return r.result?.result?.value
 }
@@ -183,12 +188,13 @@ const VIEWPORTS = [
 const HOME_ANCHORS = ["ecossistemas", "segmentos", "starlink", "infraestrutura", "construtoras", "monitoramento"]
 const DEEP_ANCHORS = [
   ["/contato/", "projeto"],
-  ["/servicos/", "monitoramento-24h"],
+  ["/servicos/", "energia-solar"],
   ["/equipamentos-e-tecnologia/", "seguranca-eletronica"],
   ["/blog/o-que-e-cabeamento-estruturado/", "capacidade"],
 ]
 /** Viewports da varredura do site inteiro (capturas só nas marcadas). */
 const SITE_VIEWPORTS = [
+  { tag: "1920x1080", w: 1920, h: 1080 },
   { tag: "1440x900", w: 1440, h: 900, shots: true },
   { tag: "1366x768", w: 1366, h: 768 },
   { tag: "1280x680", w: 1280, h: 680 },
@@ -437,6 +443,13 @@ for (const vp of PARTS.has("site") ? pick(SITE_VIEWPORTS) : []) {
         return !name
       }).length,
       imgNoAlt: [...document.querySelectorAll("img")].filter((i) => !i.hasAttribute("alt")).length,
+      // innerText aplica text-transform: pega "TIMP" mesmo quando o CSS põe em caixa alta
+      brand: document.body.innerText.split(String.fromCharCode(10)).filter((l) => /(^|[^A-Za-z])TIMP([^A-Za-z]|$)/.test(l)).slice(0, 3),
+      wa: [...document.querySelectorAll('a[href^="https://wa.me/"]')].map((a) => {
+        const u = new URL(a.href)
+        const btn = /rounded-sm/.test(a.className)
+        return { text: u.searchParams.get("text") ?? "", ctx: a.dataset.waContext ?? null, number: btn && a.textContent.includes("98331"), dot: !!a.querySelector(".bg-ok") }
+      }),
     })`)
     for (const l of info.links) internal.add(l.split("#")[0])
     const dead = await js(DEAD_SPACE)
@@ -447,6 +460,12 @@ for (const vp of PARTS.has("site") ? pick(SITE_VIEWPORTS) : []) {
     check(`${tag}: sem espaço morto > 220 px`, (dead[0]?.h ?? 0) <= 220, dead.map((d) => `${d.h}px@${d.in}`).join(" · "))
     check(`${tag}: sem coluna vazia nem card órfão`, layout.emptyRight.length === 0 && layout.orphans.length === 0, JSON.stringify(layout))
     check(`${tag}: console/CSP/requests/hidratação limpos`, events.length === 0, events.slice(0, 4).join(" | "))
+    check(`${tag}: marca "Timp" (nunca "TIMP") no texto renderizado`, info.brand.length === 0, info.brand.join(" | "))
+    check(
+      `${tag}: WhatsApp com mensagem da origem, ícone e sem número no botão`,
+      info.wa.length > 0 && info.wa.every((w) => w.text.length > 10 && !w.number && !w.dot),
+      JSON.stringify(info.wa.filter((w) => w.text.length <= 10 || w.number || w.dot).slice(0, 3)),
+    )
     if (vp.shots) {
       const name = p.replaceAll("/", "_").replace(/^_|_$/g, "") || "home"
       await shot(`site-${name}-${vp.tag}`)
@@ -479,9 +498,9 @@ if (PARTS.has("extra")) {
 // Âncora na mesma página após hidratar (índice de /servicos/)
 await open(url("/servicos/"), { w: 1440, h: 900 })
 {
-  const clicked = await clickAndSettle(`document.querySelector('nav[aria-label="Frentes de serviço"] a[href="#monitoramento-24h"]')`)
-  const o = await js(OFFSET("monitoramento-24h"))
-  check("/servicos/ índice (hidratado) → #monitoramento-24h", clicked && near(o), `Δ ${o.delta}px`)
+  const clicked = await clickAndSettle(`document.querySelector('nav[aria-label="Frentes de serviço"] a[href="#seguranca-eletronica"]')`)
+  const o = await js(OFFSET("seguranca-eletronica"))
+  check("/servicos/ índice (hidratado) → #seguranca-eletronica", clicked && near(o), `Δ ${o.delta}px`)
 }
 // Consentimento de cookies: banner, escolha persistida e preferências pelo footer
 await send("Network.clearBrowserCookies")
@@ -516,7 +535,63 @@ for (const vp of [
   const b = await js(`(() => { const b = document.querySelector('[aria-label="Aviso de cookies"]'); const r = b.getBoundingClientRect(); return { h: Math.round(r.height), full: Math.round(r.width) === innerWidth, small: [...b.querySelectorAll("button, a")].filter((x) => x.tagName === "BUTTON" && x.getBoundingClientRect().height < 44).length, hscroll: document.documentElement.scrollWidth > innerWidth } })()`)
   check(`${vp.tag} cookies: banner compacto, toque ≥ 44 px`, b.full && b.small === 0 && !b.hscroll && b.h <= vp.h * 0.45, JSON.stringify(b))
 }
+// Consentimento — validação formal (perfil novo = primeira visita / janela anônima)
+for (const vp of [
+  { tag: "1440x900", w: 1440, h: 900 },
+  { tag: "834x1112", w: 834, h: 1112 },
+  { tag: "390x844", w: 390, h: 844, mobile: true },
+]) {
+  const banner = `!!document.querySelector('[aria-label="Aviso de cookies"]')`
+  const clickText = (t, scope = "document") => clickAt(`[...${scope}.querySelectorAll("button")].find((b) => b.textContent.trim() === ${JSON.stringify(t)})`)
+  const cookie = async () => (await send("Network.getCookies", { urls: [BASE] })).result.cookies.find((c) => c.name === "timp_consent")
+  const flow = {}
+  for (const [choice, steps] of [
+    ["aceitar", [["Aceitar todos"]]],
+    ["rejeitar", [["Rejeitar não necessários"]]],
+    ["configurar", [["Configurar cookies"], ["Salvar preferências", 'document.querySelector("[role=dialog]")']]],
+  ]) {
+    await send("Network.clearBrowserCookies")
+    await open(url("/"), vp)
+    const first = await js(banner)
+    for (const [t, scope] of steps) {
+      await clickText(t, scope)
+      await settle()
+    }
+    const c = await cookie()
+    const days = c ? Math.round((c.expires * 1000 - Date.now()) / 86400000) : 0
+    await open(url("/empresa/"), vp) // "reabrir": nova navegação com o cookie persistido
+    const after = await js(banner)
+    flow[choice] = { first, saved: !!c, days, allowed: c ? JSON.parse(decodeURIComponent(c.value)).allowed : null, after }
+  }
+  const ok = Object.values(flow).every((f) => f.first && f.saved && f.days >= 179 && f.after === false && Array.isArray(f.allowed) && f.allowed.length === 0)
+  check(`${vp.tag} cookies: primeira visita mostra o banner; aceitar/rejeitar/configurar salvam (180 dias) e não voltam a perguntar`, ok, JSON.stringify(flow))
+}
 await CONSENT_SET()
+// Base da página: a assinatura Kinau encerra o site (sem espaço abaixo)
+for (const vp of [
+  { tag: "1440x900", w: 1440, h: 900 },
+  { tag: "390x844", w: 390, h: 844, mobile: true },
+]) {
+  await open(url("/"), vp)
+  await settle()
+  const gap = await js(`(() => { const k = [...document.querySelectorAll("footer p")].find((p) => p.textContent.includes("Kinau Company")); if (!k) return -1; const b = k.getBoundingClientRect(); return Math.round(document.documentElement.scrollHeight - (b.bottom + window.scrollY)) || 0 })()`)
+  check(`${vp.tag}: assinatura Kinau é a última coisa do site (0 px abaixo)`, gap >= 0 && gap <= 1, `${gap}px`)
+}
+// CTAs lado a lado no mobile (Hero e Starlink), mesma altura
+for (const vp of [
+  { tag: "360x640", w: 360, h: 640, mobile: true },
+  { tag: "375x667", w: 375, h: 667, mobile: true },
+  { tag: "390x844", w: 390, h: 844, mobile: true },
+  { tag: "430x932", w: 430, h: 932, mobile: true },
+]) {
+  await open(url("/"), vp)
+  const pair = await js(`(() => {
+    const row = (sel) => { const as = [...document.querySelectorAll(sel)].filter((a) => a.offsetParent).slice(0, 2).map((a) => a.getBoundingClientRect()); return as.length === 2 ? { sameRow: Math.abs(as[0].top - as[1].top) < 1, sameH: Math.abs(as[0].height - as[1].height) < 1, fits: as.every((r) => r.right <= innerWidth - 12 && r.left >= 12), overflow: [...document.querySelectorAll(sel)].some((a) => a.scrollWidth > a.clientWidth + 1) } : null }
+    return { hero: row("[data-hero-cta] a"), starlink: row("#starlink .grid a[href]") }
+  })()`)
+  const good = (r) => r && r.sameRow && r.sameH && r.fits && !r.overflow
+  check(`${vp.tag}: CTAs do Hero e da Starlink lado a lado, mesma altura, sem estouro`, good(pair.hero) && good(pair.starlink), JSON.stringify(pair))
+}
 // Imagens das câmeras respondem 200
 for (const f of ["cam-07-entrada-lateral.webp", "cam-08-corredor-lateral.webp"]) {
   const r = await fetch(url(`/home/monitoramento/${f}`))
@@ -590,6 +665,49 @@ for (const vp of pick(MON_VIEWPORTS)) {
     await shot(`demo-${vp.tag}`)
   }
 }
+// Timeline "Da planta à operação": luz verde percorre as etapas (Home e Construtoras)
+for (const [path, vp] of [
+  ["/", { tag: "1440x900", w: 1440, h: 900 }],
+  ["/", { tag: "390x844", w: 390, h: 844, mobile: true }],
+  ["/solucoes/construtoras-e-engenharia/", { tag: "1440x900", w: 1440, h: 900 }],
+]) {
+  await open(url(path), vp)
+  await js(`document.querySelector("[data-timeline-step]").scrollIntoView({ block: "center", behavior: "instant" })`)
+  const tl = await js(`(async () => {
+    const ol = document.querySelector("[data-timeline-step]")
+    const seen = []
+    for (let i = 0; i < 60 && Number(ol.dataset.timelineStep) !== 0; i++) await new Promise((r) => setTimeout(r, 50))
+    for (let i = 0; i < 40; i++) { const s = Number(ol.dataset.timelineStep); if (seen[seen.length - 1] !== s) seen.push(s); await new Promise((r) => setTimeout(r, 250)) }
+    return { seen, done: ol.querySelectorAll("[data-done]").length, controls: ol.querySelectorAll("button, [tabindex]").length }
+  })()`)
+  check(`${vp.tag} ${path} timeline avança sozinha (0→…), sem controles`, tl.seen[0] === 0 && tl.seen.length >= 5 && tl.seen.every((v, i) => i === 0 || v === tl.seen[i - 1] + 1) && tl.controls === 0, JSON.stringify(tl))
+}
+// Demonstração Starlink: automática, só Pausar/Retomar
+for (const vp of [
+  { tag: "1440x900", w: 1440, h: 900 },
+  { tag: "390x844", w: 390, h: 844, mobile: true },
+]) {
+  events.length = 0
+  await open(url("/servicos/instalacao-starlink/"), vp)
+  await js(`document.querySelector("[data-starlink-step]").scrollIntoView({ block: "center", behavior: "instant" })`)
+  const sd = await js(`(async () => {
+    const root = document.querySelector("[data-starlink-step]")
+    const seen = []
+    for (let i = 0; i < 50 && Number(root.dataset.starlinkStep) !== 0; i++) await new Promise((r) => setTimeout(r, 50))
+    const t0 = performance.now()
+    while (performance.now() - t0 < 11000) { const s = Number(root.dataset.starlinkStep); if (seen[seen.length - 1] !== s) seen.push(s); await new Promise((r) => setTimeout(r, 200)) }
+    return { seen, focus: [...root.querySelectorAll("button, a[href], [tabindex]")].map((e) => e.textContent.trim()) }
+  })()`)
+  await clickAt(`[...document.querySelectorAll("[data-starlink-step] button")].find((b) => /Pausar/.test(b.textContent))`)
+  const frozen = await js(`document.querySelector("[data-starlink-step]").dataset.starlinkStep`)
+  await pause(4000)
+  const still = await js(`document.querySelector("[data-starlink-step]").dataset.starlinkStep`)
+  check(
+    `${vp.tag} Starlink: demonstração automática (0→3…), único controle Pausar/Retomar, pausa congela`,
+    sd.seen.slice(0, 4).join() === "0,1,2,3" && sd.focus.length === 1 && /Pausar demonstração/.test(sd.focus[0] ?? "") && still === frozen && events.length === 0,
+    JSON.stringify({ ...sd, frozen, still, events: events.slice(0, 2) }),
+  )
+}
 // Falha real do arquivo de uma câmera → aviso explícito (não quadro preto)
 await send("Network.setBlockedURLs", { urls: ["*cam-07-entrada-lateral*"] })
 await open(url("/"), { w: 1440, h: 900 })
@@ -630,6 +748,8 @@ const rm = await js(`({
   step: document.querySelector("[data-demo-step]").dataset.demoStep,
   cams: [...document.querySelectorAll("[data-cam]")].map((c) => c.hasAttribute("data-cam-open") && c.querySelector("img")?.naturalWidth > 0),
 })`)
+const rmTl = await js(`({ done: document.querySelectorAll("[data-timeline-step] [data-done]").length, step: document.querySelector("[data-timeline-step]").dataset.timelineStep })`)
+check("reduced motion: timeline com as 9 etapas concluídas, estática", rmTl.done === 9 && rmTl.step === "8", JSON.stringify(rmTl))
 check("reduced motion: sem animação, sem pontos/pulsos, pilha aberta, Central em estado final estático", rm.running === 0 && rm.dots === 0 && rm.pulses === 0 && rm.idp === "1" && rm.demo === 0 && rm.step === "4" && rm.cams.every(Boolean), JSON.stringify(rm))
 await shot("reduced-1440")
 

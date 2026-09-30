@@ -4,8 +4,9 @@ import { useActionState, useRef, useState, type FormEvent } from "react"
 
 import { submitProjectRequest } from "@/lib/forms/project-request"
 import type { ProjectRequestState } from "@/lib/forms/project-request-core"
-import { WA_MESSAGES } from "@/lib/home/content"
+import { WhatsAppIcon, WhatsAppLink } from "@/components/ui/whatsapp-link"
 import { SITE, whatsappHref } from "@/lib/site/constants"
+import { WA_MESSAGES } from "@/lib/site/whatsapp"
 import { PROJECT_SIZES, PROJECT_SOLUTION_LABELS, PROJECT_SOLUTIONS, PROJECT_TYPES, UFS } from "@/lib/forms/project-options"
 import { requiredHref } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
@@ -133,7 +134,7 @@ export function ProjectForm() {
 
   // Gravação indisponível: nada foi registrado — orienta o envio por WhatsApp/e-mail
   if (state.status === "unavailable" && !editing) {
-    const summary = state.summary || WA_MESSAGES.home
+    const summary = state.summary || WA_MESSAGES.contato
     return (
       <div className={panel}>
         <div role="alert" className="flex flex-col gap-4 py-3">
@@ -147,9 +148,10 @@ export function ProjectForm() {
               href={whatsappHref(summary)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-[52px] items-center gap-2.5 rounded-sm bg-blue-600 px-6 text-[16px] font-semibold text-white no-underline hover:bg-blue-650 hover:text-white"
+              data-wa-context="contato"
+              className="inline-flex h-[52px] items-center gap-2.5 rounded-sm border border-wa bg-wa px-6 text-[16px] font-semibold text-wa-ink no-underline hover:bg-wa-strong hover:text-wa-ink"
             >
-              <span aria-hidden="true" className="size-2 rounded-full bg-ok" />
+              <WhatsAppIcon />
               Enviar pelo WhatsApp
             </a>
             <a
@@ -286,15 +288,9 @@ export function ProjectForm() {
           >
             {pending ? "Enviando…" : "Solicitar um projeto"} <span aria-hidden="true">→</span>
           </button>
-          <a
-            href={whatsappHref(WA_MESSAGES.home)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-[15px] font-semibold text-g-200 no-underline hover:text-white"
-          >
-            <span aria-hidden="true" className="size-2 rounded-full bg-ok" />
+          <WhatsAppLink context="contato" className="min-h-11 px-4 text-[15px]">
             Prefiro o WhatsApp
-          </a>
+          </WhatsAppLink>
         </div>
         <p className="m-0 text-[13px] leading-normal text-g-400">
           * Campos obrigatórios. Usamos estes dados somente para responder a esta solicitação de projeto.{" "}

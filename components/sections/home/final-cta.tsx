@@ -1,6 +1,6 @@
-import { WA_MESSAGES } from "@/lib/home/content"
-import { whatsappHref } from "@/lib/site/constants"
+import { WhatsAppLink } from "@/components/ui/whatsapp-link"
 import { PROJECT_CTA } from "@/lib/site/routes"
+import type { WaContext } from "@/lib/site/whatsapp"
 import { cn } from "@/lib/utils"
 
 import { S } from "./ui"
@@ -14,12 +14,13 @@ export function FinalCta({
   title = "Conte o que sua operação precisa.",
   text = "Descreva o ambiente e o objetivo. A equipe comercial retorna com o próximo passo: visita técnica, diagnóstico ou proposta de projeto.",
   primary = "Solicitar um projeto",
-  waText = WA_MESSAGES.home,
+  wa,
 }: {
   title?: string
   text?: string
   primary?: string
-  waText?: string
+  /** Origem do contato: define a mensagem pré-preenchida do WhatsApp. */
+  wa: WaContext
 }) {
   return (
     <section data-final-cta="" aria-labelledby="cta-final-titulo" className="bg-blue-900">
@@ -37,15 +38,7 @@ export function FinalCta({
           >
             {primary} <span aria-hidden="true">→</span>
           </a>
-          <a
-            href={whatsappHref(waText)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-[52px] items-center gap-2.5 rounded-sm border border-g-200/35 px-5 py-2 text-[16px] font-semibold whitespace-nowrap text-white no-underline hover:border-white hover:text-white"
-          >
-            <span aria-hidden="true" className="size-2 rounded-full bg-ok" />
-            Falar pelo WhatsApp
-          </a>
+          <WhatsAppLink context={wa} variant="onBlue" />
         </div>
       </div>
     </section>

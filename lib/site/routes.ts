@@ -63,6 +63,7 @@ export const ROUTES = {
   cftv: page("/servicos/cftv-cameras-de-seguranca/", "CFTV e Câmeras de Segurança"),
   segurancaEletronica: page("/servicos/seguranca-eletronica/", "Segurança Eletrônica"),
   alarmes: page("/servicos/alarmes/", "Alarmes"),
+  alarmeIncendio: page("/servicos/alarme-de-incendio/", "Alarme de Incêndio"),
   controleAcesso: page("/servicos/controle-de-acesso/", "Controle de Acesso"),
   fechaduras: page("/servicos/fechaduras-eletronicas/", "Fechaduras Eletrônicas"),
   monitoramento: page("/servicos/monitoramento-24h/", "Monitoramento 24h"),
@@ -72,11 +73,13 @@ export const ROUTES = {
   segurancaInformacao: page("/servicos/seguranca-da-informacao/", "Segurança da Informação"),
   automacao: page("/servicos/automacao-predial/", "Automação Predial"),
   telefonia: page("/servicos/telefonia-ip-pabx/", "Telefonia IP e PABX"),
+  energiaSolar: page("/servicos/energia-solar/", "Energia Solar"),
 
   // Soluções
   construtoras: page("/solucoes/construtoras-e-engenharia/", "Construtoras e Engenharia"),
+  arquitetos: page("/solucoes/arquitetos-e-designers-de-interiores/", "Arquitetos e Designers de Interiores"),
   empresas: page("/solucoes/empresas-e-escritorios/", "Empresas e Escritórios"),
-  condominios: page("/solucoes/condominios/", "Condomínios"),
+  casasCondominios: page("/solucoes/casas-e-condominios/", "Casas e Condomínios"),
   clinicas: page("/solucoes/clinicas/", "Clínicas"),
   comercio: page("/solucoes/comercio-e-restaurantes/", "Comércio e Restaurantes"),
   industrias: page("/solucoes/industrias-e-galpoes/", "Indústrias e Galpões"),
@@ -100,6 +103,7 @@ export const SERVICE_KEYS = [
   "cftv",
   "segurancaEletronica",
   "alarmes",
+  "alarmeIncendio",
   "controleAcesso",
   "fechaduras",
   "monitoramento",
@@ -109,10 +113,20 @@ export const SERVICE_KEYS = [
   "segurancaInformacao",
   "automacao",
   "telefonia",
+  "energiaSolar",
 ] as const satisfies readonly RouteKey[]
 export type ServiceKey = (typeof SERVICE_KEYS)[number]
 
-export const SOLUTION_KEYS = ["construtoras", "empresas", "condominios", "clinicas", "comercio", "industrias", "multiplasUnidades"] as const satisfies readonly RouteKey[]
+export const SOLUTION_KEYS = [
+  "construtoras",
+  "arquitetos",
+  "empresas",
+  "casasCondominios",
+  "clinicas",
+  "comercio",
+  "industrias",
+  "multiplasUnidades",
+] as const satisfies readonly RouteKey[]
 export type SolutionKey = (typeof SOLUTION_KEYS)[number]
 
 /** Onde o link está: `section` (âncora exata, ex.: "/#starlink") ou `page` (ex.: "/servicos/"). */

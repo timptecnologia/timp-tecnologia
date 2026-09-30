@@ -35,7 +35,7 @@ export default function ContatoPage() {
         aside={
           <div className="flex flex-col gap-3 rounded-md border border-g-800 bg-g-900 p-5">
             <span className="font-mono text-[11px] tracking-[0.08em] text-g-400">FALE DIRETO</span>
-            <ContactChannels area={AREA} />
+            <ContactChannels area={AREA} wa="contato" />
           </div>
         }
       />

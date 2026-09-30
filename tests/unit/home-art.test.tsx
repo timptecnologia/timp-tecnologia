@@ -47,9 +47,9 @@ describe("Hero RJ45 = assets/home/hero", () => {
     expectSameGeometry(renderToStaticMarkup(<HeroScene variant={variant as HeroVariant} />), read(`home/hero/${file}`))
   })
 
-  it("mantém o texto técnico (TIMP, OPERAÇÃO, P1–P4 no desktop)", () => {
+  it("mantém o texto técnico (Timp, OPERAÇÃO, P1–P4 no desktop)", () => {
     const html = renderToStaticMarkup(<HeroScene variant="d" />)
-    for (const t of ["TIMP", "OPERAÇÃO", "P1", "P4"]) expect(html).toContain(`>${t}<`)
+    for (const t of ["Timp", "OPERAÇÃO", "P1", "P4"]) expect(html).toContain(`>${t}<`)
   })
 })
 

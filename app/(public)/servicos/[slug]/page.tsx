@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 
-import { MonitoringExtras, SecurityExtras, StarlinkExtras } from "@/components/sections/services/extras"
+import { MonitoringExtras, MonitoringLead, SecurityLead, StarlinkExtras, StarlinkLead } from "@/components/sections/services/extras"
 import { ServicePage } from "@/components/templates/service-page"
 import { SERVICES } from "@/lib/content/services"
 import { buildMetadata } from "@/lib/seo/metadata"
@@ -21,15 +21,17 @@ export async function generateMetadata({ params }: PageProps<"/servicos/[slug]">
   return buildMetadata({ ...SERVICES[key].seo, path: ROUTES[key].path })
 }
 
-const EXTRAS: Partial<Record<ServiceKey, () => React.ReactElement>> = {
-  starlink: StarlinkExtras,
-  monitoramento: MonitoringExtras,
-  segurancaEletronica: SecurityExtras,
+/** Blocos exclusivos: `lead` logo depois da abertura; `extra` depois do escopo. */
+const EXTRAS: Partial<Record<ServiceKey, { lead?: () => React.ReactElement; extra?: () => React.ReactElement; hideHiring?: boolean }>> = {
+  // Starlink: a instalação passo a passo substitui as etapas genéricas de contratação
+  starlink: { lead: StarlinkLead, extra: StarlinkExtras, hideHiring: true },
+  monitoramento: { lead: MonitoringLead, extra: MonitoringExtras },
+  segurancaEletronica: { lead: SecurityLead },
 }
 
 export default async function ServicoPage({ params }: PageProps<"/servicos/[slug]">) {
   const key = bySlug.get((await params).slug)
   if (!key) notFound()
-  const Extra = EXTRAS[key]
-  return <ServicePage s={SERVICES[key]} extra={Extra ? <Extra /> : undefined} />
+  const x = EXTRAS[key]
+  return <ServicePage s={SERVICES[key]} lead={x?.lead && <x.lead />} extra={x?.extra && <x.extra />} hideHiring={x?.hideHiring} />
 }

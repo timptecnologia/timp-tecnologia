@@ -9,7 +9,7 @@ export const PAGE_SEO = {
   home: {
     title: "Empresa de TI no Rio de Janeiro | Timp Tecnologia",
     description:
-      "Infraestrutura, conectividade, segurança eletrônica, automação e suporte de TI para empresas no Rio de Janeiro. Projeto, implantação e operação com a Timp.",
+      "Empresa de TI no Rio de Janeiro especializada em infraestrutura, redes, Wi-Fi, segurança eletrônica, automação e suporte. Projetos completos com a Timp.",
     path: "/",
   },
   empresa: {
@@ -21,13 +21,13 @@ export const PAGE_SEO = {
   servicos: {
     title: "Serviços de TI, Redes e Segurança | Timp Tecnologia",
     description:
-      "Cabeamento estruturado, redes, Wi-Fi, fibra, Starlink, CFTV, alarmes, controle de acesso, suporte de TI, automação e monitoramento 24h no Rio de Janeiro.",
+      "Infraestrutura, redes, Wi-Fi, Starlink, CFTV, alarmes, alarme de incêndio, controle de acesso, monitoramento 24h, TI, automação e energia solar no Rio.",
     path: "/servicos/",
   },
   solucoes: {
     title: "Soluções de Tecnologia por Segmento | Timp Tecnologia",
     description:
-      "Tecnologia para construtoras, empresas, condomínios, clínicas, comércio, indústrias e operações com várias unidades no Rio de Janeiro, com um só parceiro.",
+      "Tecnologia para construtoras, arquitetos, empresas, casas e condomínios, clínicas, comércio, indústrias e redes com várias unidades no Rio de Janeiro.",
     path: "/solucoes/",
   },
   contato: {

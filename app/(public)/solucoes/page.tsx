@@ -27,7 +27,7 @@ export default function SolucoesPage() {
         eyebrow="SOLUÇÕES"
         title="Soluções para cada tipo de operação."
         lead="Os mesmos sistemas, combinados de acordo com a rotina, o risco e o tamanho de cada ambiente. Cada solução reúne os serviços Timp de que o segmento precisa, com um único parceiro responsável."
-        actions={<CtaButtons />}
+        actions={<CtaButtons wa="solucoes" />}
         aside={
           <nav aria-label="Segmentos" className="flex flex-col gap-3 rounded-md border border-g-800 bg-g-900 p-5">
             <span className="font-mono text-[11px] tracking-[0.08em] text-g-400">SEGMENTOS</span>
@@ -79,7 +79,7 @@ export default function SolucoesPage() {
           <div className={cn("flex flex-col gap-4", S.stickyHead)}>
             <span className={cn(S.eyebrow, "text-blue-400")}>COMO UMA SOLUÇÃO É MONTADA</span>
             <h2 id="frentes-titulo" className={S.h2}>
-              Cinco frentes. Uma operação integrada.
+              Frentes que se combinam conforme a sua operação.
             </h2>
             <p className={cn(S.lead, "text-g-300")}>Cada solução combina serviços destas frentes, projetados para funcionar em conjunto na mesma infraestrutura.</p>
           </div>
@@ -101,7 +101,7 @@ export default function SolucoesPage() {
         </div>
       </Section>
 
-      <FinalCta title="Seu segmento não está na lista?" text="As soluções combinam os mesmos serviços. Conte a sua operação e a equipe monta a combinação adequada." />
+      <FinalCta title="Seu segmento não está na lista?" text="As soluções combinam os mesmos serviços. Conte a sua operação e a equipe monta a combinação adequada." wa="solucoes" />
     </>
   )
 }

@@ -195,7 +195,7 @@ export function StarlinkExperience({ intro }: { intro: ReactNode }) {
             className="flex w-full max-w-[520px] flex-col gap-3 justify-self-end rounded-md border border-g-700 bg-g-950/92 p-3.5 tablet:gap-4 tablet:p-5 tablet:short:gap-3 tablet:short:p-4"
           >
             <div className="flex items-center justify-between gap-3 font-mono text-[10px] tracking-[0.1em] text-g-400">
-              <span>DIAGRAMA CONCEITUAL · TIMP</span>
+              <span>Diagrama conceitual · Timp</span>
               <span className="track-sticky:hidden">SELECIONE A ETAPA</span>
               <span className="hidden track-sticky:inline">ROLE PARA AVANÇAR</span>
             </div>
