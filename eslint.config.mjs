@@ -27,6 +27,13 @@ const eslintConfig = defineConfig([
     files: ["lib/logger/index.ts", "scripts/**/*.mjs"],
     rules: { "no-console": "off" },
   },
+  {
+    // Imagens de metadados (ImageResponse/Satori só aceita <img>): o plugin do Next já isenta
+    // esses arquivos, mas a normalização de caminho dele falha no Windows (só troca o primeiro "\").
+    // Fixar a isenção aqui deixa o lint igual no Windows e no Linux (CI).
+    files: ["app/**/{opengraph-image,twitter-image,icon,apple-icon}.{js,jsx,ts,tsx}"],
+    rules: { "@next/next/no-img-element": "off" },
+  },
   globalIgnores([
     ".next/**",
     "out/**",
