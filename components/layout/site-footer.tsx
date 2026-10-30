@@ -74,7 +74,7 @@ export function SiteFooter() {
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1.5 text-[13px] leading-normal text-g-400">
             <p className="m-0">{SITE.areaServedText}</p>
             <p className="m-0">
-              © 2016–{year} {SITE.name} · Rio de Janeiro/RJ
+              © 2016–{year} {SITE.name} · {SITE.legalName} · CNPJ {SITE.cnpj} · Rio de Janeiro/RJ
             </p>
           </div>
         </div>

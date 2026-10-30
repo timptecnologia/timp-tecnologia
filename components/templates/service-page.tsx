@@ -79,7 +79,7 @@ export function ServicePage({
           <div className="flex flex-col gap-5">
             <span className={cn(S.eyebrow, "text-blue-400")}>O que a Timp faz</span>
             <h2 id="escopo-titulo" className={S.h2}>
-              Escopo do serviço
+              {s.scopeTitle ?? "Escopo do serviço"}
             </h2>
             <ol className="m-0 flex list-none flex-col border-t border-g-700 p-0">
               {s.scope.map((t, i) => (
@@ -92,7 +92,7 @@ export function ServicePage({
           </div>
           <div className="flex flex-col gap-5">
             <span className={cn(S.eyebrow, "text-blue-400")}>O QUE DEFINE O PROJETO</span>
-            <h2 className={S.h2}>Cada ambiente pede um projeto próprio.</h2>
+            <h2 className={S.h2}>{s.factorsTitle ?? "Cada ambiente pede um projeto próprio."}</h2>
             <ul className="m-0 flex list-none flex-col border-t border-g-700 p-0">
               {s.factors.map((t) => (
                 <li key={t} className="flex items-baseline gap-3 border-b border-g-800 py-3.5">
@@ -126,7 +126,7 @@ export function ServicePage({
       </Section>
 
       <Section tone="alt" labelledBy="faq-titulo">
-        <Faq id="faq-titulo" title={`Dúvidas sobre ${s.short}`} items={s.faq} />
+        <Faq id="faq-titulo" title={s.faqTitle ?? `Dúvidas sobre ${s.short}`} items={s.faq} />
       </Section>
 
       {s.articles.length > 0 && (
@@ -146,7 +146,12 @@ export function ServicePage({
         </Section>
       )}
 
-      <FinalCta title={s.ctaTitle} text="Informe o ambiente, o objetivo e o que já existe instalado. A equipe avalia e retorna com o próximo passo." primary={s.cta} wa={s.key} />
+      <FinalCta
+        title={s.ctaTitle}
+        text={s.ctaText ?? "Informe o ambiente, o objetivo e o que já existe instalado. A equipe avalia e retorna com o próximo passo."}
+        primary={s.cta}
+        wa={s.key}
+      />
     </>
   )
 }

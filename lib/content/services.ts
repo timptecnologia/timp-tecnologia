@@ -42,6 +42,15 @@ export interface ServiceContent {
   cta: string
   ctaTitle: string
   seo: { title: string; description: string }
+  /**
+   * Títulos de seção próprios do serviço (docs/SEO-GEO.md): desenvolvem a palavra-chave
+   * principal ao longo da página. Sem eles, o template usa os títulos genéricos.
+   */
+  scopeTitle?: string
+  factorsTitle?: string
+  faqTitle?: string
+  /** Texto do CTA final; sem ele, o texto padrão do template. */
+  ctaText?: string
 }
 
 const INFRA = { front: "INFRAESTRUTURA E CONECTIVIDADE", frontId: "infraestrutura-e-conectividade" }
@@ -58,10 +67,10 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     h1: "Cabeamento estruturado para empresas no Rio de Janeiro",
     short: "cabeamento estruturado",
     answer:
-      "Cabeamento estruturado é a infraestrutura física padronizada que conecta computadores, access points, câmeras, telefones e controles de acesso à rede. A Timp projeta, instala, identifica e organiza essa infraestrutura para que a rede cresça sem improviso.",
+      "Cabeamento estruturado é a infraestrutura física padronizada que conecta computadores, access points, câmeras, telefones e controles de acesso à rede. A Timp projeta e instala essa infraestrutura em empresas e obras no Rio de Janeiro, com rack organizado, cabos identificados, testes e documentação, para que a rede cresça sem improviso.",
     problem: {
       title: "Planeje o cabeamento antes do próximo ponto improvisado.",
-      text: "Cabos sem identificação, extensões e pontos criados às pressas tornam a rede instável e cada mudança mais demorada. Um cabeamento projetado organiza os pontos, o rack e as rotas, e já considera câmeras, Wi-Fi e telefonia sobre a mesma infraestrutura.",
+      text: "Cabos de rede sem identificação, extensões e pontos criados às pressas tornam a rede instável e cada mudança mais demorada. Um cabeamento estruturado projetado organiza os pontos, o rack e as rotas, e já considera câmeras, Wi-Fi e telefonia sobre a mesma infraestrutura.",
     },
     flow: {
       title: "COMO O CABEAMENTO CONECTA A OPERAÇÃO",
@@ -74,14 +83,16 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       ],
       hl: 0,
     },
+    scopeTitle: "O que inclui a instalação de cabeamento estruturado",
     scope: [
-      "Levantamento e projeto de pontos de rede",
+      "Levantamento e projeto dos pontos de rede",
       "Rack, patch panels e organização de cabos",
-      "Passagem e identificação dos cabos",
+      "Passagem, terminação e identificação dos cabos",
       "Pontos para access points, câmeras e telefonia",
       "Fibra óptica entre andares ou prédios",
       "Testes e documentação na entrega",
     ],
+    factorsTitle: "O que define um projeto de cabeamento de rede",
     factors: ["Quantidade e posição dos pontos", "Categoria do cabo (Cat6 ou Cat6A)", "Rotas e infraestrutura disponível", "Sala técnica ou rack", "Crescimento previsto da operação"],
     benefits: [
       { t: "Rede estável", d: "Pontos, cabos e conexões padronizados reduzem falhas intermitentes." },
@@ -102,10 +113,23 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       },
       { q: "Dá para fazer cabeamento em um escritório em funcionamento?", a: "Sim. A instalação é planejada por etapas e horários para reduzir a interferência na rotina da equipe." },
       { q: "O mesmo cabeamento atende câmeras e telefonia?", a: "Sim. Câmeras IP, telefones IP e access points usam a mesma infraestrutura, inclusive com alimentação PoE pelo switch." },
+      {
+        q: "Qual a diferença entre cabeamento estruturado e cabos instalados ponto a ponto?",
+        a: "No cabeamento estruturado, cada ponto chega a um rack com patch panel, é identificado, testado e documentado. Em cabos ponto a ponto, cada ligação é feita isoladamente, o que dificulta a manutenção e as mudanças.",
+      },
+      {
+        q: "Vocês fazem a instalação de rede em obras?",
+        a: "Sim. Em obras, o ideal é prever o cabeamento no projeto, antes das rotas e da alvenaria, junto às demais disciplinas.",
+      },
+      {
+        q: "Em quais regiões a Timp atende?",
+        a: "Com prioridade no município do Rio de Janeiro e de forma regular em todo o estado. Projetos especiais em outras regiões do Brasil são avaliados caso a caso.",
+      },
     ],
     articles: ["o-que-e-cabeamento-estruturado", "cat6-ou-cat6a", "infraestrutura-tecnologica-para-construtoras"],
     cta: "Solicitar projeto de cabeamento",
-    ctaTitle: "Planeje o cabeamento com quem instala.",
+    ctaTitle: "Planeje o cabeamento estruturado com quem instala.",
+    ctaText: "Informe quantos pontos de rede são necessários, onde fica o rack e o que já existe instalado. A equipe avalia e retorna com o próximo passo.",
     seo: {
       title: "Cabeamento Estruturado no Rio de Janeiro | Timp",
       description: "Projeto e instalação de cabeamento estruturado Cat6/Cat6A para empresas no Rio de Janeiro: rack, patch panels, identificação, testes e documentação.",
@@ -118,10 +142,10 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     h1: "Infraestrutura de redes para empresas no Rio de Janeiro",
     short: "infraestrutura de redes",
     answer:
-      "Infraestrutura de redes é o conjunto de firewall, switches, roteamento e segmentação que faz os dados circularem com segurança entre pessoas, sistemas e a internet. A Timp projeta, configura e documenta a rede para que ela seja estável, segmentada e preparada para crescer.",
+      "Infraestrutura de redes é o conjunto de firewall, switches, roteamento e segmentação que faz os dados circularem com segurança entre pessoas, sistemas e a internet. A Timp projeta, implanta e documenta a rede corporativa de empresas no Rio de Janeiro para que ela seja estável, segmentada e preparada para crescer.",
     problem: {
-      title: "Uma rede que cresceu sem projeto fica lenta e difícil de proteger.",
-      text: "Equipamentos domésticos, tudo na mesma rede e nenhuma documentação: é assim que surgem lentidão, quedas e falhas de segurança. A Timp organiza a rede em camadas, separa o que precisa ficar separado e deixa cada configuração registrada.",
+      title: "Uma rede corporativa que cresceu sem projeto fica lenta e difícil de proteger.",
+      text: "Equipamentos domésticos, tudo na mesma rede e nenhuma documentação: é assim que surgem lentidão, quedas e falhas de segurança. A Timp organiza a infraestrutura de redes em camadas, separa o que precisa ficar separado e deixa cada configuração registrada.",
     },
     flow: {
       title: "COMO A REDE É ORGANIZADA",
@@ -135,6 +159,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       ],
       hl: 1,
     },
+    scopeTitle: "O que a Timp faz na infraestrutura de redes",
     scope: [
       "Levantamento da rede existente",
       "Projeto lógico: endereçamento e segmentação",
@@ -143,6 +168,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       "Dois links de internet com troca automática, quando aplicável",
       "Documentação da topologia e das configurações",
     ],
+    factorsTitle: "O que define o projeto de uma rede corporativa",
     factors: ["Número de usuários e dispositivos", "Sistemas críticos para a operação", "Links de internet disponíveis", "Necessidade de acesso remoto", "Requisitos de segurança e segmentação"],
     benefits: [
       { t: "Segurança por padrão", d: "Visitantes, câmeras e sistemas em redes separadas, com regras claras." },
@@ -163,12 +189,17 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
         a: "É separar a rede em partes (por exemplo, equipe, visitantes, câmeras e sistemas) com regras de comunicação entre elas. Um problema em uma parte não se espalha para as outras.",
       },
       { q: "É possível ter dois links de internet?", a: "Sim. Com o firewall adequado, um link assume quando o outro falha, conforme configurado no projeto." },
+      {
+        q: "A Timp faz a instalação de rede do zero?",
+        a: "Sim. A Timp projeta e implanta a rede corporativa completa (firewall, switches, segmentação e, quando necessário, o cabeamento estruturado) ou reorganiza uma rede existente.",
+      },
     ],
     articles: ["o-que-e-cabeamento-estruturado", "starlink-como-internet-de-backup-para-empresas"],
     cta: "Solicitar projeto de rede",
     ctaTitle: "Organize a rede antes do próximo problema.",
+    ctaText: "Informe o número de usuários, os sistemas críticos e como a rede funciona hoje. A equipe avalia e retorna com o próximo passo.",
     seo: {
-      title: "Infraestrutura de Redes para Empresas | Timp",
+      title: "Infraestrutura de Redes para Empresas no RJ | Timp",
       description: "Projeto e configuração de redes corporativas no Rio de Janeiro: firewall, switches gerenciáveis, segmentação, VPN, links redundantes e documentação.",
     },
   },
@@ -374,13 +405,13 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
   cftv: {
     key: "cftv",
     ...SEG,
-    h1: "CFTV e câmeras de segurança para empresas no Rio de Janeiro",
+    h1: "Instalação de câmeras de segurança e CFTV no Rio de Janeiro",
     short: "CFTV e câmeras",
     answer:
-      "CFTV é o sistema de câmeras que captura, grava e permite visualizar as imagens de um ambiente. A Timp projeta o posicionamento das câmeras, a rede que as alimenta e a gravação, e pode integrar o sistema ao alarme e ao monitoramento 24h.",
+      "A Timp faz a instalação de câmeras de segurança e de sistemas de CFTV para empresas, condomínios, comércios e galpões em todo o estado do Rio de Janeiro. O projeto define onde cada câmera fica, a rede que alimenta as câmeras e a gravação, e pode integrar o sistema ao alarme e ao monitoramento 24h.",
     problem: {
-      title: "Câmeras posicionadas onde a operação precisa enxergar.",
-      text: "Câmeras instaladas sem estudo deixam pontos cegos, gravam pouco tempo ou não mostram o que importa na hora em que é preciso. O projeto define ângulos, resolução, gravação e acesso remoto seguro como um sistema.",
+      title: "Câmeras de segurança posicionadas onde a operação precisa enxergar.",
+      text: "Câmeras instaladas sem estudo deixam pontos cegos, gravam pouco tempo ou não mostram o que importa na hora em que é preciso. Uma instalação de CFTV planejada define ângulos, resolução, gravação e acesso remoto seguro como um único sistema.",
     },
     flow: {
       title: "DA CÂMERA À VISUALIZAÇÃO",
@@ -394,14 +425,16 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       ],
       hl: 2,
     },
+    scopeTitle: "Como é a instalação de câmeras de segurança",
     scope: [
-      "Estudo de pontos e ângulos de cobertura",
-      "Câmeras IP e infraestrutura PoE",
+      "Levantamento no local e estudo de pontos e ângulos de cobertura",
+      "Instalação de câmeras IP e da infraestrutura PoE",
       "NVR e dimensionamento da gravação",
-      "Visualização local e remota",
-      "Integração com alarme e controle de acesso",
-      "Manutenção preventiva",
+      "Visualização local e acesso remoto seguro pelo celular",
+      "Integração com alarme, controle de acesso e monitoramento 24h",
+      "Manutenção preventiva do sistema de câmeras",
     ],
+    factorsTitle: "O que define cada projeto de CFTV",
     factors: ["Áreas críticas e ângulos necessários", "Iluminação e ambiente externo", "Tempo de gravação desejado", "Capacidade da rede existente", "Integração com monitoramento"],
     benefits: [
       { t: "Sem pontos cegos", d: "Posicionamento definido por estudo de cobertura." },
@@ -422,13 +455,27 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       },
       { q: "Quanto tempo de gravação é possível?", a: "Depende do número de câmeras, da resolução e da capacidade de armazenamento do NVR. O tempo é definido no projeto." },
       { q: "As câmeras podem ser vistas pelo celular?", a: "Sim, com acesso remoto configurado de forma segura, sem expor as senhas das câmeras na internet." },
+      {
+        q: "Vocês fazem instalação de câmeras de segurança em condomínios?",
+        a: "Sim. A Timp atende empresas, condomínios, casas, comércios e galpões. Em condomínios, o projeto considera portaria, áreas comuns e garagem.",
+      },
+      {
+        q: "Quanto tempo leva a instalação?",
+        a: "Depende da quantidade de câmeras, das rotas de cabo e do ambiente. O prazo é informado na proposta, depois do diagnóstico do local.",
+      },
+      {
+        q: "Em quais regiões a Timp faz instalação de CFTV?",
+        a: "Com prioridade no município do Rio de Janeiro e de forma regular em todo o estado. Projetos especiais em outras regiões do Brasil são avaliados caso a caso.",
+      },
     ],
+    faqTitle: "Dúvidas sobre instalação de câmeras",
     articles: ["cftv-ip-ou-analogico", "como-funciona-uma-central-de-monitoramento-24h", "o-que-acontece-quando-um-alarme-dispara"],
-    cta: "Solicitar projeto de CFTV",
-    ctaTitle: "Projete as câmeras como um sistema.",
+    cta: "Solicitar instalação de câmeras",
+    ctaTitle: "Projete as câmeras de segurança como um sistema.",
+    ctaText: "Informe o local, as áreas que precisam de câmeras e o que já existe instalado. A equipe avalia e retorna com o próximo passo.",
     seo: {
-      title: "CFTV e Câmeras de Segurança no Rio de Janeiro | Timp",
-      description: "Projeto e instalação de CFTV com câmeras IP, PoE, gravação em NVR, acesso remoto seguro e integração com alarme e monitoramento 24h no Rio de Janeiro.",
+      title: "Instalação de Câmeras de Segurança e CFTV no RJ | Timp",
+      description: "Instalação de câmeras de segurança e CFTV no Rio de Janeiro: estudo de cobertura, câmeras IP com PoE, gravação em NVR, acesso remoto e monitoramento 24h.",
     },
   },
 
@@ -514,6 +561,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       ],
       hl: 1,
     },
+    scopeTitle: "Instalação de sistema de alarme",
     scope: [
       "Projeto de zonas por área e acesso",
       "Sensores de presença, abertura e perímetro",
@@ -522,6 +570,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       "Associação das zonas às câmeras",
       "Preparação para monitoramento 24h",
     ],
+    factorsTitle: "O que define o projeto do sistema de alarme",
     factors: ["Áreas, acessos e perímetro", "Horários de funcionamento", "Presença de animais e características do ambiente", "Meios de comunicação disponíveis", "Integração com CFTV e monitoramento"],
     benefits: [
       { t: "Disparo com endereço", d: "A zona indica exatamente onde o evento aconteceu." },
@@ -536,7 +585,10 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     ],
     segments: ["comercio", "empresas", "casasCondominios", "industrias"],
     faq: [
-      { q: "Qual a diferença entre alarme local e monitorado?", a: "O alarme local avisa quem está no local, com a sirene. O monitorado envia o evento para a Central, onde um operador verifica e segue o protocolo do cliente." },
+      {
+        q: "Qual a diferença entre alarme local e alarme monitorado?",
+        a: "O alarme local avisa quem está no local, com a sirene. No alarme monitorado, o sistema envia o evento para a Central, onde um operador verifica e segue o protocolo do cliente.",
+      },
       { q: "Preciso ter câmeras para ter alarme monitorado?", a: "Não é obrigatório, mas câmeras associadas às zonas permitem a verificação por vídeo e tornam a análise mais precisa." },
       { q: "Consigo armar e desarmar pelo celular?", a: "Quando o equipamento oferece esse recurso, o acesso é configurado de forma segura na instalação." },
     ],
@@ -619,7 +671,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     h1: "Controle de acesso para empresas e condomínios",
     short: "controle de acesso",
     answer:
-      "Controle de acesso é o sistema que identifica pessoas, autoriza a entrada conforme regras e registra cada passagem. A Timp projeta e instala leitores, reconhecimento facial, fechaduras e controladoras, integrados à rede e ao CFTV.",
+      "Controle de acesso é o sistema que identifica pessoas, autoriza a entrada conforme regras e registra cada passagem. A Timp projeta e instala controle de acesso com reconhecimento facial e leitores, fechaduras e controladoras, integrados à rede e ao CFTV, para empresas e condomínios no Rio de Janeiro.",
     problem: {
       title: "Quem entra, quando e por qual porta, registrado.",
       text: "Chaves copiadas e listas em papel não mostram quem entrou nem permitem retirar um acesso na hora. Com controle de acesso, cada pessoa tem uma credencial com regras por perfil e horário, e cada passagem fica no histórico.",
@@ -636,15 +688,18 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       ],
       hl: 2,
     },
+    scopeTitle: "Instalação de controle de acesso com reconhecimento facial",
     scope: [
       "Mapeamento de portas e fluxos",
-      "Leitores e reconhecimento facial",
+      "Leitores e terminais de reconhecimento facial",
+      "Cadastro dos usuários autorizados",
       "Fechaduras eletrônicas e controladoras",
       "Regras por horário e perfil",
       "Relatórios de acesso",
       "Integração com CFTV e alarme",
     ],
-    factors: ["Número de portas e acessos", "Perfis de usuários", "Regras de horário", "Tipo de porta e fechadura", "Integração com a portaria"],
+    factorsTitle: "O que define um projeto de controle de acesso",
+    factors: ["Número de portas e acessos", "Perfis de usuários", "Regras de horário", "Fluxo de pessoas e iluminação do local", "Tipo de porta e fechadura", "Integração com a portaria"],
     benefits: [
       { t: "Acesso por regra, não por chave", d: "Credenciais concedidas e retiradas no sistema." },
       { t: "Histórico de passagens", d: "Quem entrou, por onde e quando." },
@@ -658,16 +713,28 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     ],
     segments: ["casasCondominios", "empresas", "clinicas", "industrias"],
     faq: [
-      { q: "Reconhecimento facial substitui o cartão?", a: "Pode substituir ou complementar. A escolha depende do fluxo de pessoas, do ambiente e do nível de segurança desejado." },
+      {
+        q: "Controle de acesso facial substitui o cartão?",
+        a: "O controle de acesso facial pode substituir ou complementar o cartão. A escolha depende do fluxo de pessoas, do ambiente e do nível de segurança desejado.",
+      },
+      {
+        q: "Como funciona o controle de acesso facial?",
+        a: "O terminal compara o rosto da pessoa com os cadastros autorizados e libera a porta ou a catraca conforme as regras de perfil e horário. Cada passagem fica registrada no histórico.",
+      },
       { q: "É possível limitar o acesso por horário?", a: "Sim. Regras por perfil e horário são configuradas na controladora ou no software de gestão." },
-      { q: "Funciona em condomínios?", a: "Sim, em portarias, áreas comuns e garagens." },
+      { q: "Funciona em condomínios?", a: "Sim, em portarias, áreas comuns e garagens, com reconhecimento facial, leitores ou a combinação dos dois." },
+      {
+        q: "Como ficam os dados do reconhecimento facial?",
+        a: "A imagem do rosto é um dado biométrico, tratado como dado pessoal sensível pela LGPD. O projeto define quem faz os cadastros e quem pode acessar os registros.",
+      },
     ],
     articles: ["controle-de-acesso-para-condominios", "o-que-acontece-quando-um-alarme-dispara"],
     cta: "Solicitar projeto de controle de acesso",
     ctaTitle: "Acessos definidos por regra, não por chave.",
+    ctaText: "Informe quantas portas e usuários o local tem, se há portaria e o que já existe instalado. A equipe avalia e retorna com o próximo passo.",
     seo: {
-      title: "Controle de Acesso para Empresas e Condomínios | Timp",
-      description: "Controle de acesso com leitores, reconhecimento facial, fechaduras e controladoras, regras por perfil e horário e integração com CFTV no Rio de Janeiro.",
+      title: "Controle de Acesso Facial para Empresas e Condomínios | Timp",
+      description: "Instalação de controle de acesso com reconhecimento facial, leitores, fechaduras e controladoras, regras por perfil e horário e integração com CFTV no RJ.",
     },
   },
 
@@ -804,10 +871,10 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     h1: "Suporte de TI para empresas no Rio de Janeiro",
     short: "suporte de TI",
     answer:
-      "Suporte de TI é o atendimento contínuo à equipe e ao ambiente de tecnologia: usuários, computadores, rede, servidores e rotinas de backup. A Timp atende remotamente e no local quando necessário, com manutenção preventiva e documentação do ambiente.",
+      "Suporte de TI para empresas é o atendimento contínuo à equipe e ao ambiente de tecnologia: usuários, computadores, rede, servidores e rotinas de backup. A Timp presta suporte de TI remoto e presencial a empresas no Rio de Janeiro, com manutenção preventiva e documentação do ambiente.",
     problem: {
       title: "Quando cada problema de TI para a equipe inteira.",
-      text: "Sem suporte definido, falhas se repetem, ninguém sabe onde estão as senhas e o backup não é verificado. Um suporte contínuo resolve os chamados do dia a dia e cuida da manutenção que evita os próximos.",
+      text: "Sem suporte definido, falhas se repetem, ninguém sabe onde estão as senhas e o backup não é verificado. Um suporte de TI contínuo resolve os chamados do dia a dia e cuida da manutenção que evita os próximos.",
     },
     flow: {
       title: "COMO UM ATENDIMENTO FUNCIONA",
@@ -821,14 +888,16 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       ],
       hl: 2,
     },
+    scopeTitle: "O que inclui o suporte de TI para empresas",
     scope: [
-      "Atendimento a usuários",
-      "Manutenção preventiva de estações e rede",
+      "Atendimento a usuários, remoto e presencial",
+      "Manutenção preventiva de computadores, estações e rede",
       "Gestão de computadores e periféricos",
       "Servidores e rotinas de backup",
       "Inventário e documentação do ambiente",
       "Padronização entre unidades",
     ],
+    factorsTitle: "O que define o contrato de suporte",
     factors: ["Número de usuários e estações", "Sistemas utilizados", "Unidades e localização", "Horário de atendimento necessário", "Ambiente atual e documentação existente"],
     benefits: [
       { t: "Menos interrupções", d: "Manutenção preventiva reduz falhas repetidas." },
@@ -846,10 +915,24 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       { q: "O atendimento é remoto ou presencial?", a: "Os dois. A maior parte dos chamados é resolvida remotamente; a visita técnica acontece quando o problema exige presença." },
       { q: "Vocês atendem empresas com várias unidades?", a: "Sim, com o mesmo padrão técnico e documentação em todas as unidades." },
       { q: "O suporte substitui uma equipe de TI interna?", a: "Pode complementar a equipe existente ou assumir o suporte, conforme o escopo definido em contrato." },
+      {
+        q: "O que é terceirização de TI?",
+        a: "É contratar uma empresa para cuidar do suporte e da manutenção da tecnologia, no lugar de uma equipe própria ou junto com ela. Na Timp, o escopo do suporte de TI é definido em contrato, a partir do número de usuários, dos sistemas e das unidades.",
+      },
+      {
+        q: "A Timp faz manutenção de computadores?",
+        a: "Sim, como parte do suporte de TI: manutenção preventiva de estações e da rede, gestão de computadores e periféricos e atendimento quando algo deixa de funcionar.",
+      },
+      {
+        q: "Onde há atendimento presencial?",
+        a: "O atendimento remoto não depende da localização. As visitas técnicas acontecem com prioridade no município do Rio de Janeiro e de forma regular em todo o estado, conforme o escopo do contrato.",
+      },
     ],
+    faqTitle: "Dúvidas sobre suporte de TI para empresas",
     articles: ["servidor-local-cloud-ou-hibrido"],
     cta: "Solicitar proposta de suporte",
     ctaTitle: "Suporte contínuo para a sua equipe.",
+    ctaText: "Informe quantos usuários e unidades a empresa tem e como o suporte funciona hoje. A equipe avalia e retorna com uma proposta.",
     seo: {
       title: "Suporte de TI para Empresas no Rio de Janeiro | Timp",
       description: "Suporte de TI remoto e presencial para empresas no Rio de Janeiro: atendimento a usuários, manutenção preventiva, servidores, backup e documentação.",
@@ -1111,6 +1194,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
       ],
       hl: 3,
     },
+    scopeTitle: "Implantação de telefonia IP e PABX",
     scope: [
       "Levantamento de ramais e fluxos de atendimento",
       "PABX IP ou híbrido",
@@ -1141,7 +1225,7 @@ export const SERVICES: Record<ServiceKey, ServiceContent> = {
     cta: "Solicitar projeto de telefonia",
     ctaTitle: "Voz da empresa sobre a mesma rede.",
     seo: {
-      title: "Telefonia IP e PABX para Empresas | Timp Tecnologia",
+      title: "Telefonia IP e PABX para Empresas no RJ | Timp",
       description: "Implantação de telefonia IP e PABX IP ou híbrido no Rio de Janeiro: ramais, grupos, atendimento automático, softphones e integração com a operadora.",
     },
   },

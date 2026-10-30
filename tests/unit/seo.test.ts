@@ -33,6 +33,21 @@ describe("schema.org", () => {
     expect(organizationSchema()).toMatchObject({ foundingDate: "2016-02-24", name: "Timp Tecnologia" })
   })
 
+  it("Organization com dados cadastrais oficiais; LocalBusiness com município e estado, sem endereço inventado", () => {
+    expect(organizationSchema()).toMatchObject({
+      legalName: "TIMP COMERCIO E SERVICO DE EQUIPAMENTOS DE INFORMATICA LTDA - EPP",
+      taxID: "61.279.516/0001-01",
+    })
+    const lb = localBusinessSchema() as { areaServed: unknown; address: Record<string, unknown>; legalName?: unknown }
+    expect(lb.areaServed).toEqual([
+      { "@type": "City", name: "Rio de Janeiro" },
+      { "@type": "State", name: "Rio de Janeiro" },
+    ])
+    expect(lb.address).not.toHaveProperty("streetAddress")
+    // Dados cadastrais só no nó Organization (LocalBusiness aponta para ele por parentOrganization)
+    expect(lb.legalName).toBeUndefined()
+  })
+
   it("BreadcrumbList com posições e URLs absolutas", () => {
     const b = breadcrumbSchema([
       { name: "Timp", path: "/" },

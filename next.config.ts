@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
       { source: "/conhecimento/:slug/", destination: "/blog/:slug/", permanent: true },
       // Macrofase 2 · revisão final: Condomínios → Casas e Condomínios
       { source: "/solucoes/condominios/", destination: "/solucoes/casas-e-condominios/", permanent: true },
+      // URL antiga (404) ainda com impressões no Search Console → página de CFTV
+      { source: "/cftv/", destination: "/servicos/cftv-cameras-de-seguranca/", permanent: true },
     ]
   },
   async headers() {

@@ -127,6 +127,16 @@ describe("registro de rotas", () => {
     expect(config).toContain(`{ source: "/solucoes/condominios/", destination: "${ROUTES.casasCondominios.path}", permanent: true }`)
   })
 
+  it("redirect permanente: URL antiga /cftv/ → página de CFTV, sem cadeia nem loop", async () => {
+    const { default: nextConfig } = await import("@/next.config")
+    const rules = await nextConfig.redirects!()
+    const cftv = rules.find((r) => r.source === "/cftv/")
+    expect(cftv).toMatchObject({ destination: ROUTES.cftv.path, permanent: true })
+    // Destino é página publicada e não é origem de outro redirect
+    expect(publishedPaths.has(cftv!.destination)).toBe(true)
+    expect(rules.some((r) => r.source === cftv!.destination)).toBe(false)
+  })
+
   it("taxonomia: 4 categorias + Energia Solar estratégica; sem categoria filha de si mesma e sem duplicatas", () => {
     const categories = ECOSYSTEMS.filter((e) => !e.strategic)
     expect(categories.map((e) => e.name)).toEqual(["Infraestrutura e Conectividade", "Segurança Eletrônica", "TI Corporativa", "Automação e Comunicação"])
@@ -183,12 +193,37 @@ describe.each(Object.keys(PAGES))("página %s", (page) => {
   })
 
   it('texto público: marca "Timp", "e" no lugar de "&", sem numeração editorial de seção', () => {
-    const text = textOf(markup)
+    // Exceção única: a razão social é identificação cadastral e aparece exatamente como registrada
+    const text = textOf(markup).replaceAll(SITE.legalName, "")
     // Marca sempre "Timp" no texto renderizado (nunca "TIMP", nem em rótulos em caixa alta)
     const upper = text.split("\n").filter((line) => /\bTIMP\b/.test(line))
     expect(upper, upper.join(" | ")).toEqual([])
     expect(markup.replace(/<script[\s\S]*?<\/script>/g, "")).not.toMatch(/\s&amp;\s/)
     expect(markup).not.toMatch(/>\s*\d{2} — [A-ZÀ-Ú]/)
+  })
+})
+
+describe("dados estruturados (JSON-LD)", () => {
+  type Node = { "@type"?: string; "@context"?: string }
+  type Block = Node & { "@graph"?: Node[] }
+  const blocksOf = (markup: string): Block[] => [...markup.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]!) as Block)
+  const blockWith = (markup: string, type: string) => blocksOf(markup).find((b) => (b["@graph"] ?? [b]).some((n) => n["@type"] === type))
+
+  it("todo bloco publicado tem @context schema.org uma única vez (no topo, nunca nos nós)", () => {
+    for (const [path, markup] of Object.entries(html)) {
+      for (const b of blocksOf(markup)) {
+        expect(b["@context"], path).toBe("https://schema.org")
+        for (const n of b["@graph"] ?? []) expect(n, path).not.toHaveProperty("@context")
+      }
+    }
+  })
+
+  it.each([ROUTES.cftv.path, ROUTES.starlink.path, articlePath("cat6-ou-cat6a")])("%s: BreadcrumbList e FAQPage com @context", (path) => {
+    for (const type of ["BreadcrumbList", "FAQPage"]) {
+      const block = blockWith(html[path]!, type)
+      expect(block, `${path} ${type}`).toBeDefined()
+      expect(block!["@context"]).toBe("https://schema.org")
+    }
   })
 })
 

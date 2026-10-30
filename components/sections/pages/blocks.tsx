@@ -2,7 +2,7 @@ import { Children, type ReactNode } from "react"
 
 import { JsonLd } from "@/components/seo/json-ld"
 import { S } from "@/components/sections/home/ui"
-import { faqSchema } from "@/lib/seo/schema"
+import { faqSchema, graph } from "@/lib/seo/schema"
 import { cn } from "@/lib/utils"
 
 /**
@@ -107,7 +107,7 @@ export function Faq({ id, title, items, light }: { id: string; title: string; it
   if (items.length === 0) return null
   return (
     <div className="grid items-start gap-x-[clamp(32px,5vw,80px)] gap-y-6 desktop:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]">
-      <JsonLd data={faqSchema({ visible: true, items: items.map((i) => ({ question: i.q, answer: i.a })) })} />
+      <JsonLd data={graph(faqSchema({ visible: true, items: items.map((i) => ({ question: i.q, answer: i.a })) }))} />
       <div className={cn("flex flex-col gap-4", S.stickyHead)}>
         <span className={cn(S.eyebrow, light ? "text-blue-600" : "text-blue-400")}>PERGUNTAS FREQUENTES</span>
         <h2 id={id} className={S.h2}>
