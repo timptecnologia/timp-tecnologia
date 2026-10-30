@@ -33,7 +33,6 @@ export default async function OpengraphImage() {
           color: P.g100,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse (Satori) só aceita <img> */}
         <img src={logoSrc} width={210} height={110} alt="" />
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <div style={{ fontSize: 22, letterSpacing: 3, color: P.g400 }}>Timp Tecnologia · Rio de Janeiro · Desde 2016</div>
