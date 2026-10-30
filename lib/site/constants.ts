@@ -8,13 +8,18 @@
 export const SITE = {
   name: "Timp Tecnologia",
   shortName: "Timp",
+  /** Dados cadastrais oficiais (confirmados pelo responsável em 30/10/2026). */
+  legalName: "TIMP COMERCIO E SERVICO DE EQUIPAMENTOS DE INFORMATICA LTDA - EPP",
+  cnpj: "61.279.516/0001-01",
   locale: "pt_BR",
   language: "pt-BR",
   foundingDate: "2016-02-24",
   city: "Rio de Janeiro",
   region: "RJ",
   country: "BR",
-  areaServedText: "Atendimento em todo o estado do Rio de Janeiro. Projetos personalizados em todo o Brasil.",
+  /** Abrangência oficial: prioridade na capital, regular no estado, projetos especiais no Brasil sob avaliação. */
+  areaServedText:
+    "Atendimento prioritário no município do Rio de Janeiro e regular em todo o estado. Projetos especiais em outras regiões do Brasil, mediante avaliação.",
   email: "comercial@timp.com.br",
   whatsappNumber: "5521983318387",
   /** Mesmo número, formatado para exibição. */

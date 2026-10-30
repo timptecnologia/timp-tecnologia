@@ -43,6 +43,14 @@ export default function EmpresaPage() {
                 <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">SEDE</dt>
                 <dd className="m-0 text-[16px] font-semibold text-g-100">Rio de Janeiro/RJ</dd>
               </div>
+              <div className="col-span-2 flex flex-col gap-1">
+                <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">RAZÃO SOCIAL</dt>
+                <dd className="m-0 text-[15px] font-semibold text-g-100">{SITE.legalName}</dd>
+              </div>
+              <div className="col-span-2 flex flex-col gap-1">
+                <dt className="font-mono text-[11px] tracking-[0.08em] text-g-400">CNPJ</dt>
+                <dd className="m-0 text-[16px] font-semibold text-g-100">{SITE.cnpj}</dd>
+              </div>
             </dl>
             <ContactChannels area={SITE.areaServedText} wa="empresa" />
           </div>

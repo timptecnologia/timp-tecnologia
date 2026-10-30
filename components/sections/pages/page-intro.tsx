@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 
 import { JsonLd } from "@/components/seo/json-ld"
 import { S } from "@/components/sections/home/ui"
-import { breadcrumbSchema } from "@/lib/seo/schema"
+import { breadcrumbSchema, graph } from "@/lib/seo/schema"
 import { requiredHref } from "@/lib/site/routes"
 import { cn } from "@/lib/utils"
 
@@ -55,7 +55,7 @@ export function PageIntro({
   const trail = [{ name: "Início", path: requiredHref("home") }, ...crumbs]
   return (
     <section aria-labelledby="pagina-titulo" className={cn("border-b border-g-800 bg-g-950", backdrop && "relative overflow-hidden")}>
-      <JsonLd data={breadcrumbSchema(trail)} />
+      <JsonLd data={graph(breadcrumbSchema(trail))} />
       {backdrop}
       <div className={cn(S.container, backdrop && "relative", "flex flex-col gap-6 pt-[clamp(20px,3vw,40px)] pb-[clamp(32px,4vw,56px)]")}>
         <nav aria-label="Você está em">

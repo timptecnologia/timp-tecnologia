@@ -188,18 +188,21 @@ export const DIFFERENTIALS = [
   { t: "Projeto antes da instalação", d: "Diagnóstico, projeto e proposta vêm antes da execução — inclusive na fase de projeto do empreendimento." },
   { t: "Documentação na entrega", d: "Pontos, equipamentos e configurações identificados e registrados." },
   { t: "Monitoramento independente de fabricante", d: "A Central Timp recebe eventos de diferentes equipamentos, com verificação por operador." },
-  { t: "Atendimento no estado do Rio", d: "Todo o estado do Rio de Janeiro; projetos especiais em outras regiões sob avaliação." },
+  { t: "Atendimento no estado do Rio", d: "Prioridade para o município do Rio de Janeiro e atendimento regular em todo o estado; projetos especiais em outras regiões sob avaliação." },
 ] as const
 
 export const FACTS = [
-  { q: "QUEM É", a: "Timp Tecnologia, empresa de tecnologia fundada em 24 de fevereiro de 2016 no Rio de Janeiro." },
+  {
+    q: "QUEM É",
+    a: `Timp Tecnologia (${SITE.legalName}, CNPJ ${SITE.cnpj}), empresa de tecnologia fundada em 24 de fevereiro de 2016 no Rio de Janeiro.`,
+  },
   {
     q: "O QUE FAZ",
     a: "Infraestrutura de TI, redes, Wi-Fi, fibra, instalação de Starlink, servidores e cloud, segurança eletrônica, automação, telefonia IP, suporte, monitoramento 24h, carregadores de veículos elétricos e energia solar.",
   },
   {
     q: "ONDE ATENDE",
-    a: "Todo o estado do Rio de Janeiro, com prioridade para a capital. Projetos especiais de grande porte em outras regiões do Brasil sob avaliação técnica e logística.",
+    a: "Atendimento prioritário no município do Rio de Janeiro e regular em todo o estado do Rio de Janeiro. Projetos especiais em outras regiões do Brasil, mediante avaliação técnica e logística.",
   },
   { q: "QUEM ATENDE", a: "Empresas, construtoras, arquitetos e designers de interiores, casas e condomínios, clínicas, comércio, indústrias e operações com várias unidades." },
   { q: "COMO CONTRATAR", a: `Pelo formulário de projeto, pelo WhatsApp ${SITE.whatsappDisplay} ou por ${SITE.email}.` },
@@ -330,6 +333,7 @@ export const FOOTER_COLUMNS = [
       { label: "Wi-Fi Empresarial", href: href("wifi") },
       { label: "Instalação de Starlink", href: href("starlink") },
       { label: "Monitoramento 24h", href: href("monitoramento") },
+      { label: "Suporte de TI", href: href("suporteTi") },
       { label: "Alarme de Incêndio", href: href("alarmeIncendio") },
       { label: "Energia Solar", href: href("energiaSolar") },
       { label: "Todos os serviços", href: requiredHref("servicos") },

@@ -68,7 +68,9 @@ export const ARTICLES: readonly Article[] = [
       { h2: "Por que o cabeamento define a capacidade da rede", id: "capacidade" },
       {
         p: [
-          "Switches e access points podem ser trocados com o tempo; o cabeamento fica na parede por muitos anos. A categoria do cabo, a qualidade da instalação e o respeito aos limites de distância determinam a velocidade e a estabilidade que a rede conseguirá entregar. A escolha entre ",
+          "Switches e access points podem ser trocados com o tempo; o cabeamento fica na parede por muitos anos. A categoria do cabo, a qualidade da ",
+          { t: "instalação do cabeamento", to: "cabeamento" },
+          " e o respeito aos limites de distância determinam a velocidade e a estabilidade que a rede conseguirá entregar. A escolha entre ",
           { t: "Cat6 e Cat6A", article: "cat6-ou-cat6a" },
           " é uma das decisões mais importantes do projeto.",
         ],
@@ -99,7 +101,7 @@ export const ARTICLES: readonly Article[] = [
       {
         p: [
           "Em obras, o ideal é prever o cabeamento no projeto, antes das rotas e da alvenaria — veja ",
-          { t: "infraestrutura tecnológica para construtoras", article: "infraestrutura-tecnologica-para-construtoras" },
+          { t: "o que prever de tecnologia no projeto da obra", article: "infraestrutura-tecnologica-para-construtoras" },
           ".",
         ],
       },
@@ -158,7 +160,9 @@ export const ARTICLES: readonly Article[] = [
       { h2: "Como decidir no projeto", id: "decidir" },
       {
         p: [
-          "O projeto considera o uso de cada ponto, a expansão prevista e o espaço disponível nas rotas — o Cat6A é mais grosso e ocupa mais eletroduto. Em muitos casos, a combinação é a melhor resposta: Cat6A para APs e backbone, Cat6 para estações. Veja também ",
+          "O ",
+          { t: "projeto de cabeamento", to: "cabeamento" },
+          " considera o uso de cada ponto, a expansão prevista e o espaço disponível nas rotas — o Cat6A é mais grosso e ocupa mais eletroduto. Em muitos casos, a combinação é a melhor resposta: Cat6A para APs e backbone, Cat6 para estações. Veja também ",
           { t: "o que é cabeamento estruturado", article: "o-que-e-cabeamento-estruturado" },
           ".",
         ],
@@ -356,7 +360,9 @@ export const ARTICLES: readonly Article[] = [
       { h2: "Quando aproveitar o sistema analógico", id: "aproveitar" },
       {
         p: [
-          "Se as câmeras analógicas estão em bom estado e cobrem os pontos certos, pode ser possível mantê-las e migrar por etapas — por exemplo, trocando primeiro as câmeras das áreas críticas. A avaliação do sistema existente indica o caminho.",
+          "Se as câmeras analógicas estão em bom estado e cobrem os pontos certos, pode ser possível mantê-las e migrar por etapas — por exemplo, trocando primeiro as câmeras das áreas críticas. A avaliação do sistema existente, feita no ",
+          { t: "projeto de CFTV", to: "cftv" },
+          ", indica o caminho.",
         ],
       },
       { note: "Acesso remoto às câmeras deve ser configurado sem expor as senhas dos equipamentos na internet. Câmeras com senha padrão e porta aberta são um risco para toda a rede." },
@@ -482,6 +488,8 @@ export const ARTICLES: readonly Article[] = [
           { t: "consultoria em TI", to: "consultoriaTi" },
           " e ",
           { t: "servidores, cloud e virtualização", to: "servidores" },
+          ". A rotina de backup e a manutenção do ambiente fazem parte do ",
+          { t: "suporte de TI para empresas", to: "suporteTi" },
           ".",
         ],
       },
@@ -502,7 +510,7 @@ export const ARTICLES: readonly Article[] = [
   {
     slug: "infraestrutura-tecnologica-para-construtoras",
     cat: "TECNOLOGIA PARA OBRAS",
-    title: "Infraestrutura tecnológica para construtoras",
+    title: "O que prever de tecnologia no projeto de uma obra",
     dek: "O que prever no projeto da obra para evitar retrabalho na entrega e na operação.",
     cover: ["Projeto", "Prumada", "Sala técnica", "Entrega"],
     hl: 2,
@@ -550,7 +558,7 @@ export const ARTICLES: readonly Article[] = [
     cta: { eyebrow: "CONSTRUTORAS E ENGENHARIA", title: "Traga a Timp para a mesa de projeto.", label: "Ver a solução para construtoras", to: "construtoras" },
     related: ["o-que-e-cabeamento-estruturado", "cat6-ou-cat6a", "starlink-como-internet-de-backup-para-empresas"],
     seo: {
-      title: "Infraestrutura tecnológica para construtoras",
+      title: "O que prever de tecnologia no projeto de uma obra",
       description: "O que prever no projeto da obra: rotas, prumadas, sala técnica, cabeamento, fibra, segurança e carregadores EV para evitar retrabalho na entrega.",
     },
   },

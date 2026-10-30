@@ -16,6 +16,9 @@ export function organizationSchema(): JsonLd {
     "@type": "Organization",
     "@id": orgId(),
     name: SITE.name,
+    legalName: SITE.legalName,
+    // CNPJ: identificador fiscal da empresa (schema.org taxID)
+    taxID: SITE.cnpj,
     url: absoluteUrl("/"),
     logo: absoluteUrl(SITE.logoPath),
     foundingDate: SITE.foundingDate,
@@ -34,7 +37,11 @@ export function localBusinessSchema(): JsonLd {
     email: SITE.email,
     // Sem streetAddress: não inventar endereço (seo-geo.md)
     address: { "@type": "PostalAddress", addressLocality: SITE.city, addressRegion: SITE.region, addressCountry: SITE.country },
-    areaServed: { "@type": "State", name: "Rio de Janeiro" },
+    // Prioridade no município e atendimento regular no estado (projetos fora do RJ só sob avaliação)
+    areaServed: [
+      { "@type": "City", name: "Rio de Janeiro" },
+      { "@type": "State", name: "Rio de Janeiro" },
+    ],
   }
 }
 
